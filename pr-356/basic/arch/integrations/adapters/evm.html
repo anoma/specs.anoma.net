@@ -1,0 +1,1223 @@
+
+<!DOCTYPE html>
+
+<html class="no-js" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<meta content="The Anoma specs is a collection of documents that describe the architecture, design, and implementation of the Anoma Network." name="description"/>
+<meta content="Anoma Foundation" name="author"/>
+<link href="https://specs.anoma.net/pr-356/arch/integrations/adapters/evm.html" rel="canonical"/>
+<link href="index.html" rel="prev"/>
+<link href="../../../tutorial/principles_and_guidelines.html" rel="next"/>
+<link href="../../../assets/logo.svg" rel="icon"/>
+<meta content="mkdocs-1.6.1, mkdocs-material-9.6.12" name="generator"/>
+<title>Ethereum Virtual Machine - Anoma specs</title>
+<link href="../../../assets/stylesheets/main.2afb09e1.min.css" rel="stylesheet"/>
+<link href="../../../assets/stylesheets/palette.06af60db.min.css" rel="stylesheet"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&amp;display=fallback" rel="stylesheet"/>
+<style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+<link href="../../../assets/css/juvix-material-style.css" rel="stylesheet"/>
+<link href="../../../assets/css/juvix-highlighting.css" rel="stylesheet"/>
+<link href="../../../assets/css/juvix_codeblock_footer.css" rel="stylesheet"/>
+<link href="../../../assets/css/latte-light.css" rel="stylesheet"/>
+<link href="../../../assets/css/extra.css" rel="stylesheet"/>
+<script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+<link href="../../../assets/stylesheets/glightbox.min.css" rel="stylesheet"><style>
+    html.glightbox-open { overflow: initial; height: 100%; }
+    .gslide-title { margin-top: 0px; user-select: text; }
+    .gslide-desc { color: #666; user-select: text; }
+    .gslide-image img { background: white; }
+    .gscrollbar-fixer { padding-right: 15px; }
+    .gdesc-inner { font-size: 0.75rem; }
+    body[data-md-color-scheme="slate"] .gdesc-inner { background: var(--md-default-bg-color);}
+    body[data-md-color-scheme="slate"] .gslide-title { color: var(--md-default-fg-color);}
+    body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color);}</style> <script src="../../../assets/javascripts/glightbox.min.js"></script></link></head>
+<body data-md-color-accent="indigo" data-md-color-primary="white" data-md-color-scheme="default" dir="ltr">
+<input autocomplete="off" class="md-toggle" data-md-toggle="drawer" id="__drawer" type="checkbox"/>
+<input autocomplete="off" class="md-toggle" data-md-toggle="search" id="__search" type="checkbox"/>
+<label class="md-overlay" for="__drawer"></label>
+<div data-md-component="skip">
+<a class="md-skip" href="#ethereum-virtual-machine-protocol-adapter">
+          Skip to content
+        </a>
+</div>
+<div data-md-component="announce">
+<aside class="md-banner">
+<div class="md-banner__inner md-grid md-typeset">
+<button aria-label="Don't show this again" class="md-banner__button md-icon">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>
+</button>
+            
+            
+  For updates follow <strong>@anoma</strong> on
+  <a href="https://x.com/anoma" rel="me">
+<span class="twemoji x-twitter">
+<svg viewbox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M389.2 48h70.6L305.6 224.2 487 464H345L233.7 318.6 106.5 464H35.8l164.9-188.5L26.8 48h145.6l100.5 132.9zm-24.8 373.8h39.1L151.1 88h-42z"></path></svg>
+</span>
+<strong></strong>
+</a>
+  and discuss on our
+  <a href="https://research.anoma.net">
+<span class="twemoji discourse">
+<svg viewbox="0 0 448 512" xmlns="http://www.w3.org/2000/svg"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M225.9 32C103.3 32 0 130.5 0 252.1 0 256 .1 480 .1 480l225.8-.2c122.7 0 222.1-102.3 222.1-223.9S348.6 32 225.9 32M224 384c-19.4 0-37.9-4.3-54.4-12.1L88.5 392l22.9-75c-9.8-18.1-15.4-38.9-15.4-61 0-70.7 57.3-128 128-128s128 57.3 128 128-57.3 128-128 128"></path></svg>
+</span>
+<strong>forum</strong>
+</a>
+</div>
+<script>var el=document.querySelector("[data-md-component=announce]");if(el){var content=el.querySelector(".md-typeset");__md_hash(content.innerHTML)===__md_get("__announce")&&(el.hidden=!0)}</script>
+</aside>
+</div>
+<header class="md-header md-header--shadow" data-md-component="header">
+<nav aria-label="Header" class="md-header__inner md-grid">
+<a aria-label="Anoma specs" class="md-header__button md-logo" data-md-component="logo" href="../../../index.html" title="Anoma specs">
+<img alt="logo" src="../../../assets/logo.svg"/>
+</a>
+<label class="md-header__button md-icon" for="__drawer">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"></path></svg>
+</label>
+<div class="md-header__title" data-md-component="header-title">
+<div class="md-header__ellipsis">
+<div class="md-header__topic">
+<span class="md-ellipsis">
+<span class="first-letter">A</span>noma 
+              
+                <span class="first-letter">s</span>pecs
+              
+              
+                <span class="md-header__topic-version">(PR 356)</span>
+</span>
+</div>
+<div class="md-header__topic" data-md-component="header-topic">
+<span class="md-ellipsis">
+              
+                Ethereum Virtual Machine
+              
+            </span>
+</div>
+</div>
+</div>
+<form class="md-header__option" data-md-component="palette">
+<input aria-label="Switch to light mode" class="md-option" data-md-color-accent="indigo" data-md-color-media="(prefers-color-scheme)" data-md-color-primary="white" data-md-color-scheme="default" id="__palette_0" name="__palette" type="radio"/>
+<label class="md-header__button md-icon" for="__palette_1" hidden="" title="Switch to light mode">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="m14.3 16-.7-2h-3.2l-.7 2H7.8L11 7h2l3.2 9zM20 8.69V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12zm-9.15 3.96h2.3L12 9z"></path></svg>
+</label>
+<input aria-label="Switch to dark mode" class="md-option" data-md-color-accent="red" data-md-color-media="(prefers-color-scheme: light)" data-md-color-primary="white" data-md-color-scheme="default" id="__palette_1" name="__palette" type="radio"/>
+<label class="md-header__button md-icon" for="__palette_2" hidden="" title="Switch to dark mode">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+</label>
+<input aria-label="Switch to system preference" class="md-option" data-md-color-accent="red" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-primary="black" data-md-color-scheme="slate" id="__palette_2" name="__palette" type="radio"/>
+<label class="md-header__button md-icon" for="__palette_0" hidden="" title="Switch to system preference">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+</label>
+</form>
+<script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+<label class="md-header__button md-icon" for="__search">
+<svg viewbox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><path d="M10.68 11.74a6 6 0 0 1-7.922-8.982 6 6 0 0 1 8.982 7.922l3.04 3.04a.749.749 0 0 1-.326 1.275.75.75 0 0 1-.734-.215ZM11.5 7a4.499 4.499 0 1 0-8.997 0A4.499 4.499 0 0 0 11.5 7"></path></svg>
+</label>
+<div class="md-search" data-md-component="search" role="dialog">
+<label class="md-search__overlay" for="__search"></label>
+<div class="md-search__inner" role="search">
+<form class="md-search__form" name="search">
+<input aria-label="Search" autocapitalize="off" autocomplete="off" autocorrect="off" class="md-search__input" data-md-component="search-query" name="query" placeholder="Search" required="" spellcheck="false" type="text"/>
+<label class="md-search__icon md-icon" for="__search">
+<svg viewbox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><path d="M10.68 11.74a6 6 0 0 1-7.922-8.982 6 6 0 0 1 8.982 7.922l3.04 3.04a.749.749 0 0 1-.326 1.275.75.75 0 0 1-.734-.215ZM11.5 7a4.499 4.499 0 1 0-8.997 0A4.499 4.499 0 0 0 11.5 7"></path></svg>
+<svg viewbox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><path d="M7.78 12.53a.75.75 0 0 1-1.06 0L2.47 8.28a.75.75 0 0 1 0-1.06l4.25-4.25a.75.75 0 0 1 1.042.018.75.75 0 0 1 .018 1.042L4.81 7h7.44a.75.75 0 0 1 0 1.5H4.81l2.97 2.97a.75.75 0 0 1 0 1.06"></path></svg>
+</label>
+<nav aria-label="Search" class="md-search__options">
+<button aria-label="Clear" class="md-search__icon md-icon" tabindex="-1" title="Clear" type="reset">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>
+</button>
+</nav>
+<div class="md-search__suggest" data-md-component="search-suggest"></div>
+</form>
+<div class="md-search__output">
+<div class="md-search__scrollwrap" data-md-scrollfix="" tabindex="0">
+<div class="md-search-result" data-md-component="search-result">
+<div class="md-search-result__meta">
+            Initializing search
+          </div>
+<ol class="md-search-result__list" role="presentation"></ol>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="md-header__source">
+<a class="md-source" data-md-component="source" href="https://github.com/anoma/nspec" title="Go to repository">
+<div class="md-source__icon md-icon">
+<svg viewbox="0 0 496 512" xmlns="http://www.w3.org/2000/svg"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8M97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"></path></svg>
+</div>
+<div class="md-source__repository">
+    anoma/nspec
+  </div>
+</a>
+</div>
+</nav>
+</header>
+<div class="md-container" data-md-component="container">
+<main class="md-main" data-md-component="main">
+<div class="md-main__inner md-grid">
+<div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation">
+<div class="md-sidebar__scrollwrap">
+<div class="md-sidebar__inner">
+<!--
+  This is a modified version of the original mkdocs-material theme.
+  Copyright (c) 2016-2025 Martin Donath <martin.donath@squidfunk.com>
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to
+  deal in the Software without restriction, including without limitation the
+  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+  sell copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in
+  all copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+  IN THE SOFTWARE.
+-->
+<!-- Determine classes -->
+<!-- Navigation -->
+<nav aria-label="Navigation" class="md-nav md-nav--primary" data-md-level="0">
+<!-- Site title -->
+<label class="md-nav__title" for="__drawer">
+<a aria-label="Anoma specs" class="md-nav__button md-logo" data-md-component="logo" href="../../../index.html" title="Anoma specs">
+<img alt="logo" src="../../../assets/logo.svg"/>
+</a>
+    Anoma specs
+  </label>
+<!-- List of Versions -->
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="https://specs.anoma.net/latest" target="_blank">
+     Latest version ((PR 356))
+      </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="https://specs.anoma.net/main">
+        Development version
+      </a>
+</li>
+</ul>
+<!-- Navigation list -->
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../index.html">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"></path></svg>
+<span class="md-ellipsis">
+    Home
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../changelog.html">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 21.5c-1.35-.85-3.8-1.5-5.5-1.5-1.65 0-3.35.3-4.75 1.05-.1.05-.15.05-.25.05-.25 0-.5-.25-.5-.5V6c.6-.45 1.25-.75 2-1 1.11-.35 2.33-.5 3.5-.5 1.95 0 4.05.4 5.5 1.5 1.45-1.1 3.55-1.5 5.5-1.5 1.17 0 2.39.15 3.5.5.75.25 1.4.55 2 1v14.6c0 .25-.25.5-.5.5-.1 0-.15 0-.25-.05-1.4-.75-3.1-1.05-4.75-1.05-1.7 0-4.15.65-5.5 1.5M12 8v11.5c1.35-.85 3.8-1.5 5.5-1.5 1.2 0 2.4.15 3.5.5V7c-1.1-.35-2.3-.5-3.5-.5-1.7 0-4.15.65-5.5 1.5m1 3.5c1.11-.68 2.6-1 4.5-1 .91 0 1.76.09 2.5.28V9.23c-.87-.15-1.71-.23-2.5-.23q-2.655 0-4.5.84zm4.5.17c-1.71 0-3.21.26-4.5.79v1.69c1.11-.65 2.6-.99 4.5-.99 1.04 0 1.88.08 2.5.24v-1.5c-.87-.16-1.71-.23-2.5-.23m2.5 2.9c-.87-.16-1.71-.24-2.5-.24-1.83 0-3.33.27-4.5.8v1.69c1.11-.66 2.6-.99 4.5-.99 1.04 0 1.88.08 2.5.24z"></path></svg>
+<span class="md-ellipsis">
+    Changelog
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item md-nav__item--section md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_3" type="checkbox"/>
+<label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+<span class="md-ellipsis">
+    Indexes
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_3_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_3">
+<span class="md-nav__icon md-icon"></span>
+            Indexes
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../indexes/tags.html">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M5.5 7A1.5 1.5 0 0 1 4 5.5 1.5 1.5 0 0 1 5.5 4 1.5 1.5 0 0 1 7 5.5 1.5 1.5 0 0 1 5.5 7m15.91 4.58-9-9C12.05 2.22 11.55 2 11 2H4c-1.11 0-2 .89-2 2v7c0 .55.22 1.05.59 1.41l8.99 9c.37.36.87.59 1.42.59s1.05-.23 1.41-.59l7-7c.37-.36.59-.86.59-1.41 0-.56-.23-1.06-.59-1.42"></path></svg>
+<span class="md-ellipsis">
+    List of tags
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../indexes/modules.html">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19 10h-2V8h2m0 5h-2v-2h2m-3-1h-2V8h2m0 5h-2v-2h2m0 6H8v-2h8m-9-5H5V8h2m0 5H5v-2h2m1 0h2v2H8m0-5h2v2H8m3 1h2v2h-2m0-5h2v2h-2m9-5H4c-1.11 0-2 .89-2 2v10a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2"></path></svg>
+<span class="md-ellipsis">
+    List of modules
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../prelude.html">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M6 2a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm0 2h7v5h5v11H6zm2 8v2h8v-2zm0 4v2h5v-2z"></path></svg>
+<span class="md-ellipsis">
+    List of basic types
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--section md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_4" type="checkbox"/>
+<label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+<span class="md-ellipsis">
+    Introduction
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_4_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_4">
+<span class="md-nav__icon md-icon"></span>
+            Introduction
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../anomian.html">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 3C6.5 3 2 6.6 2 11c0 2.1 1 4.1 2.8 5.5 0 .6-.4 2.2-2.8 4.5 0 0 3.5 0 6.5-2.5 1.1.3 2.3.5 3.5.5 5.5 0 10-3.6 10-8s-4.5-8-10-8m1 12h-2v-2h2zm1.8-5c-.3.4-.7.6-1.1.8-.3.2-.4.3-.5.5-.2.2-.2.4-.2.7h-2c0-.5.1-.8.3-1.1.2-.2.6-.5 1.1-.8.3-.1.5-.3.6-.5s.2-.5.2-.7c0-.3-.1-.5-.3-.7s-.5-.3-.8-.3-.5.1-.7.2q-.3.15-.3.6h-2c.1-.7.4-1.3.9-1.7s1.2-.5 2.1-.5 1.7.2 2.2.6.8 1 .8 1.7q.15.6-.3 1.2"></path></svg>
+<span class="md-ellipsis">
+    Anomian
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../overview.html">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M24 18.714v4.8c0 .288-.192.48-.48.48h-4.8c-.288 0-.48-.192-.48-.48v-4.8c0-.288.192-.48.48-.48h1.92v-1.92h-8.16v1.92h1.92c.288 0 .48.192.48.48v4.8c0 .288-.192.48-.48.48H9.6c-.288 0-.48-.192-.48-.48v-4.8c0-.288.192-.48.48-.48h1.92v-1.92H3.36v1.92h1.92c.288 0 .48.192.48.48v4.8c0 .288-.192.48-.48.48H.48c-.288 0-.48-.192-.48-.48v-4.8c0-.288.192-.48.48-.48H2.4v-2.4c0-.288.192-.48.48-.48h8.64v-1.44h.96v1.44h8.64c.288 0 .48.192.48.48v2.4h1.92c.288 0 .48.192.48.48m-13.92 4.32h3.84v-3.84h-3.84zm-9.12 0H4.8v-3.84H.96Zm18.24 0h3.84v-3.84H19.2ZM6.24 9.642V3.546c0-.192.096-.336.24-.432L11.76.042a.8.8 0 0 1 .48 0l5.28 3.072c.144.096.24.24.24.432v6.096c0 .144-.096.288-.24.384l-5.28 3.072q-.096.048-.24.048t-.24-.048l-5.28-3.072c-.144-.096-.24-.24-.24-.384m10.56-.288V4.362l-4.32 2.496v4.992zm-9.6 0 4.32 2.496V6.858L7.2 4.362Zm.48-5.808L12 5.994l4.32-2.448L12 1.05Z"></path></svg>
+<span class="md-ellipsis">
+    Anoma architecture
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--section md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_5" type="checkbox"/>
+<label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+<span class="md-ellipsis">
+    Node architecture
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_5_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_5">
+<span class="md-nav__icon md-icon"></span>
+            Node architecture
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+<a class="md-nav__link" href="../../node/concepts/engine.html">
+<span class="md-ellipsis">
+    Concepts
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</a>
+</li>
+<li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+<a class="md-nav__link" href="../../node/types/anoma_message.html">
+<span class="md-ellipsis">
+    Types
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</a>
+</li>
+<li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+<a class="md-nav__link" href="../../node/subsystems/hardware.html">
+<span class="md-ellipsis">
+    Subsystems
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--section md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_6" type="checkbox"/>
+<label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
+<span class="md-ellipsis">
+    System architecture
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_6_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_6">
+<span class="md-nav__icon md-icon"></span>
+            System architecture
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+<a class="md-nav__link" href="../../system/identity/identity.html">
+<span class="md-ellipsis">
+    Identity Architecture
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</a>
+</li>
+<li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+<a class="md-nav__link" href="../../system/state/resource_machine/index.html">
+<span class="md-ellipsis">
+    State Architecture
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+<input checked="" class="md-nav__toggle md-toggle" id="__nav_7" type="checkbox"/>
+<label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="">
+<span class="md-ellipsis">
+    Integrations
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="true" aria-labelledby="__nav_7_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_7">
+<span class="md-nav__icon md-icon"></span>
+            Integrations
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item md-nav__item--active md-nav__item--nested">
+<input checked="" class="md-nav__toggle md-toggle" id="__nav_7_1" type="checkbox"/>
+<div class="md-nav__link md-nav__container">
+<a class="md-nav__link" href="index.html">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 6h18V4H3c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h4v-2H3zm10 6H9v1.78c-.61.55-1 1.33-1 2.22s.39 1.67 1 2.22V20h4v-1.78c.61-.55 1-1.34 1-2.22s-.39-1.67-1-2.22zm-2 5.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5M22 8h-6c-.5 0-1 .5-1 1v10c0 .5.5 1 1 1h6c.5 0 1-.5 1-1V9c0-.5-.5-1-1-1m-1 10h-4v-8h4z"></path></svg>
+<span class="md-ellipsis">
+    Protocol Adapters
+    
+  </span>
+</a>
+<label class="md-nav__link" for="__nav_7_1" id="__nav_7_1_label" tabindex="0">
+<span class="md-nav__icon md-icon"></span>
+</label>
+</div>
+<nav aria-expanded="true" aria-labelledby="__nav_7_1_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_7_1">
+<span class="md-nav__icon md-icon"></span>
+            Protocol Adapters
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item md-nav__item--active">
+<input class="md-nav__toggle md-toggle" id="__toc" type="checkbox"/>
+<label class="md-nav__link md-nav__link--active" for="__toc">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 6h18V4H3c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h4v-2H3zm10 6H9v1.78c-.61.55-1 1.33-1 2.22s.39 1.67 1 2.22V20h4v-1.78c.61-.55 1-1.34 1-2.22s-.39-1.67-1-2.22zm-2 5.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5M22 8h-6c-.5 0-1 .5-1 1v10c0 .5.5 1 1 1h6c.5 0 1-.5 1-1V9c0-.5-.5-1-1-1m-1 10h-4v-8h4z"></path></svg>
+<span class="md-ellipsis">
+    Ethereum Virtual Machine
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<a class="md-nav__link md-nav__link--active" href="evm.html">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 6h18V4H3c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h4v-2H3zm10 6H9v1.78c-.61.55-1 1.33-1 2.22s.39 1.67 1 2.22V20h4v-1.78c.61-.55 1-1.34 1-2.22s-.39-1.67-1-2.22zm-2 5.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5M22 8h-6c-.5 0-1 .5-1 1v10c0 .5.5 1 1 1h6c.5 0 1-.5 1-1V9c0-.5-.5-1-1-1m-1 10h-4v-8h4z"></path></svg>
+<span class="md-ellipsis">
+    Ethereum Virtual Machine
+    
+  </span>
+</a>
+<nav aria-label="Table of contents" class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">
+<span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#supported-networks">
+<span class="md-ellipsis">
+      Supported Networks
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#storage">
+<span class="md-ellipsis">
+      Storage
+    </span>
+</a>
+<nav aria-label="Storage" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#commitment-accumulator">
+<span class="md-ellipsis">
+      Commitment Accumulator
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#nullifier-set">
+<span class="md-ellipsis">
+      Nullifier Set
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#blob-storage">
+<span class="md-ellipsis">
+      Blob Storage
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#hash-function">
+<span class="md-ellipsis">
+      Hash Function
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#types-computable-components">
+<span class="md-ellipsis">
+      Types &amp; Computable Components
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#proving-systems">
+<span class="md-ellipsis">
+      Proving Systems
+    </span>
+</a>
+<nav aria-label="Proving Systems" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#resource-logic-proofs">
+<span class="md-ellipsis">
+      Resource Logic Proofs
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#compliance-proofs">
+<span class="md-ellipsis">
+      Compliance Proofs
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#delta-proofs">
+<span class="md-ellipsis">
+      Delta Proofs
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#evm-and-rm-state-correspondence">
+<span class="md-ellipsis">
+      EVM and RM State Correspondence
+    </span>
+</a>
+<nav aria-label="EVM and RM State Correspondence" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#forwarder-contract">
+<span class="md-ellipsis">
+      Forwarder Contract
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#implementation-details">
+<span class="md-ellipsis">
+      Implementation Details
+    </span>
+</a>
+<nav aria-label="Implementation Details" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#calldata-carrier-resource">
+<span class="md-ellipsis">
+      Calldata Carrier Resource
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#resources-corresponding-to-external-state">
+<span class="md-ellipsis">
+      Resources Corresponding to External State
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#transaction-flow">
+<span class="md-ellipsis">
+      Transaction Flow
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--section md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_8" type="checkbox"/>
+<label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="">
+<span class="md-ellipsis">
+    Tutorials
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_8_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_8">
+<span class="md-nav__icon md-icon"></span>
+            Tutorials
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+<a class="md-nav__link" href="../../../tutorial/principles_and_guidelines.html">
+<span class="md-ellipsis">
+    Contributor guidelines
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</div>
+</div>
+</div>
+<div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc">
+<div class="md-sidebar__scrollwrap">
+<div class="md-sidebar__inner">
+<nav aria-label="Table of contents" class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">
+<span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#supported-networks">
+<span class="md-ellipsis">
+      Supported Networks
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#storage">
+<span class="md-ellipsis">
+      Storage
+    </span>
+</a>
+<nav aria-label="Storage" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#commitment-accumulator">
+<span class="md-ellipsis">
+      Commitment Accumulator
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#nullifier-set">
+<span class="md-ellipsis">
+      Nullifier Set
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#blob-storage">
+<span class="md-ellipsis">
+      Blob Storage
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#hash-function">
+<span class="md-ellipsis">
+      Hash Function
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#types-computable-components">
+<span class="md-ellipsis">
+      Types &amp; Computable Components
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#proving-systems">
+<span class="md-ellipsis">
+      Proving Systems
+    </span>
+</a>
+<nav aria-label="Proving Systems" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#resource-logic-proofs">
+<span class="md-ellipsis">
+      Resource Logic Proofs
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#compliance-proofs">
+<span class="md-ellipsis">
+      Compliance Proofs
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#delta-proofs">
+<span class="md-ellipsis">
+      Delta Proofs
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#evm-and-rm-state-correspondence">
+<span class="md-ellipsis">
+      EVM and RM State Correspondence
+    </span>
+</a>
+<nav aria-label="EVM and RM State Correspondence" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#forwarder-contract">
+<span class="md-ellipsis">
+      Forwarder Contract
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#implementation-details">
+<span class="md-ellipsis">
+      Implementation Details
+    </span>
+</a>
+<nav aria-label="Implementation Details" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#calldata-carrier-resource">
+<span class="md-ellipsis">
+      Calldata Carrier Resource
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#resources-corresponding-to-external-state">
+<span class="md-ellipsis">
+      Resources Corresponding to External State
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#transaction-flow">
+<span class="md-ellipsis">
+      Transaction Flow
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</div>
+</div>
+</div>
+<div class="md-content" data-md-component="content">
+<article class="md-content__inner md-typeset">
+<!--
+  This is a modified version of the original mkdocs-material theme.
+  Copyright (c) 2016-2025 Martin Donath <martin.donath@squidfunk.com>
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to
+  deal in the Software without restriction, including without limitation the
+  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+  sell copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in
+  all copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+  IN THE SOFTWARE.
+-->
+<!-- Tags -->
+<nav class="md-tags">
+<a class="md-tag" href="../../../indexes/tags.html#tag:evm">evm</a>
+<a class="md-tag" href="../../../indexes/tags.html#tag:protocol-adapter">protocol-adapter</a>
+<a class="md-tag" href="../../../indexes/tags.html#tag:resource-machine">resource-machine</a>
+<a class="md-tag" href="../../../indexes/tags.html#tag:work-in-progress">work-in-progress</a>
+</nav>
+<!-- Actions -->
+<!--
+  Copyright (c) 2016-2025 Martin Donath <martin.donath@squidfunk.com>
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to
+  deal in the Software without restriction, including without limitation the
+  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+  sell copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in
+  all copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+  IN THE SOFTWARE.
+-->
+<!-- Actions -->
+<!-- Edit button -->
+<a class="md-content__button md-icon" href="https://github.com/anoma/nspec/edit/main/docs/arch/integrations/adapters/evm.md" title="Edit this page">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M6 2c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4v-1.9l10-10V8l-6-6zm7 1.5L18.5 9H13zm7.1 9.5c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-2 1.8L12 20.9V23h2.1l6.1-6.1z"></path></svg>
+</a>
+<!-- View button -->
+<a class="md-content__button md-icon" href="https://github.com/anoma/nspec/raw/main/docs/arch/integrations/adapters/evm.md" title="View source of this page">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20.56 18H3.44C2.65 18 2 17.37 2 16.59V7.41C2 6.63 2.65 6 3.44 6h17.12c.79 0 1.44.63 1.44 1.41v9.18c0 .78-.65 1.41-1.44 1.41M6.81 15.19v-3.66l1.92 2.35 1.92-2.35v3.66h1.93V8.81h-1.93l-1.92 2.35-1.92-2.35H4.89v6.38zM19.69 12h-1.92V8.81h-1.92V12h-1.93l2.89 3.28z"></path></svg>
+</a>
+<!-- If the page source ends with .juvix.md, we show a button to view the raw code -->
+<!--
+  Hack: check whether the content contains a h1 headline. If it doesn't, the
+  page title (or respectively site name) is used as the main headline.
+-->
+<!-- Page content -->
+<h1 id="ethereum-virtual-machine-protocol-adapter">Ethereum Virtual Machine Protocol Adapter<a class="headerlink" href="#ethereum-virtual-machine-protocol-adapter" title="Anchor link to this section for reference">¶</a></h1>
+<p>The Ethereum Virtual Machine (EVM) protocol adapter is a smart contract written in <a href="https://soliditylang.org/">Solidity</a> that can be deployed to EVM compatible chains and rollups to connect them to the a Anoma protocol. In general, the aim of the protocol adapter is to allow Anoma applications to be run on existing EVM-compatible chains (similar to how drivers allow an operating system to be run on different pieces of physical hardware).</p>
+<p>The current prototype is a <strong>settlement-only</strong> protocol adapter, i.e., it is only capable of processing fully-evaluated transaction functions and therefore does not implement the full <a href="https://specs.anoma.net/pr-356/arch/node/engines/executor.html">executor engine</a> behavior.</p>
+<p>The implementation can be found in the <a href="https://github.com/anoma/evm-protocol-adapter"><code>anoma/evm-protocol-adapter</code> GH repo</a>.</p>
+<h2 id="supported-networks">Supported Networks<a class="headerlink" href="#supported-networks" title="Anchor link to this section for reference">¶</a></h2>
+<p>For the upcoming product version v0.3, only the <a href="https://ethereum.org/en/developers/docs/networks/#sepolia">Sepolia network</a> will be supported.</p>
+<h2 id="storage">Storage<a class="headerlink" href="#storage" title="Anchor link to this section for reference">¶</a></h2>
+<p>The protocol adapter contract inherits the following storage components</p>
+<ul>
+<li><a href="https://specs.anoma.net/pr-356/arch/system/state/resource_machine/primitive_interfaces/commitment_accumulator.html">Commitment Accumulator</a></li>
+<li><a href="https://specs.anoma.net/pr-356/arch/system/state/resource_machine/primitive_interfaces/nullifier_set.html">Nullifier Set</a></li>
+<li><a href="https://specs.anoma.net/pr-356/arch/system/state/resource_machine/notes/storage.html#Data blob storage">Blob Storage</a></li>
+</ul>
+<p>Only the protocol adapter can call <a href="https://docs.soliditylang.org/en/latest/contracts.html#view-functions">non-view functions</a> implemented by the storage components.</p>
+<h3 id="commitment-accumulator">Commitment Accumulator<a class="headerlink" href="#commitment-accumulator" title="Anchor link to this section for reference">¶</a></h3>
+<p>The implementation uses a modified version of the <a href="https://github.com/OpenZeppelin/openzeppelin-contracts/blob/v5.2.0/contracts/utils/structs/MerkleTree.sol">OpenZeppelin <code>MerkleTree</code> v.5.2.0</a> that populates the binary tree from left to right and stores leaf indices in a hash table</p>
+<div class="language-solidity highlight"><pre><span></span><code><span id="__ispan-0-1"><span class="w"> </span><span class="kt">mapping</span><span class="p">(</span><span class="kt">bytes32</span><span class="w"> </span><span class="nv">commitment</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="kt">uint256</span><span class="w"> </span><span class="nv">index</span><span class="p">)</span><span class="w"> </span><span class="kt">internal</span><span class="w"> </span>_indices<span class="p">;</span>
+</span></code></pre></div>
+<p>allowing for commitment existence checks.</p>
+<p>In addition to the leaves, the <a href="https://github.com/anoma/evm-protocol-adapter/blob/main/src/state/CommitmentAccumulator.sol">modified implementation</a> stores also the intermediary node hashes.</p>
+<p>Historical Merkle tree roots are stored in an <a href="https://github.com/OpenZeppelin/openzeppelin-contracts/blob/v5.2.0/contracts/utils/structs/EnumerableSet.sol">OpenZeppelin <code>EnumerableSet</code> v5.2.0</a> allowing for existence checks.</p>
+<h3 id="nullifier-set">Nullifier Set<a class="headerlink" href="#nullifier-set" title="Anchor link to this section for reference">¶</a></h3>
+<p>The implementation uses an <a href="https://github.com/OpenZeppelin/openzeppelin-contracts/blob/v5.2.0/contracts/utils/structs/EnumerableSet.sol">OpenZeppelin <code>EnumerableSet</code> v5.2.0</a> to store nullifiers of consumed resources and allow for existence checks.</p>
+<h3 id="blob-storage">Blob Storage<a class="headerlink" href="#blob-storage" title="Anchor link to this section for reference">¶</a></h3>
+<p>The <a href="https://github.com/anoma/evm-protocol-adapter/blob/main/src/state/BlobStorage.sol">implementation</a> uses a simple hash table to store blobs content-addressed.</p>
+<div class="language-solidity highlight"><pre><span></span><code><span id="__ispan-1-1"><span class="kt">mapping</span><span class="p">(</span><span class="kt">bytes32</span><span class="w"> </span><span class="nv">blobHash</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="kt">bytes</span><span class="w"> </span><span class="nv">blob</span><span class="p">)</span><span class="w"> </span><span class="kt">internal</span><span class="w"> </span>_blobs<span class="p">;</span>
+</span></code></pre></div>
+<p>From the <a href="https://specs.anoma.net/pr-356/arch/system/state/resource_machine/notes/storage.html#data-blob-storage">list of deletion criteria</a>, the current blob storage implementation supports the following two:</p>
+<div class="language-solidity highlight"><pre><span></span><code><span id="__ispan-2-1"><span class="kt">enum</span><span class="w"> </span><span class="nv">DeletionCriterion</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__ispan-2-2"><span class="w">    </span>Immediately<span class="p">,</span>
+</span><span id="__ispan-2-3"><span class="w">    </span>Never
+</span><span id="__ispan-2-4"><span class="p">}</span>
+</span></code></pre></div>
+<h2 id="hash-function">Hash Function<a class="headerlink" href="#hash-function" title="Anchor link to this section for reference">¶</a></h2>
+<p>For hashing, we compute the SHA-256 hash of the <a href="https://docs.soliditylang.org/en/latest/abi-spec.html#strict-encoding-mode">strictly ABI-encoded</a> data. SHA-256 is available as a pre-compile in both the <a href="https://www.evm.codes/precompiled">EVM</a> and <a href="https://dev.risczero.com/api/zkvm/precompiles">RISC ZERO zkVM</a>.</p>
+<h2 id="types-computable-components">Types &amp; Computable Components<a class="headerlink" href="#types-computable-components" title="Anchor link to this section for reference">¶</a></h2>
+<p>The RM-related type and computable component definitions in Solidity can be found in the <a href="https://github.com/anoma/evm-protocol-adapter/blob/main/src/Types.sol"><code>src/Types.sol</code></a> and <a href="https://github.com/anoma/evm-protocol-adapter/blob/main/src/libs/ComputableComponents.sol"><code>src/libs/ComputableComponents.sol</code></a> file, respectively.</p>
+<h2 id="proving-systems">Proving Systems<a class="headerlink" href="#proving-systems" title="Anchor link to this section for reference">¶</a></h2>
+<p>For <a href="#resource-logic-proofs">resource logic proof</a> and <a href="#compliance-proofs">compliance proof</a> generation, we use <a href="https://risczero.com/">RISC ZERO</a>'s proving libraries.</p>
+<p>For proof verification, we use the <a href="https://dev.risczero.com/api/blockchain-integration/contracts/verifier#contract-addresses">RISC ZERO verifier contracts</a>.</p>
+<h3 id="resource-logic-proofs">Resource Logic Proofs<a class="headerlink" href="#resource-logic-proofs" title="Anchor link to this section for reference">¶</a></h3>
+<p>For the current prototype and the only supported example application <a href="https://research.anoma.net/t/basic-e2e-shielded-kudos-app/1237">basic shielded Kudos </a>, we use a specific circuit resulting in the loss of function privacy. This will be improved in future iterations.</p>
+<p>The associated types are defined in <a href="https://github.com/anoma/evm-protocol-adapter/blob/main/src/proving/Compliance.sol"><code>proving/Compliance.sol</code></a>.</p>
+<h3 id="compliance-proofs">Compliance Proofs<a class="headerlink" href="#compliance-proofs" title="Anchor link to this section for reference">¶</a></h3>
+<p>Compliance units have a fixed size and contain references to one consumed and one created resource. For transaction with <span class="arithmatex">\(n_\text{consumed} \neq n_\text{created}\)</span>, we expect padding resources (ephemeral resources with quantity 0) to be used.</p>
+<p>The associated types are defined in <a href="https://github.com/anoma/evm-protocol-adapter/blob/main/src/proving/Compliance.sol"><code>proving/Compliance.sol</code></a>.</p>
+<h3 id="delta-proofs">Delta Proofs<a class="headerlink" href="#delta-proofs" title="Anchor link to this section for reference">¶</a></h3>
+<p>The delta values are computed as 2D points (<code>uint256[2]</code>) on the <code>secp256k1</code> (K-256) curve and can be verified using ECDSA.</p>
+<p>The curve implementation is taken from <a href="https://github.com/witnet/elliptic-curve-solidity/tree/0.2.1">Witnet's <code>eliptic-curve-solidity</code> library v0.2.1</a>. This includes</p>
+<ul>
+<li><a href="https://github.com/witnet/elliptic-curve-solidity/blob/0.2.1/examples/Secp256k1.sol">curve parameters</a></li>
+<li><a href="https://github.com/witnet/elliptic-curve-solidity/blob/3510760b0f20c1156aea795e68b30fe62ce7c20f/contracts/EllipticCurve.sol#L165">curve addition</a> (<code>ecAdd</code>)</li>
+<li><a href="https://github.com/witnet/elliptic-curve-solidity/blob/3510760b0f20c1156aea795e68b30fe62ce7c20f/contracts/EllipticCurve.sol#L239">curve multiplication</a> (<code>ecMul</code>)</li>
+</ul>
+<p>We use the zero delta public key derived from the private key <code>0</code>.</p>
+<p>As the message digest, we use the transaction hash that we've defined as follows (see <a href="https://github.com/anoma/evm-protocol-adapter/blob/main/src/ProtocolAdapter.sol"><code>src/ProtocolAdapter.sol</code></a>):</p>
+<div class="language-solidity highlight"><pre><span></span><code><span id="__ispan-3-1"><span class="kt">function</span><span class="w"> </span><span class="nv">_transactionHash</span><span class="p">(</span><span class="kt">bytes32</span><span class="p">[]</span><span class="w"> </span><span class="kt">memory</span><span class="w"> </span>tags<span class="p">)</span><span class="w"> </span><span class="kt">internal</span><span class="w"> </span>pure<span class="w"> </span><span class="kt">returns</span><span class="w"> </span><span class="p">(</span><span class="kt">bytes32</span><span class="w"> </span><span class="nv">txHash</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__ispan-3-2"><span class="w">    </span>txHash<span class="w"> </span><span class="o">=</span><span class="w"> </span>sha256<span class="p">(</span>abi<span class="p">.</span>encode<span class="p">(</span>tags<span class="p">));</span>
+</span><span id="__ispan-3-3"><span class="p">}</span>
+</span></code></pre></div>
+<p>For key recovery from the message digest and signature, we use <a href="https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/utils/cryptography/ECDSA.sol">OpenZeppelin's <code>ECDSA</code> library</a>.</p>
+<h2 id="evm-and-rm-state-correspondence">EVM and RM State Correspondence<a class="headerlink" href="#evm-and-rm-state-correspondence" title="Anchor link to this section for reference">¶</a></h2>
+<p>Taking a protocol adapter contract-centric viewpoint, we distinguish between two types of EVM state:</p>
+<ol>
+<li>Internal <a href="https://specs.anoma.net/pr-356/arch/system/state/resource_machine/index.html">resource machine (RM)</a> state being maintained inside the protocol adapter contract that is constituted by commitments, nullifiers, and blobs (see <a href="#storage">Storage</a>).</li>
+<li>External state existing in smart contracts which are independent of the protocol adapter and its internal RM state.</li>
+</ol>
+<p>To <strong>interoperate with state in external contracts</strong>, the protocol adapter contract can, during transaction execution, <strong>make read and write calls</strong> to them and <strong>create and consume corresponding resources</strong> in its internal state reflecting the external state reads and writes.</p>
+<p>We achieve this by creating an indirection layer separating the protocol adapter from the
+the external contract and resources that should be created and consumed in consequence. It consists of:
+- A <a href="#forwarder-contract">forwarder contract</a> that
+    - performs the actual state read or write calls into the target contract and returns eventual return data
+    - is custom-built for the target contract to call and permissionlessly deployed by 3rd parties
+- A <a href="#calldata-carrier-resource">calldata carrier resource</a> (singleton) that
+    - must be part of the action data structure containing the forwarder call instruction
+    - carries the inputs and outputs of the forwarded call
+    - expresses constraints over other resources that must be present and correspond to the external call</p>
+<p>and allows the protocol adapter to ensure the correspondence.</p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="https://specs.anoma.net/pr-356/images/pa-evm.drawio.svg"><img alt="Schematic depiction of the state correspondence design." src="https://specs.anoma.net/pr-356/images/pa-evm.drawio.svg"/></a></p>
+<p>This works as follows:</p>
+<p>The protocol adapter accepts an optional <code>ForwarderCalldata</code> struct with the RM transaction object as part of the action object (see <a href="https://github.com/anoma/evm-protocol-adapter/blob/main/src/Types.sol"><code>src/Types.sol</code></a>):</p>
+<p><div class="language-solidity highlight"><pre><span></span><code><span id="__ispan-4-1"><span class="kt">struct</span><span class="w"> </span><span class="nv">ForwarderCalldata</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__ispan-4-2"><span class="w">    </span><span class="kt">address</span><span class="w"> </span><span class="nv">untrustedForwarderContract</span><span class="p">;</span>
+</span><span id="__ispan-4-3"><span class="w">    </span><span class="kt">bytes</span><span class="w"> </span><span class="nv">input</span><span class="p">;</span>
+</span><span id="__ispan-4-4"><span class="w">    </span><span class="kt">bytes</span><span class="w"> </span><span class="nv">output</span><span class="p">;</span>
+</span><span id="__ispan-4-5"><span class="p">}</span>
+</span></code></pre></div>
+The struct contains the address of the <a href="#forwarder-contract">forwarder contract</a> and <code>bytes input</code> data required for the intended state read or write calls on the target contract. It also contains the <code>bytes output</code> data that must match the data returned from the call.</p>
+<p>The protocol adapter ensures the <code>ForwarderCalldata</code> is part of the app data of the <a href="#calldata-carrier-resource">singleton calldata carrier resources</a> that has a pre-determined kind being referenced in the forwarder contract.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>In the current, settlement-only protocol adapter design, the <code>output</code> data must already be known during proving time to be checked by resource logics and therefore is part of the <code>ForwarderCalldata</code> struct.</p>
+</div>
+<p>The binding between the created calldata carrier resource and the called forwarder contract is ensured through the protocol adapter, which</p>
+<ol>
+<li>is the exclusive caller of the forwarder contract,</li>
+<li>ensures the presence of the created calldata carrier resource in correspondence to the call in the transaction,</li>
+<li>ensures that the forwarder contract call input data, call output data, and address is available in the app data entry of the created calldata carrier resource under its commitment,</li>
+<li>ensures that the kind of the created calldata carrier resource matches the kind being immutably referenced in the forwarder contract. This way, the calldata carrier resource logic and label are fully determined by the forwarder contract.</li>
+</ol>
+<p>Because the calldata carrier resource is a singleton, we know that the consumption of the old carrier is guaranteed through the transaction balance property.</p>
+<p>The created calldata carrier resource, in turn, can enforce creation or consumption of other <a href="#resources-corresponding-to-external-state">resources corresponding to external state</a>.</p>
+<p>In the following we describe the components in more detail.</p>
+<h3 id="forwarder-contract">Forwarder Contract<a class="headerlink" href="#forwarder-contract" title="Anchor link to this section for reference">¶</a></h3>
+<p>The forwarder contract</p>
+<ul>
+<li>is only callable by the protocol adapter</li>
+<li>has the address to the external contract it corresponds to</li>
+<li>forwards arbitrary calls to the external contract to read and write its state and changes the call context (i.e., <a href="https://docs.soliditylang.org/en/latest/units-and-global-variables.html#block-and-transaction-properties"><code>msg.sender</code> and <code>msg.data</code></a>)</li>
+<li>returns the call return data to the protocol adapter</li>
+</ul>
+<p>The resulting indirection has the purpose to keep custom logic such as</p>
+<ul>
+<li>callback logic (e.g., required by <a href="https://eips.ethereum.org/EIPS/eip-721">ERC-721</a> or <a href="https://eips.ethereum.org/EIPS/eip-1155">ERC-1155</a> tokens)</li>
+<li>escrow logic (e.g., required to wrap owned state into resources)</li>
+<li>event logic (e.g., required for EVM indexers)</li>
+</ul>
+<p>separate and independent from the protocol adapter contract. This allows the forwarder contract to be custom-built and permissionlessly deployed by untrusted 3rd parties.</p>
+<p>Besides referencing the external contract by its address, the forwarder contract must also reference the
+the resource kind of the associated <a href="#calldata-carrier-resource">calldata carrier resource</a> that the protocol adapter will require be created. This allows the forwarder contract to also to enforce its own contract address to be part of the carrier resource label, which ensures that the correspondence between the forwarder and carrier resource is unique.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The mutual dependency between
+- the calldata carrier resource label containing the forwarder contract address
+- the forwarder contract referencing the calldata carrier resource label</p>
+<p>can be established by deterministic deployment or post-deployment initialization of the forwarder contract.</p>
+</div>
+<h2 id="implementation-details">Implementation Details<a class="headerlink" href="#implementation-details" title="Anchor link to this section for reference">¶</a></h2>
+<p>A minimal implementation is shown below:</p>
+<div class="language-solidity highlight"><pre><span></span><code><span id="__ispan-5-1"><span class="k">contract</span><span class="w"> </span><span class="ni">ExampleForwarder</span><span class="w"> </span><span class="kt">is</span><span class="w"> </span>Ownable<span class="w"> </span><span class="p">{</span>
+</span><span id="__ispan-5-2"><span class="w">  </span><span class="kt">bytes32</span><span class="w"> </span><span class="k">internal </span><span class="nv">immutable</span><span class="w"> </span>_CALLDATA_CARRIER_RESOURCE_KIND<span class="p">;</span>
+</span><span id="__ispan-5-3"><span class="w">  </span><span class="kt">address</span><span class="w"> </span><span class="k">internal </span><span class="nv">immutable</span><span class="w"> </span>_CONTRACT<span class="p">;</span>
+</span><span id="__ispan-5-4">
+</span><span id="__ispan-5-5"><span class="w">    </span><span class="kt">constructor</span><span class="p">(</span><span class="kt">address</span><span class="w"> </span><span class="nv">protocolAdapter</span><span class="p">,</span><span class="w"> </span><span class="kt">bytes32</span><span class="w"> </span><span class="nv">calldataCarrierLogicRef</span><span class="p">)</span><span class="w"> </span>Ownable<span class="p">(</span>protocolAdapter<span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__ispan-5-6"><span class="w">        </span>_CALLDATA_CARRIER_RESOURCE_KIND<span class="w"> </span><span class="o">=</span><span class="w"> </span>ComputableComponents<span class="p">.</span>kind<span class="p">({</span>
+</span><span id="__ispan-5-7"><span class="w">            </span>logicRef<span class="o">:</span><span class="w"> </span>calldataCarrierLogicRef<span class="p">,</span>
+</span><span id="__ispan-5-8"><span class="w">            </span>labelRef<span class="o">:</span><span class="w"> </span>sha256<span class="p">(</span>abi<span class="p">.</span>encode<span class="p">(</span><span class="kt">address</span><span class="p">(</span><span class="kt">this</span><span class="p">)))</span>
+</span><span id="__ispan-5-9"><span class="w">        </span><span class="p">});</span>
+</span><span id="__ispan-5-10"><span class="w">    </span><span class="p">}</span>
+</span><span id="__ispan-5-11">
+</span><span id="__ispan-5-12"><span class="w">  </span><span class="kt">function</span><span class="w"> </span><span class="nv">forwardCall</span><span class="p">(</span><span class="kt">bytes</span><span class="w"> </span><span class="nv">calldata</span><span class="w"> </span>input<span class="p">)</span><span class="w"> </span><span class="kt">external</span><span class="w"> </span>onlyOwner<span class="w"> </span><span class="kt">returns</span><span class="w"> </span><span class="p">(</span><span class="kt">bytes</span><span class="w"> </span><span class="nv">memory</span><span class="w"> </span>output<span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__ispan-5-13"><span class="w">      </span>output<span class="w"> </span><span class="o">=</span><span class="w"> </span>_CONTRACT<span class="p">.</span>functionCall<span class="p">(</span>input<span class="p">);</span>
+</span><span id="__ispan-5-14"><span class="w">  </span><span class="p">}</span>
+</span><span id="__ispan-5-15">
+</span><span id="__ispan-5-16"><span class="w">  </span><span class="kt">function</span><span class="w"> </span><span class="nv">calldataCarrierResourceKind</span><span class="p">()</span><span class="w"> </span><span class="kt">external</span><span class="w"> </span>view<span class="w"> </span><span class="kt">returns</span><span class="w"> </span><span class="p">(</span><span class="kt">bytes32</span><span class="w"> </span><span class="nv">kind</span><span class="p">){</span>
+</span><span id="__ispan-5-17"><span class="w">      </span>kind<span class="w"> </span><span class="o">=</span><span class="w"> </span>_CALLDATA_CARRIER_RESOURCE_KIND<span class="p">;</span>
+</span><span id="__ispan-5-18"><span class="w">  </span><span class="p">}</span>
+</span><span id="__ispan-5-19"><span class="p">}</span>
+</span></code></pre></div>
+<p>The required calldata is passed with the RM transaction object as part of the <code>Action</code> struct (see <a href="https://github.com/anoma/evm-protocol-adapter/blob/main/src/Types.sol"><code>src/Types.sol</code></a>).</p>
+<div class="language-solidity highlight"><pre><span></span><code><span id="__ispan-6-1"><span class="kt">struct</span><span class="w"> </span><span class="nv">ForwarderCalldata</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__ispan-6-2"><span class="w">    </span><span class="kt">address</span><span class="w"> </span><span class="nv">untrustedForwarderContract</span><span class="p">;</span>
+</span><span id="__ispan-6-3"><span class="w">    </span><span class="kt">bytes</span><span class="w"> </span><span class="nv">input</span><span class="p">;</span>
+</span><span id="__ispan-6-4"><span class="w">    </span><span class="kt">bytes</span><span class="w"> </span><span class="nv">output</span><span class="p">;</span>
+</span><span id="__ispan-6-5"><span class="p">}</span>
+</span></code></pre></div>
+<p>On transaction execution by the protocol adapter, the <code>ForwarderCalldata</code> struct is processed as follows:</p>
+<div class="language-solidity highlight"><pre><span></span><code><span id="__ispan-7-1"><span class="kt">function</span><span class="w"> </span><span class="nv">_executeForwarderCall</span><span class="p">(</span>ForwarderCalldata<span class="w"> </span>calldata<span class="w"> </span>call<span class="p">)</span><span class="w"> </span><span class="kt">internal</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__ispan-7-2"><span class="w">    </span><span class="kt">bytes</span><span class="w"> </span><span class="nv">memory</span><span class="w"> </span>output<span class="w"> </span><span class="o">=</span><span class="w"> </span>IForwarder<span class="p">(</span>call<span class="p">.</span>untrustedForwarder<span class="p">).</span>forwardCall<span class="p">(</span>call<span class="p">.</span>input<span class="p">);</span>
+</span><span id="__ispan-7-3">
+</span><span id="__ispan-7-4"><span class="w">    </span><span class="kt">if</span><span class="w"> </span><span class="p">(</span><span class="nb">keccak256</span><span class="p">(</span>output<span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="nb">keccak256</span><span class="p">(</span>call<span class="p">.</span>output<span class="p">))</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__ispan-7-5"><span class="w">        </span>revert<span class="w"> </span>ForwarderCallOutputMismatch<span class="p">({</span><span class="w"> </span>expected<span class="o">:</span><span class="w"> </span>call<span class="p">.</span>output<span class="p">,</span><span class="w"> </span>actual<span class="o">:</span><span class="w"> </span>output<span class="w"> </span><span class="p">});</span>
+</span><span id="__ispan-7-6"><span class="w">    </span><span class="p">}</span>
+</span><span id="__ispan-7-7"><span class="p">}</span>
+</span></code></pre></div>
+<p>The forwarder contract base class can be found in <a href="https://github.com/anoma/evm-protocol-adapter/blob/main/src/ForwarderBase.sol"><code>src/ForwarderBase.sol</code></a>.</p>
+<h3 id="calldata-carrier-resource">Calldata Carrier Resource<a class="headerlink" href="#calldata-carrier-resource" title="Anchor link to this section for reference">¶</a></h3>
+<p>A calldata carrier resource is a singleton (i.e., it has a unique kind ensuring that only a single instance with quantity 1 exists) being bound to an associated forwarder contract.
+By default, calldata carrier resources can be consumed by everyone (because their nullifier key commitment is derived from the universal identity).</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>When the singleton calldata carrier resource is consumed in a transaction, subsequent transactions in the same block cannot consume it anymore. This effectively limits the current design to a single forwarder contract call per block (if the commitment of the latest, unspent calldata carrier resource is not known to the subsequent transaction ahead of time). This will be improved in upcoming protocol adapter versions.</p>
+</div>
+<p>The calldata carrier resource object is passed to the protocol adapter together with the <code>ForwarderCalldata</code> struct (see <a href="https://github.com/anoma/evm-protocol-adapter/blob/6cdf69b92f58d56dc13df1c0b52539295ea59814/src/Types.sol#L31"><code>src/Types.sol</code></a>):</p>
+<div class="language-solidity highlight"><pre><span></span><code><span id="__ispan-8-1"><span class="kt">struct</span><span class="w"> </span><span class="nv">ResourceForwarderCalldataPair</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__ispan-8-2"><span class="w">    </span>Resource<span class="w"> </span>carrier<span class="p">;</span>
+</span><span id="__ispan-8-3"><span class="w">    </span>ForwarderCalldata<span class="w"> </span>call<span class="p">;</span>
+</span><span id="__ispan-8-4"><span class="p">}</span>
+</span></code></pre></div>
+<p>This allows the protocol adapter to ensure that
+1. the calldata carrier resource kind matches the one referenced in the forwarder contract and
+2. a corresponding <code>action.appData</code> entry exists for the calldata carrier resource commitment tag that includes the <code>ForwarderCalldata</code>.</p>
+<p>The latter allows calldata carrier to inspect the <code>bytes input</code> and <code>bytes output</code> in the <code>ForwarderCalldata</code>
+and ensure the creation and consumption of <a href="#resources-corresponding-to-external-state">resources corresponding to the external state reads or writes</a> in the same action.
+Moreover, it can integrity check that its own label matches the <code>untrustedForwarderContract</code> address.</p>
+<p>This enables applications, such as wrapping <a href="https://eips.ethereum.org/EIPS/eip-20">ERC20</a> tokens into resources, which works by
+1. transferring tokens from an owner into the forwarder contract via <code>transferFrom</code> and
+2. initializing an owned resource with a corresponding quantity and the kind being specified in the forwarder contract.</p>
+<h3 id="resources-corresponding-to-external-state">Resources Corresponding to External State<a class="headerlink" href="#resources-corresponding-to-external-state" title="Anchor link to this section for reference">¶</a></h3>
+<p>Resources can correspond to EVM state and correspond to a specific <a href="#calldata-carrier-resource">calldata carrier resource</a> kind being referenced in their label. Their initialization and finalization logic requires a created calldata carrier resource to be part of the same action.</p>
+<h2 id="transaction-flow">Transaction Flow<a class="headerlink" href="#transaction-flow" title="Anchor link to this section for reference">¶</a></h2>
+<p>The protocol adapter transaction flow is shown below:</p>
+<pre class="mermaid"><code>sequenceDiagram
+  autonumber
+  title: Transaction Flow of the Settlement-Only EVM Protocol Adapter
+
+
+  actor Alice as User Alice
+  actor Bob as User Bob
+
+  Note over TF, R0B: Resource Logic, Compliance, &lt;br&gt; and Delta Proof Computation
+  box Anoma Client (Local)
+    participant TF as Transaction&lt;br&gt;Function
+    participant R0B as RISC ZERO&lt;br&gt;Backend
+  end
+
+  Alice -&gt;&gt; TF: call
+
+  par Local Proving
+  activate TF
+    TF -&gt;&gt; R0B: prove
+    R0B --&gt;&gt; TF: proofs
+  end
+  TF -&gt;&gt; IP: send tx1 (intent)
+  deactivate TF
+
+  Bob -&gt;&gt; TF: call
+
+  activate TF
+    TF -&gt;&gt; IP: send tx2 (intent)
+  deactivate TF
+
+  Note over IP, Sally: Intent Matching
+  box Anoma P2P Node
+    participant IP as Intent&lt;br&gt;Pool
+    actor Sally as Solver Sally
+  end
+
+  Sally --&gt;&gt; IP: monitor pool
+  activate Sally
+    Sally -&gt;&gt; Sally: compose(tx1,tx2)
+
+    box EVM
+      participant R0V as RISC ZERO&lt;br&gt;Verifier Contract
+      participant PA as Protocol Adapter&lt;br&gt;Contract
+      participant Forwarder as Forwarder&lt;br&gt;Contract
+      participant Ext as External&lt;br&gt;Contract
+    end
+    Sally -&gt;&gt; PA: eth_sendTransaction [execute(tx)]
+  deactivate Sally
+
+  %%par verify(tx)
+  PA -&gt;&gt; R0V: verify(tx)
+  %%end
+
+  par Settlement
+    opt Optional Forwarder Calls
+      Note over PA,Ext: Read/write external state
+      PA -&gt;&gt; Forwarder: Forwarder Call &lt;br&gt;forwardCall(call.input)
+      Forwarder -&gt;&gt; Ext: Forwarded Call
+      opt
+        Ext --&gt;&gt; Forwarder: Return Data
+      end
+      Forwarder --&gt;&gt; PA: Return Data&lt;br&gt;call.output
+    end
+    Note over PA: Update internal state
+    PA -&gt;&gt; PA: add nullifiers,&lt;br&gt;commitments, blobs
+  end
+</code></pre>
+<ol>
+<li>A user Alice calls a transaction function of a Juvix application to produce an ARM transaction object (here expressing an intent) as well as the instances and witnesses for the various proof types (resource logic, compliance, and delta proofs).</li>
+<li>The transaction function requests proofs from the RISC ZERO backend.</li>
+<li>The backend returns the proofs for the transaction object.</li>
+<li>The Anoma client sends the intent transaction object
+   to the intent pool.</li>
+<li>Another user Bob expresses his intent (see 1. to 3.).</li>
+<li>See 4.</li>
+<li>A solver Sally monitors the intent pool and sees the intent transactions by Alice and Bob and finds a match (using her algorithm).</li>
+<li>Sally composes the the intent transactions and adds her own actions s.t. the transaction becomes balanced &amp; valid. She converts the transaction object into the format required by the EVM protocol adapter.</li>
+<li>Sally being connected to an Ethereum node makes an <a href="https://ethereum.org/en/developers/docs/apis/json-rpc/#eth_sendtransaction"><code>eth_sendTransaction</code></a> call into the protocol adapter's <code>execute(Transaction tx)</code> function, which she signs with the private key of her account.</li>
+<li>The protocol adapter verifies the proofs from 3. by calling a RISC ZERO verifier contract deployed on the network.</li>
+<li>The protocol adapter makes an optional forwarder contract call by using the <code>ForwarderCalldata.input</code> data.</li>
+<li>The forwarder contract forwards the call to an external target contract to read from or write to its state.</li>
+<li>Optional return data is passed back to the forwarder contract.</li>
+<li>Return data (that can be empty) is passed to the protocol adapter contract allowing it to conduct integrity checks (by requiring the same data to be part of <code>action.appData</code>).</li>
+<li>The protocol adapter updates its internal state by storing<p>- nullifiers of consumed resources</p>
+<p>- commitments of created resources</p>
+<p>- blobs with deletion criteria <code>!= DeletionCriterion.Immediately</code>.</p>
+</li>
+</ol>
+<!-- list_wikilinks -->
+<!-- Source file information -->
+<!-- Was this page helpful? -->
+<!-- Comment system -->
+</article>
+</div>
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+</div>
+</main>
+<footer class="md-footer">
+<nav aria-label="Footer" class="md-footer__inner md-grid">
+<a aria-label="Previous: Protocol Adapters" class="md-footer__link md-footer__link--prev" href="index.html">
+<div class="md-footer__button md-icon">
+<svg viewbox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><path d="M7.78 12.53a.75.75 0 0 1-1.06 0L2.47 8.28a.75.75 0 0 1 0-1.06l4.25-4.25a.75.75 0 0 1 1.042.018.75.75 0 0 1 .018 1.042L4.81 7h7.44a.75.75 0 0 1 0 1.5H4.81l2.97 2.97a.75.75 0 0 1 0 1.06"></path></svg>
+</div>
+<div class="md-footer__title">
+<span class="md-footer__direction">
+                Previous
+              </span>
+<div class="md-ellipsis">
+                Protocol Adapters
+              </div>
+</div>
+</a>
+<a aria-label="Next: Global principles and guidelines" class="md-footer__link md-footer__link--next" href="../../../tutorial/principles_and_guidelines.html">
+<div class="md-footer__title">
+<span class="md-footer__direction">
+                Next
+              </span>
+<div class="md-ellipsis">
+                Global principles and guidelines
+              </div>
+</div>
+<div class="md-footer__button md-icon">
+<svg viewbox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><path d="M8.22 2.97a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.042-.018.75.75 0 0 1-.018-1.042l2.97-2.97H3.75a.75.75 0 0 1 0-1.5h7.44L8.22 4.03a.75.75 0 0 1 0-1.06"></path></svg>
+</div>
+</a>
+</nav>
+<div class="md-footer-meta md-typeset">
+<div class="md-footer-meta__inner md-grid">
+<div class="md-copyright">
+<div class="md-copyright__highlight">
+      © 2025 <a href="https://anoma.net">Anoma Foundation</a>
+</div>
+<strong>Version: (PR 356) - Updated: April 29,
+    2025 at 02:26 PM UTC</strong>
+<br/>
+<strong>Latest version: <a href="https://specs.anoma.net/latest">
+    https://specs.anoma.net/latest</a></strong>
+<br/>
+<strong>Development version: <a href="https://specs.anoma.net/main">
+    https://specs.anoma.net/main</a></strong>
+<br/>
+<strong>Anoma Official Resources:</strong>
+<small> <a href="https://anoma.net/" target="_blank">Website</a> | <a href="https://art.anoma.net" target="_blank">Research</a> | <a href="https://anoma.net/blog" target="_blank">Blog</a> | <a href="https://anoma.net/talks" target="_blank">Talks</a> </small>
+<br/>
+<strong>For Specification Authors:</strong>
+<small>
+<a href="https://specs.anoma.net/pr-356/indexes/tags.html">Tags</a>
+    | <a href="https://specs.anoma.net/pr-356/indexes/links.html">Quick links</a>
+    | <a href="https://specs.anoma.net/pr-356/indexes/juvix_modules.html">Juvix modules</a>
+    | <a href="https://specs.anoma.net/pr-356/tutorial/index.html">Guides</a>
+</small>
+</div>
+<div class="md-social">
+<a class="md-social__link" href="https://x.com/anoma" rel="noopener" target="_blank" title="x.com">
+<svg viewbox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M389.2 48h70.6L305.6 224.2 487 464H345L233.7 318.6 106.5 464H35.8l164.9-188.5L26.8 48h145.6l100.5 132.9zm-24.8 373.8h39.1L151.1 88h-42z"></path></svg>
+</a>
+<a class="md-social__link" href="https://github.com/anoma" rel="noopener" target="_blank" title="github.com">
+<svg viewbox="0 0 496 512" xmlns="http://www.w3.org/2000/svg"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8M97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"></path></svg>
+</a>
+<a class="md-social__link" href="https://anoma.net/blog" rel="noopener" target="_blank" title="anoma.net">
+<svg viewbox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M192 32c0 17.7 14.3 32 32 32 123.7 0 224 100.3 224 224 0 17.7 14.3 32 32 32s32-14.3 32-32C512 128.9 383.1 0 224 0c-17.7 0-32 14.3-32 32m0 96c0 17.7 14.3 32 32 32 70.7 0 128 57.3 128 128 0 17.7 14.3 32 32 32s32-14.3 32-32c0-106-86-192-192-192-17.7 0-32 14.3-32 32m-96 16c0-26.5-21.5-48-48-48S0 117.5 0 144v224c0 79.5 64.5 144 144 144s144-64.5 144-144-64.5-144-144-144h-16v96h16c26.5 0 48 21.5 48 48s-21.5 48-48 48-48-21.5-48-48z"></path></svg>
+</a>
+<a class="md-social__link" href="https://research.anoma.net" rel="noopener" target="_blank" title="research.anoma.net">
+<svg viewbox="0 0 448 512" xmlns="http://www.w3.org/2000/svg"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M225.9 32C103.3 32 0 130.5 0 252.1 0 256 .1 480 .1 480l225.8-.2c122.7 0 222.1-102.3 222.1-223.9S348.6 32 225.9 32M224 384c-19.4 0-37.9-4.3-54.4-12.1L88.5 392l22.9-75c-9.8-18.1-15.4-38.9-15.4-61 0-70.7 57.3-128 128-128s128 57.3 128 128-57.3 128-128 128"></path></svg>
+</a>
+<a class="md-social__link" href="https://youtube.com/anoma" rel="noopener" target="_blank" title="youtube.com">
+<svg viewbox="0 0 576 512" xmlns="http://www.w3.org/2000/svg"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M549.655 124.083c-6.281-23.65-24.787-42.276-48.284-48.597C458.781 64 288 64 288 64S117.22 64 74.629 75.486c-23.497 6.322-42.003 24.947-48.284 48.597-11.412 42.867-11.412 132.305-11.412 132.305s0 89.438 11.412 132.305c6.281 23.65 24.787 41.5 48.284 47.821C117.22 448 288 448 288 448s170.78 0 213.371-11.486c23.497-6.321 42.003-24.171 48.284-47.821 11.412-42.867 11.412-132.305 11.412-132.305s0-89.438-11.412-132.305m-317.51 213.508V175.185l142.739 81.205z"></path></svg>
+</a>
+<a class="md-social__link" href="mailto:arts@heliax.dev" rel="noopener" target="_blank" title="">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="m20 8-8 5-8-5V6l8 5 8-5m0-2H4c-1.11 0-2 .89-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2"></path></svg>
+</a>
+</div>
+</div>
+</div>
+</footer>
+</div>
+<div class="md-dialog" data-md-component="dialog">
+<div class="md-dialog__inner md-typeset"></div>
+</div>
+<script id="__config" type="application/json">{"base": "../../..", "features": ["announce.dismiss", "content.code.annotate", "content.code.copy", "content.tooltips", "content.action.edit", "content.action.view", "search.highlight", "search.suggest", "search.sharing", "navigation.instant.preview", "navigation.tracking", "navigation.prune", "navigation.indexes", "navigation.sections", "navigation.footer", "navigation.path", "toc.follow"], "search": "../../../assets/javascripts/workers/search.f8cc74c7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+<script src="../../../assets/javascripts/bundle.c8b220af.min.js"></script>
+<script src="../../../assets/js/extra.js"></script>
+<script src="../../../assets/js/highlight.js"></script>
+<script src="../../../assets/js/mathjax.js"></script>
+<script src="../../../assets/js/tex-svg-full.js"></script>
+<script id="init-glightbox">const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "slide"});
+document$.subscribe(() => { lightbox.reload() });
+</script></body>
+</html>

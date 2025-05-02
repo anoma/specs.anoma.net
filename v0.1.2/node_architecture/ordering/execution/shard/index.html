@@ -1,0 +1,3323 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="The Anoma Specification is a collection of documents that describe the architecture, design, and implementation of the Anoma Network.">
+      
+      
+        <meta name="author" content="Anoma Foundation">
+      
+      
+        <link rel="canonical" href="https://anoma.github.io/nspec/v2/node_architecture/ordering/execution/shard/index.html">
+      
+      
+        <link rel="prev" href="../index.html">
+      
+      
+        <link rel="next" href="kvs_acquire_lock.html">
+      
+      
+      <link rel="icon" href="../../../../assets/logo.svg">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.37">
+    
+    
+      
+        <title>Shard - Anoma Specification</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../assets/stylesheets/main.8c3ca2c6.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,700,700i%7CFira+Code:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Open Sans";--md-code-font:"Fira Code"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../css/timeago.css">
+    
+      <link rel="stylesheet" href="../../../../assets/css/style.css">
+    
+      <link rel="stylesheet" href="../../../../assets/css/juvix-highlighting.css">
+    
+      <link rel="stylesheet" href="../../../../assets/css/juvix_codeblock_footer.css">
+    
+      <link rel="stylesheet" href="../../../../assets/css">
+    
+    <script>__md_scope=new URL("../../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+  
+
+
+    
+    
+      
+        <meta  property="og:type"  content="website" >
+      
+        <meta  property="og:title"  content="Shard - Anoma Specification" >
+      
+        <meta  property="og:description"  content="The Anoma Specification is a collection of documents that describe the architecture, design, and implementation of the Anoma Network." >
+      
+        <meta  property="og:image"  content="https://anoma.github.io/nspec/v2/assets/images/social/node_architecture/ordering/execution/shard/index.png" >
+      
+        <meta  property="og:image:type"  content="image/png" >
+      
+        <meta  property="og:image:width"  content="1200" >
+      
+        <meta  property="og:image:height"  content="630" >
+      
+        <meta  property="og:url"  content="https://anoma.github.io/nspec/v2/node_architecture/ordering/execution/shard/index.html" >
+      
+        <meta  name="twitter:card"  content="summary_large_image" >
+      
+        <meta  name="twitter:title"  content="Shard - Anoma Specification" >
+      
+        <meta  name="twitter:description"  content="The Anoma Specification is a collection of documents that describe the architecture, design, and implementation of the Anoma Network." >
+      
+        <meta  name="twitter:image"  content="https://anoma.github.io/nspec/v2/assets/images/social/node_architecture/ordering/execution/shard/index.png" >
+      
+    
+    
+   <link href="../../../../assets/stylesheets/glightbox.min.css" rel="stylesheet"/><style>
+    html.glightbox-open { overflow: initial; height: 100%; }
+    .gslide-title { margin-top: 0px; user-select: text; }
+    .gslide-desc { color: #666; user-select: text; }
+    .gslide-image img { background: white; }
+    .gscrollbar-fixer { padding-right: 15px; }
+    .gdesc-inner { font-size: 0.75rem; }
+    body[data-md-color-scheme="slate"] .gdesc-inner { background: var(--md-default-bg-color);}
+    body[data-md-color-scheme="slate"] .gslide-title { color: var(--md-default-fg-color);}
+    body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color);}</style> <script src="../../../../assets/javascripts/glightbox.min.js"></script></head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="white" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#shard" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+        <aside class="md-banner">
+          <div class="md-banner__inner md-grid md-typeset">
+            
+              <button class="md-banner__button md-icon" aria-label="Don't show this again">
+                
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+              </button>
+            
+            
+  For updates follow <strong>@anoma</strong> on
+  <a rel="me" href="https://x.com/anoma">
+    <span class="twemoji x-twitter">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M389.2 48h70.6L305.6 224.2 487 464H345L233.7 318.6 106.5 464H35.8l164.9-188.5L26.8 48h145.6l100.5 132.9zm-24.8 373.8h39.1L151.1 88h-42z"/></svg>
+    </span>
+    <strong></strong>
+  </a>
+  and discuss on our
+  <a href="https://research.anoma.net">
+    <span class="twemoji discourse">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M225.9 32C103.3 32 0 130.5 0 252.1 0 256 .1 480 .1 480l225.8-.2c122.7 0 222.1-102.3 222.1-223.9S348.6 32 225.9 32M224 384c-19.4 0-37.9-4.3-54.4-12.1L88.5 392l22.9-75c-9.8-18.1-15.4-38.9-15.4-61 0-70.7 57.3-128 128-128s128 57.3 128 128-57.3 128-128 128"/></svg>
+    </span>
+    <strong>forum</strong>
+  </a>
+
+          </div>
+          
+            <script>var el=document.querySelector("[data-md-component=announce]");if(el){var content=el.querySelector(".md-typeset");__md_hash(content.innerHTML)===__md_get("__announce")&&(el.hidden=!0)}</script>
+          
+        </aside>
+      
+    </div>
+    
+      <div data-md-color-scheme="default" data-md-component="outdated" hidden>
+        
+          <aside class="md-banner md-banner--warning">
+            <div class="md-banner__inner md-grid md-typeset">
+              
+  You're not viewing the latest official version.
+  <a href="../../../../..">
+    <strong>Click here to go to latest.</strong>
+  </a>
+
+            </div>
+            <script>var el=document.querySelector("[data-md-component=outdated]"),outdated=__md_get("__outdated",sessionStorage);!0===outdated&&el&&(el.hidden=!1)</script>
+          </aside>
+        
+      </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../../../index.html" title="Anoma Specification" class="md-header__button md-logo" aria-label="Anoma Specification" data-md-component="logo">
+      
+  <img src="../../../../assets/logo.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Anoma Specification
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Shard
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme)" data-md-color-scheme="default" data-md-color-primary="white" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m14.3 16-.7-2h-3.2l-.7 2H7.8L11 7h2l3.2 9zM20 8.69V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12zm-9.15 3.96h2.3L12 9z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="white" data-md-color-accent="red"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_2" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="black" data-md-color-accent="red"  aria-label="Switch to system preference"  type="radio" name="__palette" id="__palette_2">
+    
+      <label class="md-header__button md-icon" title="Switch to system preference" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            <!--
+  Copyright (c) 2016-2024 Martin Donath <martin.donath@squidfunk.com>
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to
+  deal in the Software without restriction, including without limitation the
+  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+  sell copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in
+  all copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+  IN THE SOFTWARE.
+-->
+
+
+
+<!-- Navigation tabs -->
+<nav
+  class="md-tabs"
+  aria-label="Tabs"
+  data-md-component="tabs"
+>
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+      
+            
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../../index.html" class="md-tabs__link">
+        
+  
+    
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+        
+      
+      
+            
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../scope/index.html" class="md-tabs__link">
+          
+  
+    
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M5 3c-1.11 0-2 .89-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2zm10.78 2H19v12.18c-.26-.8-1.31-1.39-2.2-1.39h-1v-3a1 1 0 0 0-1-1h-6v-2h2a1 1 0 0 0 1-1v-2h2c1.03 0 1.87-.79 1.98-1.79M5 10.29l4.8 4.5v1a2 2 0 0 0 2 2V19H5z"/></svg>
+    
+  
+  Scope
+
+        </a>
+      </li>
+    
+  
+
+        
+      
+      
+            
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../basic_abstractions/index.html" class="md-tabs__link">
+          
+  
+    
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M6 2a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm0 2h7v5h5v11H6zm2 8v2h8v-2zm0 4v2h5v-2z"/></svg>
+    
+  
+  Basic Abstractions
+
+        </a>
+      </li>
+    
+  
+
+        
+      
+      
+            
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../../../../architecture/index.html" class="md-tabs__link">
+          
+  
+    
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M24 18.714v4.8c0 .288-.192.48-.48.48h-4.8c-.288 0-.48-.192-.48-.48v-4.8c0-.288.192-.48.48-.48h1.92v-1.92h-8.16v1.92h1.92c.288 0 .48.192.48.48v4.8c0 .288-.192.48-.48.48H9.6c-.288 0-.48-.192-.48-.48v-4.8c0-.288.192-.48.48-.48h1.92v-1.92H3.36v1.92h1.92c.288 0 .48.192.48.48v4.8c0 .288-.192.48-.48.48H.48c-.288 0-.48-.192-.48-.48v-4.8c0-.288.192-.48.48-.48H2.4v-2.4c0-.288.192-.48.48-.48h8.64v-1.44h.96v1.44h8.64c.288 0 .48.192.48.48v2.4h1.92c.288 0 .48.192.48.48m-13.92 4.32h3.84v-3.84h-3.84zm-9.12 0H4.8v-3.84H.96Zm18.24 0h3.84v-3.84H19.2ZM6.24 9.642V3.546c0-.192.096-.336.24-.432L11.76.042a.8.8 0 0 1 .48 0l5.28 3.072c.144.096.24.24.24.432v6.096c0 .144-.096.288-.24.384l-5.28 3.072q-.096.048-.24.048t-.24-.048l-5.28-3.072c-.144-.096-.24-.24-.24-.384m10.56-.288V4.362l-4.32 2.496v4.992zm-9.6 0 4.32 2.496V6.858L7.2 4.362Zm.48-5.808L12 5.994l4.32-2.448L12 1.05Z"/></svg>
+    
+  
+  Protocol Architecture
+
+        </a>
+      </li>
+    
+  
+
+        
+      
+      
+            
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../application_architecture/index.html" class="md-tabs__link">
+          
+  
+    
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16 20h4v-4h-4m0-2h4v-4h-4m-6-2h4V4h-4m6 4h4V4h-4m-6 10h4v-4h-4m-6 4h4v-4H4m0 10h4v-4H4m6 4h4v-4h-4M4 8h4V4H4z"/></svg>
+    
+  
+  Application Architecture
+
+        </a>
+      </li>
+    
+  
+
+        
+      
+      
+            
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../implementation/index.html" class="md-tabs__link">
+          
+  
+    
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19.793 16.575c0 3.752-2.927 7.426-7.743 7.426-5.249 0-7.843-3.71-7.843-8.29 0-5.21 3.892-12.952 8-15.647a.397.397 0 0 1 .61.371 9.72 9.72 0 0 0 1.694 6.518c.522.795 1.092 1.478 1.763 2.352.94 1.227 1.637 1.906 2.644 3.842l.015.028a7.1 7.1 0 0 1 .86 3.4"/></svg>
+    
+  
+  Implementation
+
+        </a>
+      </li>
+    
+  
+
+        
+      
+      
+      
+      
+      
+      
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../../../index.html" title="Anoma Specification" class="md-nav__button md-logo" aria-label="Anoma Specification" data-md-component="logo">
+      
+  <img src="../../../../assets/logo.svg" alt="logo">
+
+    </a>
+    Anoma Specification
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../index.html" class="md-nav__link">
+        
+  
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+  
+  <span class="md-ellipsis">
+    Home
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+    <a href="../../../../scope/index.html" class="md-nav__link">
+      
+  
+  <span class="md-ellipsis">
+    Scope
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+    <a href="../../../../basic_abstractions/index.html" class="md-nav__link">
+      
+  
+  <span class="md-ellipsis">
+    Basic Abstractions
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../../architecture/index.html" class="md-nav__link ">
+              
+  
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M24 18.714v4.8c0 .288-.192.48-.48.48h-4.8c-.288 0-.48-.192-.48-.48v-4.8c0-.288.192-.48.48-.48h1.92v-1.92h-8.16v1.92h1.92c.288 0 .48.192.48.48v4.8c0 .288-.192.48-.48.48H9.6c-.288 0-.48-.192-.48-.48v-4.8c0-.288.192-.48.48-.48h1.92v-1.92H3.36v1.92h1.92c.288 0 .48.192.48.48v4.8c0 .288-.192.48-.48.48H.48c-.288 0-.48-.192-.48-.48v-4.8c0-.288.192-.48.48-.48H2.4v-2.4c0-.288.192-.48.48-.48h8.64v-1.44h.96v1.44h8.64c.288 0 .48.192.48.48v2.4h1.92c.288 0 .48.192.48.48m-13.92 4.32h3.84v-3.84h-3.84zm-9.12 0H4.8v-3.84H.96Zm18.24 0h3.84v-3.84H19.2ZM6.24 9.642V3.546c0-.192.096-.336.24-.432L11.76.042a.8.8 0 0 1 .48 0l5.28 3.072c.144.096.24.24.24.432v6.096c0 .144-.096.288-.24.384l-5.28 3.072q-.096.048-.24.048t-.24-.048l-5.28-3.072c-.144-.096-.24-.24-.24-.384m10.56-.288V4.362l-4.32 2.496v4.992zm-9.6 0 4.32 2.496V6.858L7.2 4.362Zm.48-5.808L12 5.994l4.32-2.448L12 1.05Z"/></svg>
+  
+  <span class="md-ellipsis">
+    Protocol Architecture
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            Protocol Architecture
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_2" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../../system_architecture/index.html" class="md-nav__link ">
+              
+  
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M6 5h12a1 1 0 0 1 1 1 1 1 0 0 1-1 1H6a1 1 0 0 1-1-1 1 1 0 0 1 1-1m15-3v2H3V2zm-6 6h2v14h-2zM7 8h2v14H7zm4 0h2v14h-2z"/></svg>
+  
+  <span class="md-ellipsis">
+    System Architecture
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4_2" id="__nav_4_2_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_2">
+            <span class="md-nav__icon md-icon"></span>
+            System Architecture
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+    <a href="../../../../system_architecture/concepts/index.html" class="md-nav__link">
+      
+  
+  <span class="md-ellipsis">
+    Basic Concepts
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../system_architecture/identity/identity.html" class="md-nav__link">
+        
+  
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M6 2a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm0 2h7v5h5v11H6zm2 8v2h8v-2zm0 4v2h5v-2z"/></svg>
+  
+  <span class="md-ellipsis">
+    Identity Architecture
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+    <a href="../../../../system_architecture/network/index.html" class="md-nav__link">
+      
+  
+  <span class="md-ellipsis">
+    Network Architecture
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+    <a href="../../../../system_architecture/service/index.html" class="md-nav__link">
+      
+  
+  <span class="md-ellipsis">
+    Service Architecture
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+    <a href="../../../../system_architecture/state/index.html" class="md-nav__link">
+      
+  
+  <span class="md-ellipsis">
+    State Architecture
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_3" checked>
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../index.html" class="md-nav__link ">
+              
+  
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19.5 17c-.13 0-.26 0-.39.04l-1.61-3.25a2.5 2.5 0 0 0-1.75-4.29c-.13 0-.25 0-.39.04l-1.63-3.25c.48-.45.77-1.08.77-1.79a2.5 2.5 0 0 0-5 0c0 .71.29 1.34.76 1.79L8.64 9.54c-.14-.04-.26-.04-.39-.04a2.5 2.5 0 0 0-1.75 4.29l-1.61 3.25C4.76 17 4.63 17 4.5 17a2.5 2.5 0 0 0 0 5A2.5 2.5 0 0 0 7 19.5c0-.7-.29-1.34-.76-1.79l1.62-3.25c.14.04.26.04.39.04s.25 0 .39-.04l1.63 3.25c-.47.45-.77 1.09-.77 1.79a2.5 2.5 0 0 0 5 0A2.5 2.5 0 0 0 12 17c-.13 0-.26 0-.39.04L10 13.79c.46-.45.75-1.08.75-1.79s-.29-1.34-.75-1.79l1.61-3.25c.13.04.26.04.39.04s.26 0 .39-.04L14 10.21c-.45.45-.75 1.09-.75 1.79a2.5 2.5 0 0 0 2.5 2.5c.13 0 .25 0 .39-.04l1.63 3.25c-.47.45-.77 1.09-.77 1.79a2.5 2.5 0 0 0 5 0 2.5 2.5 0 0 0-2.5-2.5"/></svg>
+  
+  <span class="md-ellipsis">
+    Node Architecture
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4_3" id="__nav_4_3_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4_3">
+            <span class="md-nav__icon md-icon"></span>
+            Node Architecture
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../modules/index.html" class="md-nav__link">
+        
+  
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M6 2a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm0 2h7v5h5v11H6zm2 8v2h8v-2zm0 4v2h5v-2z"/></svg>
+  
+  <span class="md-ellipsis">
+    Modules
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+    <a href="../../../types/basics.html" class="md-nav__link">
+      
+  
+  <span class="md-ellipsis">
+    Basic Types
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+    <a href="../../../engines/index.html" class="md-nav__link">
+      
+  
+  <span class="md-ellipsis">
+    Engine Types
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+    <a href="../../../hardware_abstraction/index.html" class="md-nav__link">
+      
+  
+  <span class="md-ellipsis">
+    Hardware Abstraction Machine
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+    <a href="../../../engines/configuration/index.html" class="md-nav__link">
+      
+  
+  <span class="md-ellipsis">
+    Control Machine
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+    <a href="../../../identity/index.html" class="md-nav__link">
+      
+  
+  <span class="md-ellipsis">
+    Identity Machine
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+    <a href="../../../networking/index.html" class="md-nav__link">
+      
+  
+  <span class="md-ellipsis">
+    Networking Machine
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+      
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_3_9" checked>
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../index.html" class="md-nav__link ">
+              
+  
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M6 2a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm0 2h7v5h5v11H6zm2 8v2h8v-2zm0 4v2h5v-2z"/></svg>
+  
+  <span class="md-ellipsis">
+    Ordering Machine
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4_3_9" id="__nav_4_3_9_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_4_3_9_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4_3_9">
+            <span class="md-nav__icon md-icon"></span>
+            Ordering Machine
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+    <a href="../../types/allofthem/index.html" class="md-nav__link">
+      
+  
+  <span class="md-ellipsis">
+    Common types
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+    <a href="../../mempool/index.html" class="md-nav__link">
+      
+  
+  <span class="md-ellipsis">
+    Mempool engines
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+    <a href="../../consensus_v1.html" class="md-nav__link">
+      
+  
+  <span class="md-ellipsis">
+    Consensus Engine
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+      
+      
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_3_9_5" checked>
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../index.html" class="md-nav__link ">
+              
+  
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M6 2a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm0 2h7v5h5v11H6zm2 8v2h8v-2zm0 4v2h5v-2z"/></svg>
+  
+  <span class="md-ellipsis">
+    Execution engines
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4_3_9_5" id="__nav_4_3_9_5_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_4_3_9_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4_3_9_5">
+            <span class="md-nav__icon md-icon"></span>
+            Execution engines
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+      
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_3_9_5_2" checked>
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="index.html" class="md-nav__link md-nav__link--active">
+              
+  
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M6 2a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm0 2h7v5h5v11H6zm2 8v2h8v-2zm0 4v2h5v-2z"/></svg>
+  
+  <span class="md-ellipsis">
+    Shard
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link md-nav__link--active" for="__nav_4_3_9_5_2" id="__nav_4_3_9_5_2_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="5" aria-labelledby="__nav_4_3_9_5_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4_3_9_5_2">
+            <span class="md-nav__icon md-icon"></span>
+            Shard
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="kvs_acquire_lock.html" class="md-nav__link">
+        
+  
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M6 2a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm0 2h7v5h5v11H6zm2 8v2h8v-2zm0 4v2h5v-2z"/></svg>
+  
+  <span class="md-ellipsis">
+    KVSAcquireLock
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="kvs_read_request.html" class="md-nav__link">
+        
+  
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M6 2a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm0 2h7v5h5v11H6zm2 8v2h8v-2zm0 4v2h5v-2z"/></svg>
+  
+  <span class="md-ellipsis">
+    KVSReadRequest
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="kvs_write.html" class="md-nav__link">
+        
+  
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M6 2a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm0 2h7v5h5v11H6zm2 8v2h8v-2zm0 4v2h5v-2z"/></svg>
+  
+  <span class="md-ellipsis">
+    KVSWrite
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="update_seen_all.html" class="md-nav__link">
+        
+  
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M6 2a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm0 2h7v5h5v11H6zm2 8v2h8v-2zm0 4v2h5v-2z"/></svg>
+  
+  <span class="md-ellipsis">
+    UpdateSeenAll
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+    <a href="../executor/index.html" class="md-nav__link">
+      
+  
+  <span class="md-ellipsis">
+    Executor
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+    <a href="../../../../application_architecture/index.html" class="md-nav__link">
+      
+  
+  <span class="md-ellipsis">
+    Application Architecture
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+    <a href="../../../../implementation/index.html" class="md-nav__link">
+      
+  
+  <span class="md-ellipsis">
+    Implementation
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../indexes/links.html" class="md-nav__link">
+        
+  
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7a5 5 0 0 0-5 5 5 5 0 0 0 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1M8 13h8v-2H8zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4a5 5 0 0 0 5-5 5 5 0 0 0-5-5"/></svg>
+  
+  <span class="md-ellipsis">
+    Quick links
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../indexes/juvix_modules.html" class="md-nav__link">
+        
+  
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 10h-2V8h2m0 5h-2v-2h2m-3-1h-2V8h2m0 5h-2v-2h2m0 6H8v-2h8m-9-5H5V8h2m0 5H5v-2h2m1 0h2v2H8m0-5h2v2H8m3 1h2v2h-2m0-5h2v2h-2m9-5H4c-1.11 0-2 .89-2 2v10a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2"/></svg>
+  
+  <span class="md-ellipsis">
+    Juvix modules
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+    <a href="../../../../tutorial/index.html" class="md-nav__link">
+      
+  
+  <span class="md-ellipsis">
+    Tutorials for contributors
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#state-of-the-shard" class="md-nav__link">
+    <span class="md-ellipsis">
+      State (of the shard)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#shard-optimizations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Shard Optimizations
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Shard Optimizations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#optimization-per-key-ordering" class="md-nav__link">
+    <span class="md-ellipsis">
+      Optimization: Per-Key Ordering
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#optimization-order-with-respect-to-writes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Optimization: Order With Respect To Writes
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#optimization-only-wait-to-read" class="md-nav__link">
+    <span class="md-ellipsis">
+      Optimization: Only Wait to Read
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#optimization-execute-with-partial-order" class="md-nav__link">
+    <span class="md-ellipsis">
+      Optimization: Execute With Partial Order
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#heardallwrites" class="md-nav__link">
+    <span class="md-ellipsis">
+      heardAllWrites
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="heardAllWrites">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#heardallreads" class="md-nav__link">
+    <span class="md-ellipsis">
+      heardAllReads
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#conflicts" class="md-nav__link">
+    <span class="md-ellipsis">
+      Conflicts
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#optimization-client-reads-as-read-only-transactions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Optimization: Client Reads as Read-Only Transactions
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+<h1 id="shard">Shard<a class="headerlink" href="#shard" title="Permanent link">&para;</a></h1>
+<p>The Shards together store and update the
+ <a href="../index.html#state">state</a> of the replicated state machine and
+  together are a component of the Execution Engines.
+They provide <a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/execution/executor/index.html">Executor</a>s with input data and update the state
+ according to the results of <a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/execution/executor/index.html">Executor</a>s' computations.</p>
+<p>Different shards may be on different physical machines.
+ <!--
+   Redistributing state between shards is called *Re-Sharding*.
+   Each Shard is specific to exactly one learner.
+   However,
+   as an optimization,
+   an implementation could conceivably use a single process to do
+   the work of multiple shards with different learners
+   so long as those shards are identical, and
+   fork that process if and when the learners diverge.
+-->
+</p>
+<p>Each shard is responsible for a set of <a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/types/kvs_key.html">KVSKey</a>s
+and these sets are disjoint for different shards.
+For each of the keys that a shard is responsible for, the shard maintains a
+ (partially-ordered) timeline of Timestamps of
+ <a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/types/transaction_candidate.html">transaction candidates</a> that may read or write to keys.
+Shards also keep a history of data written by each
+ <a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/types/transaction_candidate.html">TransactionCandidate</a> to each key.
+This is <a href="https://en.wikipedia.org/wiki/Multiversion_concurrency_control">multi-version concurrent storage</a>.</p>
+<!-- ‼ duplication of prose to be avoided via includes
+    using `ANCHOR` ... ANCHOR_END "mechanics"
+    https://rust-lang.GitHub.io/mdBook/format/mdbook.html#including-portions-of-a-file
+-->
+
+<h2 id="state-of-the-shard">State (of the shard)<a class="headerlink" href="#state-of-the-shard" title="Permanent link">&para;</a></h2>
+<p>For each <a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/mempool/worker/index.html">Worker Engine</a>, the Shard maintains:</p>
+<ul>
+<li>A Timestamp, such that all
+   <em><a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/execution/shard/kvs_acquire_lock.html">write lock requests</a></em><sup id="fnref2:1"><a class="footnote-ref" href="#fn:1">1</a></sup> for
+   transaction candidates with earlier timestamps that this worker curates
+   have already been received.
+  Together, these timestamps represent <a href="#heardallwrites"><code>heardAllWrites</code></a>.</li>
+<li>Another Timestamp, before which
+   the Shard will receive no further <em>read</em> requests from this
+   <a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/mempool/worker/index.html">Worker Engine</a>.
+  For WorkerEngine, this cannot be <em>after</em> the corresponding
+   <em>write</em> Timestamps.
+  We will also maintain these from each Read Backend worker.
+  Together, these represent <code>heardAllReads</code>.</li>
+</ul>
+<p>For each <a href="#state">key</a> (assigned to this Shard):</p>
+<ul>
+<li>A set of <a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/types/tx_fingerprint.html">time‍stamps</a> of known
+   <a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/types/transaction_candidate.html">transaction candidates</a> that read and/or write that key, and for
+   each, some subset of:</li>
+<li>A value written to that key at that <a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/types/tx_fingerprint.html">time‍stamps</a>
+     by that <a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/types/transaction_candidate.html">TransactionCandidate</a> using a <a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/execution/shard/kvs_write.html">KVSWrite</a> message</li>
+<li>A marker indicating that this <a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/types/transaction_candidate.html">TransactionCandidate</a> may
+     (or will) write to this key, but this Shard has not yet received
+     a corresponding <a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/execution/shard/kvs_write.html">KVSWrite</a> message.</li>
+<li>A marker indicating that this <a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/types/transaction_candidate.html">TransactionCandidate</a> <em>will</em> read
+     this value, and an <a href="https://anoma.github.io/nspec/v2/node_architecture/identity/types/external_identity.html">ExternalIdentity</a> corresponding to the
+     relevant <a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/execution/executor/index.html">Executor</a>.
+    This marker is only stored so long as the Shard doesn't know the
+     value.
+    When this value is determined, this Shard must remove this marker
+     and send a <a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/execution/executor/kvs_read.html">KVSRead</a> message to the <a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/execution/executor/index.html">Executor</a>.</li>
+<li>A marker indicating that this <a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/types/transaction_candidate.html">TransactionCandidate</a> <em>may</em> read
+     this value, and an <a href="https://anoma.github.io/nspec/v2/node_architecture/identity/types/external_identity.html">ExternalIdentity</a> corresponding to the
+     relevant <a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/execution/executor/index.html">Executor</a>.
+    If the <a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/execution/executor/index.html">Executor</a> sends a <a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/execution/shard/kvs_read_request.html">KVSReadRequest</a> for this key, the
+     Shard updates this marker to a "<em>will</em> read" marker.</li>
+<li>If a Timestamp has no corresponding markers or
+   values written, we don't have to store it.</li>
+<li>If a value written is before <code>heardAllReads</code>, and there are no pending
+   reads or writes before it, then we can remove all <em>earlier</em> values
+   written.</li>
+</ul>
+<p>Additionally, the Shard maintains:</p>
+<ul>
+<li>A complete copy of the DAG structure produced by the
+   Mempool Engines.
+  This includes a set of all <a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/types/narwhal_block_header.html">NarwhalBlockHeader</a>s.
+  For Timestamps before <code>SeenAllRead</code>, if there are
+   no keys with a pending read or write before that
+   Timestamp, we can delete old DAG structure.</li>
+<li>A complete copy of the sequence of Anchors chosen
+   by <a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/consensus_v1.html">Consensus Engine</a>.
+  This is a sequence of consensus decisions.
+  For Timestamps before <code>heardAllReads</code>, if there are
+   no keys with a pending read or write before that
+   Timestamp, we can delete old anchors.</li>
+</ul>
+<h2 id="shard-optimizations">Shard Optimizations<a class="headerlink" href="#shard-optimizations" title="Permanent link">&para;</a></h2>
+<p>We want to <em>execute</em> each <a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/types/transaction_candidate.html">TransactionCandidate</a> (evaluate the <a href="../index.html#executor-function">executor
+function</a> in order to compute the data
+written) using the idea of <a href="https://en.wikipedia.org/wiki/Serializability">serializability</a>: each <a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/types/transaction_candidate.html">TransactionCandidate</a>'s
+reads and writes should be <em>as if</em> they were executed in the total order
+determined by the mempool (and [[Consensus</p>
+<p>However, we want to compute concurrently as possible, for minimum latency. We do
+this using a set of optimizations.</p>
+<h3 id="optimization-per-key-ordering">Optimization: Per-Key Ordering<a class="headerlink" href="#optimization-per-key-ordering" title="Permanent link">&para;</a></h3>
+<p><a class="glightbox" href="https://anoma.github.io/nspec/v2/images/keys_animated.svg" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="Per-key ordering (see web version for animation)" src="https://anoma.github.io/nspec/v2/images/keys_animated.svg" /></a></p>
+<p>Mempool
+ and  <a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/consensus_v1.html">consensus</a> provides ordering
+ information for  <a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/types/tx_fingerprint.html">the time‍stamps</a>.
+Thus, relative to each key,
+<a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/types/transaction_candidate.html">transaction candidates</a> can be totally ordered by the
+ <a href="https://en.wikipedia.org/wiki/Happened-before">Happens Before</a>
+ relationship.
+With a total ordering of <a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/types/transaction_candidate.html">transaction candidates</a>, Shards can send
+ read information (<a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/execution/executor/kvs_read.html">KVSRead</a>s) to <a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/execution/executor/index.html">Executor</a>s as soon as the
+ previous <a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/types/transaction_candidate.html">TransactionCandidate</a> is complete.
+However, <a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/types/transaction_candidate.html">transaction candidates</a> that access on disjoint sets of
+ keys can be run in parallel.
+In the diagram above, for example, <a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/types/transaction_candidate.html">transaction candidates</a> <code>c</code> and
+ <code>d</code> can run concurrently, as can <a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/types/transaction_candidate.html">transaction candidates</a> <code>e</code> and
+ <code>f</code>, and <a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/types/transaction_candidate.html">transaction candidates</a> <code>h</code> and <code>j</code>.</p>
+<h3 id="optimization-order-with-respect-to-writes">Optimization: Order With Respect To Writes<a class="headerlink" href="#optimization-order-with-respect-to-writes" title="Permanent link">&para;</a></h3>
+<p><a class="glightbox" href="https://anoma.github.io/nspec/v2/images/only_order_wrt_writes_animated.svg" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="Order with respect to writes (see web version for animation)" src="https://anoma.github.io/nspec/v2/images/only_order_wrt_writes_animated.svg" /></a></p>
+<p>In fact, Shards can send read information to an <a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/execution/executor/index.html">Executor</a> as soon
+ as the previous <em>write</em>'s <a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/types/transaction_candidate.html">TransactionCandidate</a> has completed
+ (sent a <a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/execution/shard/kvs_write.html">KVSWrite</a>).
+All Shards really need to keep track of is a total order of writes,
+ and how each read is ordered with respect to writes (which write it
+ precedes and which write preceded it).
+As soon as the preceding write is complete (the Shard has received a
+ <a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/execution/shard/kvs_write.html">KVSWrite</a>), the reads that depend on it can run concurrently.
+There are no "read/read" conflicts.
+In the diagram above,
+for example, <a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/types/transaction_candidate.html">transaction candidates</a> <code>a</code> and <code>b</code> can run
+ concurrently.</p>
+<h3 id="optimization-only-wait-to-read">Optimization: Only Wait to Read<a class="headerlink" href="#optimization-only-wait-to-read" title="Permanent link">&para;</a></h3>
+<p><a class="glightbox" href="https://anoma.github.io/nspec/v2/images/only_wait_to_read_animated.svg" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="Only wait to read (see web version for animation)" src="https://anoma.github.io/nspec/v2/images/only_wait_to_read_animated.svg" /></a></p>
+<p>Because we store each version written
+ (<a href="https://en.wikipedia.org/wiki/Multiversion_concurrency_control">multi-version concurrent storage</a>),
+ we do not have to execute writes in order.
+A Shard does not have to wait to write a later data version to a key
+ just because previous reads have not finished executing yet.
+In the diagram above, for example, only green <em>happens-before</em> arrows
+ require waiting.
+<a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/types/transaction_candidate.html">transaction candidates</a> <code>a</code>, <code>b</code>, <code>c</code>, and <code>j</code> can all be executed
+ concurrently, as can <a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/types/transaction_candidate.html">transaction candidates</a> <code>d</code>, <code>e</code>, and <code>i</code>.</p>
+<h3 id="optimization-execute-with-partial-order">Optimization: Execute With Partial Order<a class="headerlink" href="#optimization-execute-with-partial-order" title="Permanent link">&para;</a></h3>
+<p>Some mempools, including Narwhal,
+can provide partial order information on transactions
+even before consensus has determined a total order.
+This allows the Ordering Machine to execute some transactions before
+a total ordering is known.
+In general, for a given key,
+a shard can send read information to an executor when
+it knows precisely which write happens most recently before the read,
+and that write has executed.</p>
+<h3 id="heardallwrites">heardAllWrites<a class="headerlink" href="#heardallwrites" title="Permanent link">&para;</a></h3>
+<p>In order to know which write happens most recently before a given
+ read, the Shard must know that no further writes will be added to
+ the timeline before the read.
+Mempool and <a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/consensus_v1.html">consensus</a> should
+ communicate a lower bound on timestamps to the Shards, called
+ <code>heardAllWrites</code>.
+The Shard is guaranteed to never receive another <a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/execution/shard/kvs_acquire_lock.html">KVSAcquireLock</a>
+ with a write operation and
+  Timestamp before  <code>heardAllWrites</code>.
+In general, a Shard cannot send a <a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/execution/executor/kvs_read.html">KVSRead</a> for
+ a Timestamp unless
+  the Timestamp is before <code>heardAllWrites</code>.
+<code>heardAllWrites</code> consists of a <a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/types/tx_fingerprint.html">TxFingerprint</a> from each
+ <a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/mempool/worker/index.html">worker engine</a> such that <a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/mempool/worker/index.html">the worker engine</a> is certain
+ (based on <a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/mempool/worker/kvs_lock_acquired.html">KVSLockAcquired</a>s) that the Shard has already seen all
+ the <a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/execution/shard/kvs_acquire_lock.html">KVSAcquireLock</a>s it will ever send at or before that
+ <a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/types/tx_fingerprint.html">TxFingerprint</a>.</p>
+<p>This can be on a per-key basis or simply a global lower bound.
+Occasionally,
+<code>heardAllWrites</code> should be updated with later timestamps.
+Each round of consensus should produce a lower bound for <code>heardAllWrites</code>,
+but the mempool may already have sent better bounds.
+Each Shard must keep track of <code>heardAllWrites</code> on
+each key's multi-version timeline.</p>
+<p>Transactions
+(like transaction <code>j</code> in the diagram below)
+containing only write operations
+can execute with a timestamp after <code>heardAllWrites</code>,
+but this simply means calculating the data they will write.
+Since that does not depend on state,
+this can of course be done at any time.</p>
+<h4 id="heardallreads">heardAllReads<a class="headerlink" href="#heardallreads" title="Permanent link">&para;</a></h4>
+<p>We want to allow Typhon to eventually garbage-collect old state.
+mempool and <a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/consensus_v1.html">consensus</a> should
+communicate a lower bound timestamp to the execution engine,
+called <code>heardAllReads</code>,
+before which there will be
+no more read transactions send to the execution engine.
+Occasionally, <code>heardAllReads</code> should be updated with later timestamps.
+Each Shard must keep track of <code>heardAllReads</code> on
+each key's multi-version timeline, so it can garbage-collect old values.</p>
+<p><a class="glightbox" href="https://anoma.github.io/nspec/v2/images/execute_before_consensus_animated.svg" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="Execute with partial order (see web version for animation)" src="https://anoma.github.io/nspec/v2/images/execute_before_consensus_animated.svg" /></a></p>
+<p>In the example above, our happens-before arrows have been replaced with
+<em>may-happen-before</em> arrows,
+representing partial ordering information from the mempool.
+Note that not all transactions can be executed with
+this partial order information.</p>
+<h4 id="conflicts">Conflicts<a class="headerlink" href="#conflicts" title="Permanent link">&para;</a></h4>
+<p>There are three types of conflicts that can prevent a transaction from
+being executable without more ordering information.</p>
+<ul>
+<li>
+<p><em>Write/Write Conflicts</em>
+  occur when a shard cannot identify the most recent write before a given read.
+  In the diagram above,
+  transaction <code>e</code> cannot execute because it is not clear whether
+  transaction <code>b</code> or transaction <code>c</code> wrote most recently to the yellow key.</p>
+</li>
+<li>
+<p><em>Read/Write Conflicts</em>
+  occur when shard cannot identify whether a read operation occurs before or
+  after a write,
+  so it is not clear if it should read the value from that write or
+  from a previous write.
+  In the diagram above,
+  transaction <code>g</code> cannot execute because it is not clear whether
+  it would read the data written to the blue key by transaction <code>d</code> or
+  transaction <code>i</code>.</p>
+</li>
+<li>
+<p><em>Transitive Conflicts</em>
+  occur when a shard cannot get the data for a read because
+  the relevant write is conflicted.
+  In the diagram above,
+  transaction <code>h</code> cannot execute because
+  it cannot read the data written to the yellow key by transaction <code>g</code>, since
+  transaction <code>g</code> is conflicted.</p>
+</li>
+</ul>
+<p>As the mempool and <a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/consensus_v1.html">consensus</a> provide
+the execution engine with more and more ordering information, and
+the partial order of timestamps is refined,
+all conflicts eventually resolve.
+In the diagram above,
+suppose consensus orders transaction <code>g</code> before transaction <code>i</code>.
+The Read/Write conflict is resolved:
+transaction <code>g</code> reads the data transaction <code>d</code> writes to the blue key.
+Then the transitive conflict is also resolved:
+transaction <code>h</code> will be able to execute.
+--&gt;</p>
+<h3 id="optimization-client-reads-as-read-only-transactions">Optimization: Client Reads as Read-Only Transactions<a class="headerlink" href="#optimization-client-reads-as-read-only-transactions" title="Permanent link">&para;</a></h3>
+<p><a class="glightbox" href="https://anoma.github.io/nspec/v2/images/read_only_animated.svg" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="Client reads as read-only transactions (see web version for animation)" src="https://anoma.github.io/nspec/v2/images/read_only_animated.svg" /></a></p>
+<p>With the above optimizations, transactions containing only read operations do not affect other transactions (or scheduling) at all.
+Therefore, they can bypass mempool and <a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/consensus_v1.html">consensus</a> altogether.
+Clients can simply send read-only transactions directly to the execution engine (with a label and a timestamp), and if the timestamp is after <code>heardAllReads</code>, the execution engine can simply place the transaction in the timeline of the relevant shards and execute it when possible.
+In the diagram above, transaction <code>f</code> is read-only.</p>
+<p>If client reads produce signed responses, then signed responses from a weak quorum of validators would form a <em>light client proof</em>.</p>
+<h1 id="shard-incoming-messages">Shard Incoming Messages<a class="headerlink" href="#shard-incoming-messages" title="Permanent link">&para;</a></h1>
+<p>Shards receive and react to the following messages:</p>
+<h1 id="kvsacquirelock">KVSAcquireLock<a class="headerlink" href="#kvsacquirelock" title="Permanent link">&para;</a></h1>
+<ul>
+<li><em>from</em> <a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/mempool/worker/index.html">Mempool Worker</a> <!-- formerly from <a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/execution/executor/index.html">Executor</a> --></li>
+</ul>
+<h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
+<p>Inform the shard about keys that a transaction may/will read and/or
+ write, at a transaction fingerprint.</p>
+<!-- the range is the novelty w.r.t. to earlier versions of the specs -->
+
+<h2 id="structure">Structure<a class="headerlink" href="#structure" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>lazy_read_keys</code></td>
+<td><a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/types/kvs_key.html">KVSKey</a> set</td>
+<td>Keys this transaction <em>may</em> read (only send values read in response to <a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/execution/shard/kvs_read_request.html">KVSReadRequest</a>s)</td>
+</tr>
+<tr>
+<td><code>eager_read_keys</code></td>
+<td><a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/types/kvs_key.html">KVSKey</a> set</td>
+<td>Keys this transaction <em>will</em> read (send values read as soon as possible)</td>
+</tr>
+<tr>
+<td><code>will_write_keys</code></td>
+<td><a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/types/kvs_key.html">KVSKey</a> set</td>
+<td>Keys this transaction <em>will</em> write. Future reads are dependent <em>only</em> on the <a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/execution/shard/kvs_write.html">KVSWrite</a> for this <a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/types/tx_fingerprint.html">TxFingerprint</a>.</td>
+</tr>
+<tr>
+<td><code>may_write_keys</code></td>
+<td><a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/types/kvs_key.html">KVSKey</a> set</td>
+<td>Keys this transaction <em>may</em> write. Future reads are dependent on the <a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/execution/shard/kvs_write.html">KVSWrite</a> for this <a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/types/tx_fingerprint.html">TxFingerprint</a>, or, if that has a <code>None</code>, the previous value.</td>
+</tr>
+<tr>
+<td><code>curator</code></td>
+<td><a href="https://anoma.github.io/nspec/v2/node_architecture/identity/types/external_identity.html">ExternalIdentity</a></td>
+<td>the <a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/mempool/worker/index.html">Worker Engine</a> in charge of the corresponding transactions</td>
+</tr>
+<tr>
+<td><code>executor</code></td>
+<td><a href="https://anoma.github.io/nspec/v2/node_architecture/identity/types/external_identity.html">ExternalIdentity</a></td>
+<td>the <a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/execution/executor/index.html">Executor</a> for this <a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/types/transaction_candidate.html">TransactionCandidate</a></td>
+</tr>
+<tr>
+<td><code>timestamp</code></td>
+<td><a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/types/tx_fingerprint.html">TxFingerprint</a></td>
+<td>specifies the transaction affiliated with these locks.</td>
+</tr>
+</tbody>
+</table>
+<p>The <code>lazy_read_keys</code> and <code>eager_read_keys</code> may not overlap.
+In the same way,  <code>will_write_keys</code> and <code>may_write_keys</code> must be
+ disjoint.
+There must be one <code>KVSAcquireLock</code> per <a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/execution/shard/index.html">Shard</a>
+ per <a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/types/tx_fingerprint.html">TxFingerprint</a>: for a given <a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/execution/shard/index.html">Shard</a> and <a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/types/tx_fingerprint.html">TxFingerprint</a>,
+ all information is to be provided in totality or not at all.<sup id="fnref:1"><a class="footnote-ref" href="#fn:1">1</a></sup></p>
+<p>Note that future versions may use some kind of structured <code>Key</code>s to
+ encode "Sets" containing infinitely many <code>Key</code>s.
+For V1, however, simple HashSets or similar are fine.</p>
+<h2 id="effects">Effects<a class="headerlink" href="#effects" title="Permanent link">&para;</a></h2>
+<ul>
+<li>The <a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/execution/shard/index.html">Shard</a> stores the respective "locks" for all keys in its timeline.</li>
+<li>these are the "markers" described in <a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/execution/shard/index.html">Shard</a> State.</li>
+<li>The <code>eager_read_keys</code> will be served as soon as possible
+  (by sending <code>KVSRead</code>-messages to the <a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/execution/executor/index.html">executor</a>).</li>
+<li>The <a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/execution/shard/index.html">Shard</a> immediately informs the <a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/mempool/worker/index.html">curator</a> that
+   the locks are acquired, using a <a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/mempool/worker/kvs_lock_acquired.html">KVSLockAcquired</a> message, so the
+   <a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/mempool/worker/index.html">curator</a> can prepare <a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/execution/shard/update_seen_all.html">UpdateSeenAll</a> messages.</li>
+</ul>
+<h2 id="triggers">Triggers<a class="headerlink" href="#triggers" title="Permanent link">&para;</a></h2>
+<ul>
+<li><em>to</em> <a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/mempool/worker/index.html">Worker Engine</a>: <a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/mempool/worker/kvs_lock_acquired.html">KVSLockAcquired</a>
+  send a <a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/mempool/worker/kvs_lock_acquired.html">KVSLockAcquired</a> message to the <a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/mempool/worker/index.html">curator</a>,
+      signaling that the locks of this message will be accounted for.</li>
+<li>to <a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/execution/executor/index.html">executor</a>:  <a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/execution/executor/kvs_read.html">KVSRead</a>
+  <code>for each</code> recorded <code>eager_read_key</code> in this shard's timeline
+  for which the most recent written value is established:
+  send a <a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/execution/executor/kvs_read.html">KVSRead</a> message to the <a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/execution/executor/index.html">Executor</a>.</li>
+</ul>
+<h1 id="kvsreadrequest">KVSReadRequest<a class="headerlink" href="#kvsreadrequest" title="Permanent link">&para;</a></h1>
+<ul>
+<li><em>from</em> <a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/execution/executor/index.html">Executor</a></li>
+</ul>
+<h2 id="purpose_1">Purpose<a class="headerlink" href="#purpose_1" title="Permanent link">&para;</a></h2>
+<p>Informs the Shard about a new read request, which happens
+in either of the following cases:</p>
+<ul>
+<li>An <a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/execution/executor/index.html">Executor</a> has determined that it actually needs
+   the value at some key for which it has a lazy read
+   (a may_read in the <a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/types/transaction_label.html">TransactionLabel</a> of the
+   <a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/types/transaction_candidate.html">TransactionCandidate</a>).
+  Now the executor is requesting that value from the Shard that stores
+   it.</li>
+<li>A <a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/execution/executor/index.html">Executor</a> has finished and does not need
+  the value for some key
+  for which it has a lazy read (a may_read in the
+   <a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/types/transaction_label.html">TransactionLabel</a>).</li>
+</ul>
+<h2 id="structure_1">Structure<a class="headerlink" href="#structure_1" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>timestamp</code></td>
+<td><a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/types/tx_fingerprint.html">TxFingerprint</a></td>
+<td>we need the value at this logical timestamp</td>
+</tr>
+<tr>
+<td><code>key</code></td>
+<td><a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/types/kvs_key.html">KVSKey</a></td>
+<td>the value corresponds to this key</td>
+</tr>
+<tr>
+<td><code>actual</code></td>
+<td><code>bool</code></td>
+<td><code>true</code> iff we actually want a response</td>
+</tr>
+</tbody>
+</table>
+<p>If <code>actual</code> is <code>false</code>, this just means that there is no dependency on
+ this key in the current execution.</p>
+<h2 id="effects_1">Effects<a class="headerlink" href="#effects_1" title="Permanent link">&para;</a></h2>
+<p>A <a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/execution/shard/index.html">Shard</a> should delay processing a <a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/execution/shard/kvs_read_request.html">KVSReadRequest</a> until it has
+ completed processing <a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/execution/shard/kvs_acquire_lock.html">KVSAcquireLock</a> for the
+ <a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/types/tx_fingerprint.html">same timestamp</a>.</p>
+<p>Then, if <code>actual</code> is false, the Shard is done reading the value, and
+ can remove the <em>may read</em> marker from state.</p>
+<p>If <code>actual</code> is true, the Shard replaces the <em>may read</em> marker with a
+ <em>will read</em> marker.
+If the Shard knows the unique previous value written before
+ <a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/types/tx_fingerprint.html">this timestamp</a>, it sends that value in a <a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/execution/executor/kvs_read.html">KVSRead</a> to
+ the <a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/execution/executor/index.html">Executor</a> and removes the <em>will read</em> marker from state.
+Otherwise, future <a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/execution/shard/kvs_write.html">KVSWrite</a>s and/or <a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/execution/shard/update_seen_all.html">UpdateSeenAll</a>s will
+ identify this unique previous value written, and trigger the
+ <a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/execution/executor/kvs_read.html">KVSRead</a>.</p>
+<h2 id="triggers_1">Triggers<a class="headerlink" href="#triggers_1" title="Permanent link">&para;</a></h2>
+<ul>
+<li><em>to</em> <a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/execution/executor/index.html">Executor</a>: <a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/execution/executor/kvs_read.html">KVSRead</a>
+  <code>if</code> the Shard has determined the unique value written prior to this "lock"
+  <code>then</code> send a <a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/execution/executor/kvs_read.html">KVSRead</a>-message to the relevant <a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/execution/executor/index.html">Executor</a>
+  to inform them of the value</li>
+</ul>
+<h1 id="kvswrite">KVSWrite<a class="headerlink" href="#kvswrite" title="Permanent link">&para;</a></h1>
+<ul>
+<li><em>from</em> <a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/execution/executor/index.html">Executor</a></li>
+</ul>
+<h2 id="purpose_2">Purpose<a class="headerlink" href="#purpose_2" title="Permanent link">&para;</a></h2>
+<p>Informs the Shard about a new write request, which happens
+in either of the following two cases:</p>
+<ul>
+<li>A <a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/types/transaction_executable.html">TransactionExecutable</a> has determined that it actually will
+   write the value at some <a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/types/kvs_key.html">key</a> for which it has a write
+   (in its <a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/types/transaction_label.html">TransactionLabel</a>).
+  Now the <a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/execution/executor/index.html">Executor</a> is requesting that value from the <a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/execution/shard/index.html">Shard</a>
+   that stores it.</li>
+<li>A <a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/types/transaction_executable.html">TransactionExecutable</a> has finished, and does not actually need
+   to write a value for some <a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/types/kvs_key.html">key</a> for which it has a lazy write
+   (a may_write in the <a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/types/transaction_label.html">TransactionLabel</a>).</li>
+</ul>
+<!-- ‼ can we combine KVSWrite and KVSReadRequest into a single message ? -->
+<!-- ‼ Yes, but would that save anything? I'm assuming the underlying messaging infrastructure is capable of concatenating 2 messageds together into 1 big message if it has 2 messages to send at the same time, and if that would help.  -->
+
+<h2 id="structure_2">Structure<a class="headerlink" href="#structure_2" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>timestamp</code></td>
+<td><a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/types/tx_fingerprint.html">TxFingerprint</a></td>
+<td>the logical time at which we are writing this data.</td>
+</tr>
+<tr>
+<td><code>key</code></td>
+<td><a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/types/kvs_key.html">KVSKey</a></td>
+<td>the key used. With fancy hierarchical keys or suchlike, we could even specify a range of keys</td>
+</tr>
+<tr>
+<td><code>datum</code></td>
+<td><a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/types/kvs_datum.html">KVSDatum</a> option</td>
+<td>the new data to be associated with the key. No datum should only be used in a "may_write," and means don't change this value</td>
+</tr>
+</tbody>
+</table>
+<h4 id="effects_2">Effects<a class="headerlink" href="#effects_2" title="Permanent link">&para;</a></h4>
+<p>A <a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/execution/shard/index.html">Shard</a> should delay processing a <a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/execution/shard/kvs_write.html">KVSWrite</a> until it has
+ completed processing <a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/execution/shard/kvs_acquire_lock.html">KVSAcquireLock</a> for the
+ <a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/types/tx_fingerprint.html">same timestamp</a>.</p>
+<p>If the <code>datum</code> is <code>None</code>, then remove the <em>may write</em> marker from
+ <a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/types/tx_fingerprint.html">this timestamp</a> in state.
+Any reads waiting to read what is written here must instead read from
+ the previous write.
+- One way to accomplish this is to copy the previous write as a
+    "value written" at <a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/types/tx_fingerprint.html">this timestamp</a> in state.</p>
+<p>If <code>datum</code> is occupied, then remove the <em>may write</em> or <em>will write</em>
+ marker from  <a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/types/tx_fingerprint.html">this timestamp</a> in state, and record the
+ value written at <a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/types/tx_fingerprint.html">this timestamp</a> in state.</p>
+<p>This may trigger a <a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/execution/executor/kvs_read.html">KVSRead</a> if there are any <em>will read</em> markers
+ for which  <a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/types/tx_fingerprint.html">this timestamp</a> is the unique previous
+ write.</p>
+<!--
+any garbage collection of old locking info is elided in V1
+-->
+
+<h2 id="triggers_2">Triggers<a class="headerlink" href="#triggers_2" title="Permanent link">&para;</a></h2>
+<ul>
+<li><em>to</em> <a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/execution/executor/index.html">Executor</a>: <a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/execution/executor/kvs_read.html">KVSRead</a>
+   <code>for each</code> <em>will read</em> lock dependent on this write:
+    send a <a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/execution/executor/kvs_read.html">KVSRead</a> to the  <a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/execution/executor/index.html">relevant Executor</a> with the value written.</li>
+</ul>
+<h1 id="updateseenall">UpdateSeenAll<a class="headerlink" href="#updateseenall" title="Permanent link">&para;</a></h1>
+<ul>
+<li><em>from</em> Mempool Engines</li>
+</ul>
+<h2 id="purpose_3">Purpose<a class="headerlink" href="#purpose_3" title="Permanent link">&para;</a></h2>
+<p>In order to actually serve read requests,
+the Shard needs to know that it will not receive more
+write requests before a  <a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/types/tx_fingerprint.html">certain timestamp</a>.
+These are in general broadcast to all <a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/execution/shard/index.html">Shard</a>s.</p>
+<p>It is important that  <a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/mempool/worker/index.html">the Worker Engine</a> has received
+<a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/mempool/worker/kvs_lock_acquired.html">KVSLockAcquired</a>-messages for all <a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/execution/shard/kvs_acquire_lock.html">KVSAcquireLock</a>s it has sent (or will ever send) at or before <a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/types/tx_fingerprint.html">the timestamp</a>.
+In other words,
+shards know about all possible read and write requests of <a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/types/transaction_candidate.html">TransactionCandidate</a>s
+for which the worker is curator and may come earlier.</p>
+<div class="admonition todo">
+<p class="admonition-title">Todo</p>
+<p>rephrase the above paragraph</p>
+</div>
+<p>Each <a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/mempool/worker/index.html">worker engine</a> only needs to send the Shard Engine <a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/execution/shard/update_seen_all.html">UpdateSeenAll</a> messages concerning worker-specific ordering (batch number and sequence number within the batch).
+This means that each Shard Engine needs to hear from  <a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/mempool/worker/index.html">every Worker Engine</a> periodically to be sure it is not waiting for any transactions.
+From there, the Shard uses TimestampOrderingInformation about the Narwhal DAG and Consensus to fill in a total order.</p>
+<h2 id="structure_3">Structure<a class="headerlink" href="#structure_3" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>timestamp</code></td>
+<td><a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/types/tx_fingerprint.html">TxFingerprint</a></td>
+<td>represents a the position in the total order (in V1)</td>
+</tr>
+<tr>
+<td><code>write</code></td>
+<td><code>bool</code></td>
+<td>seen all read and seen all write can (and should) be separate.</td>
+</tr>
+</tbody>
+</table>
+<p>For V1, we only care about <code>write = true</code>
+because we don't garbage collect and assume multi-version storage.
+From V2 onward,
+the Shard is keeping additional ordering information
+and we do have garbage collection protocols.</p>
+<h2 id="effects_3">Effects<a class="headerlink" href="#effects_3" title="Permanent link">&para;</a></h2>
+<p>Shards can now identify the unique previous write prior to each read at or before <a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/types/tx_fingerprint.html">this timestamp</a>.</p>
+<!-- In V2, this is not necessarily true: they may not have total order yet. -->
+<p>If that unique previous write has a value written, and the read is marked <em>will read</em>, they can send a <a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/execution/executor/kvs_read.html">KVSRead</a> with that value to the <a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/execution/executor/index.html">relevant Executor</a>.</p>
+<h2 id="triggers_3">Triggers<a class="headerlink" href="#triggers_3" title="Permanent link">&para;</a></h2>
+<ul>
+<li><em>to</em> <a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/execution/executor/index.html">Executor</a>: <a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/execution/executor/kvs_read.html">KVSRead</a>
+  <code>for each</code> <em>will read</em> for which we have established a unique previous write value
+  send a <code>KVSRead</code> message to the relevant <a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/execution/executor/index.html">Executor</a></li>
+</ul>
+<h3 id="timestamporderinginformation">TimestampOrderingInformation<a class="headerlink" href="#timestamporderinginformation" title="Permanent link">&para;</a></h3>
+<ul>
+<li><em>from</em> <a href="#Mempool">Mempool</a></li>
+</ul>
+<h4 id="purpose_4">Purpose<a class="headerlink" href="#purpose_4" title="Permanent link">&para;</a></h4>
+<p>While each transaction comes with a <code>Timestamp</code>, the shards do not actually know the order of those timestamps until the DAG is built, and consensus decisions are made. This message represents the mempool communicating (partial) timestamp ordering. These are broadcast to all shards.</p>
+<h4 id="structure_4">Structure<a class="headerlink" href="#structure_4" title="Permanent link">&para;</a></h4>
+<div class="admonition todo">
+<p class="admonition-title">Todo</p>
+<p>One way to convey this is to include the entire DAG structure (albeit without the transaction contents of each worker batch).
+For now, I do not know what the internal structure of this message looks like.</p>
+</div>
+<div class="admonition todo">
+<p class="admonition-title">Todo</p>
+<p>check whether,
+① worker-timestamp (= tx fingerprint),
+② primary-timestamp (= pure DAG structure based on blocks/headers),
+③ consensus-timestamp (= total order)
+are sufficiently many cases or we need yet another intermediate gradual step of ordering.
+E.g., does is make sense to also take into account local headers that (without integrity votes).</p>
+</div>
+<h3 id="effects_4">Effects<a class="headerlink" href="#effects_4" title="Permanent link">&para;</a></h3>
+<p>As shards learn more ordering information, they can finally complete reads (since they learn which writes most recently occurred).</p>
+<h3 id="triggers_4">Triggers<a class="headerlink" href="#triggers_4" title="Permanent link">&para;</a></h3>
+<ul>
+<li><em>to</em> <a href="index.html">Executor</a>: <a href="../executor/kvs_read.html"><code>KVSRead</code></a>
+  <code>for each</code> locked key for which we have established a unique write value,
+  send a <code>KVSRead</code> message to the appropriate Executor</li>
+</ul>
+<h3 id="anchorchosen">AnchorChosen<a class="headerlink" href="#anchorchosen" title="Permanent link">&para;</a></h3>
+<ul>
+<li><em>from</em> <a href="../../consensus_v1.html">Consensus</a></li>
+</ul>
+<h4 id="purpose_5">Purpose<a class="headerlink" href="#purpose_5" title="Permanent link">&para;</a></h4>
+<p>Inform shards about the most recently decided value by the consensus.</p>
+<h4 id="structure_5">Structure<a class="headerlink" href="#structure_5" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>chain_id</code></td>
+<td><a href="#ChainId"><code>ChainId</code></a></td>
+<td>the chain Id</td>
+</tr>
+<tr>
+<td><code>learner</code></td>
+<td><code>Learner</code></td>
+<td>learner (in V2 this is always <span class="arithmatex">\(\red\alpha\)</span>)</td>
+</tr>
+<tr>
+<td><code>height</code></td>
+<td><code>Height</code></td>
+<td>height of the block</td>
+</tr>
+<tr>
+<td><code>anchor</code></td>
+<td><code>NarwhalBlock</code></td>
+<td>the value that consensus decided upon</td>
+</tr>
+</tbody>
+</table>
+<h4 id="effects_5">Effects<a class="headerlink" href="#effects_5" title="Permanent link">&para;</a></h4>
+<p>The shard learns more ordering information. In particular, with this and enough <code>TimestampOrderingInformation</code> messages, it should be able to order all transactions before the new <code>anchor</code>.</p>
+<p>Once we have enough ordering information to establish the unique write preceding a key on which there is a read lock, and we have a value for that write, we can send that value to the relevant Executor.</p>
+<h4 id="triggers_5">Triggers<a class="headerlink" href="#triggers_5" title="Permanent link">&para;</a></h4>
+<ul>
+<li>to <a href="../executor/index.html">Executor</a>: <a href="../executor/kvs_read.html"><code>KVSRead</code></a>
+  <code>for each</code> locked key for which we have established a unique write value,
+  send a <code>KVSRead</code> message to the appropriate Executor.</li>
+</ul>
+<details class='quote'><summary>(Wiki) links on this page</summary><ul><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/execution/executor/index.html' alt='node_architecture/ordering/execution/executor/index.md'>Executor</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/execution/executor/index.html' alt='node_architecture/ordering/execution/executor/index.md'>Executor</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/types/kvs_key.html' alt='node_architecture/ordering/types/kvs_key.md'>KVSKey</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/types/transaction_candidate.html' alt='node_architecture/ordering/types/transaction_candidate.md'>TransactionCandidate</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/types/transaction_candidate.html' alt='node_architecture/ordering/types/transaction_candidate.md'>TransactionCandidate</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/mempool/worker/index.html' alt='node_architecture/ordering/mempool/worker/index.md'>Worker Engine</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/execution/shard/kvs_acquire_lock.html' alt='node_architecture/ordering/execution/shard/kvs_acquire_lock.md'>KVSAcquireLock</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/mempool/worker/index.html' alt='node_architecture/ordering/mempool/worker/index.md'>Worker Engine</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/types/tx_fingerprint.html' alt='node_architecture/ordering/types/tx_fingerprint.md'>TxFingerprint</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/types/transaction_candidate.html' alt='node_architecture/ordering/types/transaction_candidate.md'>TransactionCandidate</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/types/tx_fingerprint.html' alt='node_architecture/ordering/types/tx_fingerprint.md'>TxFingerprint</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/types/transaction_candidate.html' alt='node_architecture/ordering/types/transaction_candidate.md'>TransactionCandidate</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/execution/shard/kvs_write.html' alt='node_architecture/ordering/execution/shard/kvs_write.md'>KVSWrite</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/types/transaction_candidate.html' alt='node_architecture/ordering/types/transaction_candidate.md'>TransactionCandidate</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/execution/shard/kvs_write.html' alt='node_architecture/ordering/execution/shard/kvs_write.md'>KVSWrite</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/types/transaction_candidate.html' alt='node_architecture/ordering/types/transaction_candidate.md'>TransactionCandidate</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/identity/types/external_identity.html' alt='node_architecture/identity/types/external_identity.md'>ExternalIdentity</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/execution/executor/index.html' alt='node_architecture/ordering/execution/executor/index.md'>Executor</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/execution/executor/kvs_read.html' alt='node_architecture/ordering/execution/executor/kvs_read.md'>KVSRead</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/execution/executor/index.html' alt='node_architecture/ordering/execution/executor/index.md'>Executor</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/types/transaction_candidate.html' alt='node_architecture/ordering/types/transaction_candidate.md'>TransactionCandidate</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/identity/types/external_identity.html' alt='node_architecture/identity/types/external_identity.md'>ExternalIdentity</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/execution/executor/index.html' alt='node_architecture/ordering/execution/executor/index.md'>Executor</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/execution/executor/index.html' alt='node_architecture/ordering/execution/executor/index.md'>Executor</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/execution/shard/kvs_read_request.html' alt='node_architecture/ordering/execution/shard/kvs_read_request.md'>KVSReadRequest</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/consensus_v1.html' alt='node_architecture/ordering/consensus_v1.md'>Consensus Engine</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/types/transaction_candidate.html' alt='node_architecture/ordering/types/transaction_candidate.md'>TransactionCandidate</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/types/transaction_candidate.html' alt='node_architecture/ordering/types/transaction_candidate.md'>TransactionCandidate</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/types/transaction_candidate.html' alt='node_architecture/ordering/types/transaction_candidate.md'>TransactionCandidate</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/consensus_v1.html' alt='node_architecture/ordering/consensus_v1.md'>Consensus Engine</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/types/tx_fingerprint.html' alt='node_architecture/ordering/types/tx_fingerprint.md'>TxFingerprint</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/types/transaction_candidate.html' alt='node_architecture/ordering/types/transaction_candidate.md'>TransactionCandidate</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/types/transaction_candidate.html' alt='node_architecture/ordering/types/transaction_candidate.md'>TransactionCandidate</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/execution/executor/kvs_read.html' alt='node_architecture/ordering/execution/executor/kvs_read.md'>KVSRead</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/execution/executor/index.html' alt='node_architecture/ordering/execution/executor/index.md'>Executor</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/types/transaction_candidate.html' alt='node_architecture/ordering/types/transaction_candidate.md'>TransactionCandidate</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/types/transaction_candidate.html' alt='node_architecture/ordering/types/transaction_candidate.md'>TransactionCandidate</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/types/transaction_candidate.html' alt='node_architecture/ordering/types/transaction_candidate.md'>TransactionCandidate</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/types/transaction_candidate.html' alt='node_architecture/ordering/types/transaction_candidate.md'>TransactionCandidate</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/types/transaction_candidate.html' alt='node_architecture/ordering/types/transaction_candidate.md'>TransactionCandidate</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/execution/executor/index.html' alt='node_architecture/ordering/execution/executor/index.md'>Executor</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/types/transaction_candidate.html' alt='node_architecture/ordering/types/transaction_candidate.md'>TransactionCandidate</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/execution/shard/kvs_write.html' alt='node_architecture/ordering/execution/shard/kvs_write.md'>KVSWrite</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/execution/shard/kvs_write.html' alt='node_architecture/ordering/execution/shard/kvs_write.md'>KVSWrite</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/types/transaction_candidate.html' alt='node_architecture/ordering/types/transaction_candidate.md'>TransactionCandidate</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/types/transaction_candidate.html' alt='node_architecture/ordering/types/transaction_candidate.md'>TransactionCandidate</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/types/transaction_candidate.html' alt='node_architecture/ordering/types/transaction_candidate.md'>TransactionCandidate</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/consensus_v1.html' alt='node_architecture/ordering/consensus_v1.md'>Consensus Engine</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/execution/shard/kvs_acquire_lock.html' alt='node_architecture/ordering/execution/shard/kvs_acquire_lock.md'>KVSAcquireLock</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/execution/executor/kvs_read.html' alt='node_architecture/ordering/execution/executor/kvs_read.md'>KVSRead</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/types/tx_fingerprint.html' alt='node_architecture/ordering/types/tx_fingerprint.md'>TxFingerprint</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/mempool/worker/index.html' alt='node_architecture/ordering/mempool/worker/index.md'>Worker Engine</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/mempool/worker/index.html' alt='node_architecture/ordering/mempool/worker/index.md'>Worker Engine</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/mempool/worker/kvs_lock_acquired.html' alt='node_architecture/ordering/mempool/worker/kvs_lock_acquired.md'>KVSLockAcquired</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/execution/shard/kvs_acquire_lock.html' alt='node_architecture/ordering/execution/shard/kvs_acquire_lock.md'>KVSAcquireLock</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/types/tx_fingerprint.html' alt='node_architecture/ordering/types/tx_fingerprint.md'>TxFingerprint</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/consensus_v1.html' alt='node_architecture/ordering/consensus_v1.md'>Consensus Engine</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/consensus_v1.html' alt='node_architecture/ordering/consensus_v1.md'>Consensus Engine</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/consensus_v1.html' alt='node_architecture/ordering/consensus_v1.md'>Consensus Engine</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/mempool/worker/index.html' alt='node_architecture/ordering/mempool/worker/index.md'>Worker Engine</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/execution/executor/index.html' alt='node_architecture/ordering/execution/executor/index.md'>Executor</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/types/kvs_key.html' alt='node_architecture/ordering/types/kvs_key.md'>KVSKey</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/execution/shard/kvs_read_request.html' alt='node_architecture/ordering/execution/shard/kvs_read_request.md'>KVSReadRequest</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/types/kvs_key.html' alt='node_architecture/ordering/types/kvs_key.md'>KVSKey</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/types/kvs_key.html' alt='node_architecture/ordering/types/kvs_key.md'>KVSKey</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/execution/shard/kvs_write.html' alt='node_architecture/ordering/execution/shard/kvs_write.md'>KVSWrite</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/types/tx_fingerprint.html' alt='node_architecture/ordering/types/tx_fingerprint.md'>TxFingerprint</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/types/kvs_key.html' alt='node_architecture/ordering/types/kvs_key.md'>KVSKey</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/execution/shard/kvs_write.html' alt='node_architecture/ordering/execution/shard/kvs_write.md'>KVSWrite</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/types/tx_fingerprint.html' alt='node_architecture/ordering/types/tx_fingerprint.md'>TxFingerprint</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/identity/types/external_identity.html' alt='node_architecture/identity/types/external_identity.md'>ExternalIdentity</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/mempool/worker/index.html' alt='node_architecture/ordering/mempool/worker/index.md'>Worker Engine</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/identity/types/external_identity.html' alt='node_architecture/identity/types/external_identity.md'>ExternalIdentity</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/execution/executor/index.html' alt='node_architecture/ordering/execution/executor/index.md'>Executor</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/types/transaction_candidate.html' alt='node_architecture/ordering/types/transaction_candidate.md'>TransactionCandidate</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/types/tx_fingerprint.html' alt='node_architecture/ordering/types/tx_fingerprint.md'>TxFingerprint</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/execution/shard/index.html' alt='node_architecture/ordering/execution/shard/index.md'>Shard</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/types/tx_fingerprint.html' alt='node_architecture/ordering/types/tx_fingerprint.md'>TxFingerprint</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/execution/shard/index.html' alt='node_architecture/ordering/execution/shard/index.md'>Shard</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/types/tx_fingerprint.html' alt='node_architecture/ordering/types/tx_fingerprint.md'>TxFingerprint</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/execution/shard/index.html' alt='node_architecture/ordering/execution/shard/index.md'>Shard</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/execution/shard/index.html' alt='node_architecture/ordering/execution/shard/index.md'>Shard</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/execution/executor/index.html' alt='node_architecture/ordering/execution/executor/index.md'>Executor</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/execution/shard/index.html' alt='node_architecture/ordering/execution/shard/index.md'>Shard</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/mempool/worker/index.html' alt='node_architecture/ordering/mempool/worker/index.md'>Worker Engine</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/mempool/worker/kvs_lock_acquired.html' alt='node_architecture/ordering/mempool/worker/kvs_lock_acquired.md'>KVSLockAcquired</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/mempool/worker/index.html' alt='node_architecture/ordering/mempool/worker/index.md'>Worker Engine</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/execution/shard/update_seen_all.html' alt='node_architecture/ordering/execution/shard/update_seen_all.md'>UpdateSeenAll</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/mempool/worker/index.html' alt='node_architecture/ordering/mempool/worker/index.md'>Worker Engine</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/mempool/worker/kvs_lock_acquired.html' alt='node_architecture/ordering/mempool/worker/kvs_lock_acquired.md'>KVSLockAcquired</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/mempool/worker/kvs_lock_acquired.html' alt='node_architecture/ordering/mempool/worker/kvs_lock_acquired.md'>KVSLockAcquired</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/mempool/worker/index.html' alt='node_architecture/ordering/mempool/worker/index.md'>Worker Engine</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/execution/executor/index.html' alt='node_architecture/ordering/execution/executor/index.md'>Executor</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/execution/executor/kvs_read.html' alt='node_architecture/ordering/execution/executor/kvs_read.md'>KVSRead</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/execution/executor/kvs_read.html' alt='node_architecture/ordering/execution/executor/kvs_read.md'>KVSRead</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/execution/executor/index.html' alt='node_architecture/ordering/execution/executor/index.md'>Executor</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/execution/executor/index.html' alt='node_architecture/ordering/execution/executor/index.md'>Executor</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/execution/executor/index.html' alt='node_architecture/ordering/execution/executor/index.md'>Executor</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/types/transaction_label.html' alt='node_architecture/ordering/types/transaction_label.md'>TransactionLabel</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/types/transaction_candidate.html' alt='node_architecture/ordering/types/transaction_candidate.md'>TransactionCandidate</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/execution/executor/index.html' alt='node_architecture/ordering/execution/executor/index.md'>Executor</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/types/transaction_label.html' alt='node_architecture/ordering/types/transaction_label.md'>TransactionLabel</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/types/tx_fingerprint.html' alt='node_architecture/ordering/types/tx_fingerprint.md'>TxFingerprint</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/types/kvs_key.html' alt='node_architecture/ordering/types/kvs_key.md'>KVSKey</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/execution/shard/index.html' alt='node_architecture/ordering/execution/shard/index.md'>Shard</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/execution/shard/kvs_read_request.html' alt='node_architecture/ordering/execution/shard/kvs_read_request.md'>KVSReadRequest</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/execution/shard/kvs_acquire_lock.html' alt='node_architecture/ordering/execution/shard/kvs_acquire_lock.md'>KVSAcquireLock</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/types/tx_fingerprint.html' alt='node_architecture/ordering/types/tx_fingerprint.md'>TxFingerprint</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/types/tx_fingerprint.html' alt='node_architecture/ordering/types/tx_fingerprint.md'>TxFingerprint</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/execution/executor/kvs_read.html' alt='node_architecture/ordering/execution/executor/kvs_read.md'>KVSRead</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/execution/executor/index.html' alt='node_architecture/ordering/execution/executor/index.md'>Executor</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/execution/shard/kvs_write.html' alt='node_architecture/ordering/execution/shard/kvs_write.md'>KVSWrite</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/execution/shard/update_seen_all.html' alt='node_architecture/ordering/execution/shard/update_seen_all.md'>UpdateSeenAll</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/execution/executor/kvs_read.html' alt='node_architecture/ordering/execution/executor/kvs_read.md'>KVSRead</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/execution/executor/index.html' alt='node_architecture/ordering/execution/executor/index.md'>Executor</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/execution/executor/kvs_read.html' alt='node_architecture/ordering/execution/executor/kvs_read.md'>KVSRead</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/execution/executor/kvs_read.html' alt='node_architecture/ordering/execution/executor/kvs_read.md'>KVSRead</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/execution/executor/index.html' alt='node_architecture/ordering/execution/executor/index.md'>Executor</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/execution/executor/index.html' alt='node_architecture/ordering/execution/executor/index.md'>Executor</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/types/transaction_executable.html' alt='node_architecture/ordering/types/transaction_executable.md'>TransactionExecutable</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/types/kvs_key.html' alt='node_architecture/ordering/types/kvs_key.md'>KVSKey</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/types/transaction_label.html' alt='node_architecture/ordering/types/transaction_label.md'>TransactionLabel</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/execution/executor/index.html' alt='node_architecture/ordering/execution/executor/index.md'>Executor</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/execution/shard/index.html' alt='node_architecture/ordering/execution/shard/index.md'>Shard</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/types/transaction_executable.html' alt='node_architecture/ordering/types/transaction_executable.md'>TransactionExecutable</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/types/kvs_key.html' alt='node_architecture/ordering/types/kvs_key.md'>KVSKey</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/types/transaction_label.html' alt='node_architecture/ordering/types/transaction_label.md'>TransactionLabel</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/types/tx_fingerprint.html' alt='node_architecture/ordering/types/tx_fingerprint.md'>TxFingerprint</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/types/kvs_key.html' alt='node_architecture/ordering/types/kvs_key.md'>KVSKey</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/types/kvs_datum.html' alt='node_architecture/ordering/types/kvs_datum.md'>KVSDatum</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/execution/shard/index.html' alt='node_architecture/ordering/execution/shard/index.md'>Shard</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/execution/shard/kvs_write.html' alt='node_architecture/ordering/execution/shard/kvs_write.md'>KVSWrite</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/execution/shard/kvs_acquire_lock.html' alt='node_architecture/ordering/execution/shard/kvs_acquire_lock.md'>KVSAcquireLock</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/types/tx_fingerprint.html' alt='node_architecture/ordering/types/tx_fingerprint.md'>TxFingerprint</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/types/tx_fingerprint.html' alt='node_architecture/ordering/types/tx_fingerprint.md'>TxFingerprint</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/types/tx_fingerprint.html' alt='node_architecture/ordering/types/tx_fingerprint.md'>TxFingerprint</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/types/tx_fingerprint.html' alt='node_architecture/ordering/types/tx_fingerprint.md'>TxFingerprint</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/types/tx_fingerprint.html' alt='node_architecture/ordering/types/tx_fingerprint.md'>TxFingerprint</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/execution/executor/kvs_read.html' alt='node_architecture/ordering/execution/executor/kvs_read.md'>KVSRead</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/types/tx_fingerprint.html' alt='node_architecture/ordering/types/tx_fingerprint.md'>TxFingerprint</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/execution/executor/index.html' alt='node_architecture/ordering/execution/executor/index.md'>Executor</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/execution/executor/kvs_read.html' alt='node_architecture/ordering/execution/executor/kvs_read.md'>KVSRead</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/execution/executor/kvs_read.html' alt='node_architecture/ordering/execution/executor/kvs_read.md'>KVSRead</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/execution/executor/index.html' alt='node_architecture/ordering/execution/executor/index.md'>Executor</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/types/tx_fingerprint.html' alt='node_architecture/ordering/types/tx_fingerprint.md'>TxFingerprint</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/execution/shard/index.html' alt='node_architecture/ordering/execution/shard/index.md'>Shard</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/mempool/worker/index.html' alt='node_architecture/ordering/mempool/worker/index.md'>Worker Engine</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/mempool/worker/kvs_lock_acquired.html' alt='node_architecture/ordering/mempool/worker/kvs_lock_acquired.md'>KVSLockAcquired</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/execution/shard/kvs_acquire_lock.html' alt='node_architecture/ordering/execution/shard/kvs_acquire_lock.md'>KVSAcquireLock</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/types/tx_fingerprint.html' alt='node_architecture/ordering/types/tx_fingerprint.md'>TxFingerprint</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/types/transaction_candidate.html' alt='node_architecture/ordering/types/transaction_candidate.md'>TransactionCandidate</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/mempool/worker/index.html' alt='node_architecture/ordering/mempool/worker/index.md'>Worker Engine</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/execution/shard/update_seen_all.html' alt='node_architecture/ordering/execution/shard/update_seen_all.md'>UpdateSeenAll</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/mempool/worker/index.html' alt='node_architecture/ordering/mempool/worker/index.md'>Worker Engine</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/types/tx_fingerprint.html' alt='node_architecture/ordering/types/tx_fingerprint.md'>TxFingerprint</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/types/tx_fingerprint.html' alt='node_architecture/ordering/types/tx_fingerprint.md'>TxFingerprint</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/execution/executor/kvs_read.html' alt='node_architecture/ordering/execution/executor/kvs_read.md'>KVSRead</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/execution/executor/index.html' alt='node_architecture/ordering/execution/executor/index.md'>Executor</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/execution/executor/index.html' alt='node_architecture/ordering/execution/executor/index.md'>Executor</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/execution/executor/kvs_read.html' alt='node_architecture/ordering/execution/executor/kvs_read.md'>KVSRead</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/execution/executor/index.html' alt='node_architecture/ordering/execution/executor/index.md'>Executor</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/execution/shard/kvs_acquire_lock.html' alt='node_architecture/ordering/execution/shard/kvs_acquire_lock.md'>KVSAcquireLock</a></li><li><a href='https://anoma.github.io/nspec/v2/node_architecture/ordering/execution/shard/kvs_write.html' alt='node_architecture/ordering/execution/shard/kvs_write.md'>KVSWrite</a></li></ul></details>
+
+<!-- mermaid_wikilinks -->
+
+<div class="footnote">
+<hr />
+<ol>
+<li id="fn:1">
+<p>For the purpose of this discussion, we call
+a <em>write lock request</em> a <a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/execution/shard/kvs_acquire_lock.html">KVSAcquireLock</a> message
+for a key for which a <a href="https://anoma.github.io/nspec/v2/node_architecture/ordering/execution/shard/kvs_write.html">write request</a> will or may be issued.&#160;<a class="footnote-backref" href="#fnref:1" title="Jump back to footnote 1 in the text">&#8617;</a><a class="footnote-backref" href="#fnref2:1" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+</li>
+</ol>
+</div>
+
+
+
+
+
+
+
+  
+    
+  
+  
+    
+  
+
+
+  <aside class="md-source-file">
+    
+      
+  <span class="md-source-file__fact">
+    <span class="md-icon" title="Last update">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
+    </span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago"><span class="timeago" datetime="2024-08-06T20:14:36+02:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date">2024-08-06</span>
+  </span>
+
+    
+    
+      
+  <span class="md-source-file__fact">
+    <span class="md-icon" title="Created">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14.47 15.08 11 13V7h1.5v5.25l3.08 1.83c-.41.28-.79.62-1.11 1m-1.39 4.84c-.36.05-.71.08-1.08.08-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8c0 .37-.03.72-.08 1.08.69.1 1.33.32 1.92.64.1-.56.16-1.13.16-1.72 0-5.5-4.5-10-10-10S2 6.5 2 12s4.47 10 10 10c.59 0 1.16-.06 1.72-.16-.32-.59-.54-1.23-.64-1.92M18 15v3h-3v2h3v3h2v-3h3v-2h-3v-3z"/></svg>
+    </span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago"><span class="timeago" datetime="2024-03-24T00:41:13+01:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date">2024-03-24</span>
+  </span>
+
+    
+    
+    
+  </aside>
+
+
+  
+
+
+
+  <form class="md-feedback" name="feedback" hidden>
+    <fieldset>
+      <legend class="md-feedback__title">
+        Was this page helpful?
+      </legend>
+      <div class="md-feedback__inner">
+        <div class="md-feedback__list">
+          
+            <button class="md-feedback__icon md-icon" type="submit" title="This page was helpful" data-md-value="1">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12 21.35-1.45-1.32C5.4 15.36 2 12.27 2 8.5 2 5.41 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.08C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.41 22 8.5c0 3.77-3.4 6.86-8.55 11.53z"/></svg>
+            </button>
+          
+            <button class="md-feedback__icon md-icon" type="submit" title="This page could be improved" data-md-value="0">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12 21.35-1.45-1.32C5.4 15.36 2 12.27 2 8.5 2 5.41 4.42 3 7.5 3c.67 0 1.32.12 1.94.33L13 9.35l-4 5zM16.5 3C19.58 3 22 5.41 22 8.5c0 3.77-3.4 6.86-8.55 11.53L12 21.35l-1-7 4.5-5-2.65-5.08C13.87 3.47 15.17 3 16.5 3"/></svg>
+            </button>
+          
+        </div>
+        <div class="md-feedback__note">
+          
+            <div data-md-value="1" hidden>
+              
+              
+                
+              
+              Thanks for your feedback!
+            </div>
+          
+            <div data-md-value="0" hidden>
+              
+              
+                
+              
+              Thanks for your feedback! We'll try to improve this page in the future.
+            </div>
+          
+        </div>
+      </div>
+    </fieldset>
+  </form>
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../index.html" class="md-footer__link md-footer__link--prev" aria-label="Previous: Execution">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Execution
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="kvs_acquire_lock.html" class="md-footer__link md-footer__link--next" aria-label="Next: KVSAcquireLock">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                KVSAcquireLock
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  <div class="md-copyright__highlight">
+    &copy; 2024 <a href="https://anoma.net">Anoma Foundation</a> - Last updated: October 31, 2024 at 04:27 PM UTC
+  </div>
+  
+
+  <ul>
+    <li><a href="https://anoma.net/" target="_blank">Anoma Official Website</a> </li>
+    <li><a href="https://art.anoma.net" target="_blank">Anoma Research Topics (ART)</a></li>
+    <li><a href="https://anoma.net/blog" target="_blank">Anoma Blog</a></li>
+    <li><a href="https://anoma.net/talks" target="_blank">Anoma Talks</a></li>
+  </ul>
+  <ul>
+    <span class="md-copyright__highlight">Extra resources for Anoma
+      Specification collaborators</span>
+      
+      <li><a href="https://anoma.github.io/nspec/v2/indexes/links.html">Quick links</a></li>
+      <li><a href="https://anoma.github.io/nspec/v2/indexes/juvix_modules.html">Juvix modules</a></li>
+      <li><a href="https://anoma.github.io/nspec/v2/tutorial/index.html">Markdown tutorials for writing Anoma
+          Specification</a></li>
+      <li><a href="https://anoma.github.io/nspec/v2/tutorial/engines/index.html">On engines in Anoma</a></li>
+  </ul>
+</div>
+      
+        <div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://x.com/anoma" target="_blank" rel="noopener" title="x.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M389.2 48h70.6L305.6 224.2 487 464H345L233.7 318.6 106.5 464H35.8l164.9-188.5L26.8 48h145.6l100.5 132.9zm-24.8 373.8h39.1L151.1 88h-42z"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/anoma" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8M97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://anoma.net/blog" target="_blank" rel="noopener" title="anoma.net" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M192 32c0 17.7 14.3 32 32 32 123.7 0 224 100.3 224 224 0 17.7 14.3 32 32 32s32-14.3 32-32C512 128.9 383.1 0 224 0c-17.7 0-32 14.3-32 32m0 96c0 17.7 14.3 32 32 32 70.7 0 128 57.3 128 128 0 17.7 14.3 32 32 32s32-14.3 32-32c0-106-86-192-192-192-17.7 0-32 14.3-32 32m-96 16c0-26.5-21.5-48-48-48S0 117.5 0 144v224c0 79.5 64.5 144 144 144s144-64.5 144-144-64.5-144-144-144h-16v96h16c26.5 0 48 21.5 48 48s-21.5 48-48 48-48-21.5-48-48z"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://research.anoma.net" target="_blank" rel="noopener" title="research.anoma.net" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M225.9 32C103.3 32 0 130.5 0 252.1 0 256 .1 480 .1 480l225.8-.2c122.7 0 222.1-102.3 222.1-223.9S348.6 32 225.9 32M224 384c-19.4 0-37.9-4.3-54.4-12.1L88.5 392l22.9-75c-9.8-18.1-15.4-38.9-15.4-61 0-70.7 57.3-128 128-128s128 57.3 128 128-57.3 128-128 128"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://youtube.com/anoma" target="_blank" rel="noopener" title="youtube.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M549.655 124.083c-6.281-23.65-24.787-42.276-48.284-48.597C458.781 64 288 64 288 64S117.22 64 74.629 75.486c-23.497 6.322-42.003 24.947-48.284 48.597-11.412 42.867-11.412 132.305-11.412 132.305s0 89.438 11.412 132.305c6.281 23.65 24.787 41.5 48.284 47.821C117.22 448 288 448 288 448s170.78 0 213.371-11.486c23.497-6.321 42.003-24.171 48.284-47.821 11.412-42.867 11.412-132.305 11.412-132.305s0-89.438-11.412-132.305m-317.51 213.508V175.185l142.739 81.205z"/></svg>
+    </a>
+  
+    
+    
+    
+    
+    <a href="mailto:arts@heliax.dev" target="_blank" rel="noopener" title="" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m20 8-8 5-8-5V6l8 5 8-5m0-2H4c-1.11 0-2 .89-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "../../../..", "features": ["announce.dismiss", "content.code.annotate", "content.code.copy", "content.tooltips", "navigation.footer", "navigation.path", "navigation.prune", "navigation.tabs", "navigation.sections", "navigation.indexes", "search.highlight", "search.suggest", "search.sharing", "toc.follow"], "search": "../../../../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../../../../assets/javascripts/bundle.d6f25eb3.min.js"></script>
+      
+        <script src="../../../../js/timeago.min.js"></script>
+      
+        <script src="../../../../js/timeago_mkdocs_material.js"></script>
+      
+        <script src="../../../../assets/js/extra.js"></script>
+      
+        <script src="../../../../assets/js/highlight.js"></script>
+      
+        <script src="../../../../assets/js/mathjax.js"></script>
+      
+        <script src="../../../../assets/js/tex-svg-full.js"></script>
+      
+    
+  <script id="init-glightbox">const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "slide"});
+document$.subscribe(() => { lightbox.reload() });
+</script></body>
+</html>
