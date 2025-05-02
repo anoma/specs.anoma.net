@@ -640,6 +640,15 @@
 </a>
 </li>
 <li class="md-nav__item">
+<a class="md-nav__link" href="#common-flavours-of-arms">
+<span class="md-ellipsis">
+      
+        Common flavours of ARMs
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
 <a class="md-nav__link" href="#the-role-of-the-arm">
 <span class="md-ellipsis">
       
@@ -780,6 +789,8 @@
 <li>to prove the transaction satisfies the user constraints, there are <a href="https://specs.anoma.net/main/arch/system/state/resource_machine/data_structures/action/resource_logic_proof.html">resource logic proofs</a>.</li>
 </ol>
 <p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="https://specs.anoma.net/main/images/proof_contexts.svg"><img alt="Proof contexts associated with data structures" src="https://specs.anoma.net/main/images/proof_contexts.svg"/></a></p>
+<h2 id="common-flavours-of-arms">Common flavours of ARMs<a class="headerlink" href="#common-flavours-of-arms" title="Anchor link to this section for reference">¶</a></h2>
+<p>A resource machine instantiation is called <strong>shielded</strong> if it achieves both data and function privacy. Any other resource machine is considered <strong>transparent</strong> from the privacy perspective.</p>
 <h2 id="the-role-of-the-arm">The role of the ARM<a class="headerlink" href="#the-role-of-the-arm" title="Anchor link to this section for reference">¶</a></h2>
 <p>The ARM is used to create, compose, and verify transactions. It is stateless and run by every node that processes transactions. Anoma users submit their intents to the intent gossip network in the form of unbalanced ARM transactions with metadata, which are received and processed by solvers that output balanced ARM transactions. These transactions are then ordered and finally sent to the executor node, that verifies and executes the transactions in the determined order, updating the global state.</p>
 <h2 id="the-specification">The specification<a class="headerlink" href="#the-specification" title="Anchor link to this section for reference">¶</a></h2>
@@ -875,8 +886,8 @@
 <div class="md-copyright__highlight">
       Powered by Mkdocs, Material 9.6.12-insiders-4.53.16 and Juvix v0.6.10
     </div>
-<strong>Version: v0.1.4 - Updated: April 24,
-    2025 at 05:13 AM UTC</strong>
+<strong>Version: v0.1.4 - Updated: May 02,
+    2025 at 12:37 PM UTC</strong>
 <br/>
 <strong>Latest version: <a href="https://specs.anoma.net/latest">
     https://specs.anoma.net/latest</a></strong>

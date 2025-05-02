@@ -951,7 +951,7 @@
 <li>Instance <span class="arithmatex">\(x: PS.Instance\)</span> is the ordered input data structure used to produce and verify a proof.</li>
 <li>Witness <span class="arithmatex">\(w: PS.Witness\)</span> is the ordered input data structure used to produce (but not verify) a proof.</li>
 <li>Proving key <span class="arithmatex">\(pk: PS.ProvingKey\)</span> contains the data required to produce a proof for a pair <span class="arithmatex">\((x, w)\)</span>. Specific to a particular statement (different statements <code>f</code> and <code>f'</code> imply different proving keys) being proven, but doesn't depend on the inputs.</li>
-<li>Verifying key <span class="arithmatex">\(vk: PS.VerifyingKey\)</span> contains the data required, along with the instance <span class="arithmatex">\(x\)</span>, to verify a proof <span class="arithmatex">\(\pi\)</span>. Specific to a particular statement being proven (different statements <code>f</code> and <code>f'</code> imply different verifying keys), but doesn't depend on the inputs.</li>
+<li>Verifying key <span class="arithmatex">\(vk: PS.VerifyingKey\)</span> contains the data required, along with the instance <span class="arithmatex">\(x\)</span>, to verify a proof <span class="arithmatex">\(\pi\)</span>. Specific to a particular statement being proven (different statements <code>f</code> and <code>f'</code> imply different verifying keys), but doesn't depend on the inputs. The verifying key is assumed to be of fixed size.</li>
 </ul>
 <p>A proving system <span class="arithmatex">\(PS\)</span> consists of a pair of algorithms, <span class="arithmatex">\((Prove, Verify)\)</span>:</p>
 <ul>
@@ -1005,18 +1005,18 @@
 <tbody>
 <tr>
 <td>Trivial scheme</td>
-<td>predicate</td>
-<td>predicate</td>
-<td>predicate's arguments</td>
+<td>hash of the predicate</td>
+<td>hash of the predicate</td>
+<td>predicate's arguments, predicate</td>
 <td>()</td>
 <td>()</td>
 <td>transparent, not succinct</td>
 </tr>
 <tr>
 <td>Trusted delegation</td>
-<td>predicate + signing key</td>
-<td>predicate + signature verifying key</td>
-<td>predicate's arguments</td>
+<td>hash of the predicate + signing key</td>
+<td>hash of the predicate + signature verifying key</td>
+<td>predicate's arguments, predicate</td>
 <td>()</td>
 <td>signature</td>
 <td>succinct, trusted, verifiable</td>
@@ -1035,11 +1035,15 @@
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 </div>
-<p>In practice, the predicate and its arguments can be represented as a hash or commitment to the actual value. In the trivial scheme, they would have to be opened in order to verify them. In the trusted delegation case, they <em>don't have to</em> be opened if the signature is produced over the hashed values.</p>
+<p>In the trivial scheme, verification requires the pre-images of the verifying key / instance hashes. In the trusted delegation case, the pre-images are not required if the signature is produced over the hashed values.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Proving-related data structures described further are written with a PoK proving system in mind. For a transparent system, all values that are marked as witness in the specification shouldn't be discarded but rather moved to instance.</p>
+</div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 </div>
-<p>For application developers: writing applications that can work with all types of systems can be challenging since different proof types require different argument split between instance and witness (e.g., trivial scheme, unlike succinct PoK, expects no witness). The current solution is to write applications with succinct PoK types of proving systems in mind, which then can be translated to other proving systems by moving witness arguments to instance.</p>
+<p>For application developers: writing applications that can work with all types of proving systems can be challenging since different proof types require different argument split between instance and witness (e.g., trivial scheme, unlike succinct PoK, expects no witness). The current solution is to write applications with succinct PoK types of proving systems in mind, which then can be translated to other proving systems by moving witness arguments to instance.</p>
 <!-- list_wikilinks -->
 <!-- Source file information -->
 <!-- Was this page helpful? -->
@@ -1127,8 +1131,8 @@
 <div class="md-copyright__highlight">
       Powered by Mkdocs, Material 9.6.12-insiders-4.53.16 and Juvix v0.6.10
     </div>
-<strong>Version: v0.1.4 - Updated: April 24,
-    2025 at 05:13 AM UTC</strong>
+<strong>Version: v0.1.4 - Updated: May 02,
+    2025 at 12:37 PM UTC</strong>
 <br/>
 <strong>Latest version: <a href="https://specs.anoma.net/latest">
     https://specs.anoma.net/latest</a></strong>

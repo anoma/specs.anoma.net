@@ -945,7 +945,7 @@
 <p>For a set parametrised over the element type <code>T</code>:</p>
 <ol>
 <li><code>new() -&gt; Set</code> - creates an empty set.</li>
-<li><code>new(OrderedSet) -&gt; Set</code> - creates a set from the given list of elements. If the list contains duplicating elements, ignores them.</li>
+<li><code>new(List) -&gt; Set</code> - creates a set from the given list of elements. If the list contains duplicating elements, ignores them.</li>
 <li><code>size(Set) -&gt; Nat</code> - returns the number of elements in the set.</li>
 <li><code>insert(Set, T) -&gt; Set</code> - adds an element of type <code>T</code> to the set.</li>
 <li><code>union(Set, Set) -&gt; Set</code> - computes the union of two sets.</li>
@@ -960,7 +960,7 @@ classDiagram
     class ISet~T~ {
          &lt;&lt;Interface&gt;&gt;
          new() Set
-         new(OrderedSet) Set
+         new(List) Set
          size(Set) Nat
          insert(Set, T) Set
          union(Set, Set) Set
@@ -970,20 +970,19 @@ classDiagram
          contains(Set, T) Bool
     }
 
-    class IOrderedSet~T~ {
+    class IList~T~ {
          &lt;&lt;Interface&gt;&gt;
     }
 
-    ISet &lt;|-- IOrderedSet
+    ISet &lt;|-- IList
 
     ISet &lt;-- Set
 
-    IOrderedSet &lt;-- OrderedSet
+    IList &lt;-- List
 </code></pre>
 <h2 id="used-in">Used in<a class="headerlink" href="#used-in" title="Anchor link to this section for reference">¶</a></h2>
 <ol>
-<li>Transaction (roots, actions)</li>
-<li>Nullifier set</li>
+<li><a href="https://specs.anoma.net/main/arch/system/state/resource_machine/data_structures/transaction/transaction.html">Transaction</a></li>
 </ol>
 <!-- list_wikilinks -->
 <!-- Source file information -->
@@ -1072,8 +1071,8 @@ classDiagram
 <div class="md-copyright__highlight">
       Powered by Mkdocs, Material 9.6.12-insiders-4.53.16 and Juvix v0.6.10
     </div>
-<strong>Version: v0.1.4 - Updated: April 24,
-    2025 at 05:13 AM UTC</strong>
+<strong>Version: v0.1.4 - Updated: May 02,
+    2025 at 12:37 PM UTC</strong>
 <br/>
 <strong>Latest version: <a href="https://specs.anoma.net/latest">
     https://specs.anoma.net/latest</a></strong>
