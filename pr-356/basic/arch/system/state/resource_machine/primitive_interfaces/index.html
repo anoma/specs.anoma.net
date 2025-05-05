@@ -665,16 +665,15 @@
 <figure>
 <pre class="mermaid"><code>flowchart LR
     ProvingSystem
-    Set --&gt; OrderedSet
     Map --&gt; MapInstance
     CommitmentAccumulator --&gt; CommitmentAccumulatorInstance
     NullifierSet --&gt; NullifierSetInstance
 
-    OrderedSet --&gt; OrderedSetInstance
+    List --&gt; ListInstance
     Set --&gt; SetInstance
 
     style SetInstance fill:transparent
-    style OrderedSetInstance fill:transparent
+    style ListInstance fill:transparent
     style MapInstance fill:transparent
     style CommitmentAccumulatorInstance fill:transparent
     style NullifierSetInstance fill:transparent
@@ -717,7 +716,7 @@
     style DeltaHash fill:transparent
 
 
-    Hash --&gt; LogicHash
+    Hash --&gt; PS\.VerifyingKey
     Hash --&gt; LabelHash
     Hash --&gt; ValueHash
     Hash --&gt; DeltaHash
@@ -725,17 +724,17 @@
     Hash --&gt; Commitment
     Hash --&gt; Nullifier
     Hash --&gt; Kind
-    Hash --&gt; LogicRefHash
+    Hash --&gt; LogicVKOuterHash
     Hash --&gt; MerkleTreeNodeHash
 
-    style LogicHash fill:transparent
+    style LogicVKCompact fill:transparent
     style LabelHash fill:transparent
     style ValueHash fill:transparent
     style DeltaHash fill:transparent
     style Commitment fill:transparent
     style Nullifier fill:transparent
     style Kind fill:transparent
-    style LogicRefHash fill:transparent
+    style LogicVKOuterHash fill:transparent
     style MerkleTreeNodeHash fill:transparent
 
 
@@ -787,8 +786,8 @@
 <div class="md-copyright__highlight">
       © 2025 <a href="https://anoma.net">Anoma Foundation</a>
 </div>
-<strong>Version: (PR 356) - Updated: April 29,
-    2025 at 02:26 PM UTC</strong>
+<strong>Version: (PR 356) - Updated: May 05,
+    2025 at 02:12 PM UTC</strong>
 <br/>
 <strong>Latest version: <a href="https://specs.anoma.net/latest">
     https://specs.anoma.net/latest</a></strong>

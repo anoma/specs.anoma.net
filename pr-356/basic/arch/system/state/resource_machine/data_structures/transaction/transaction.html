@@ -787,11 +787,6 @@ It is a composite structure that contains the following components:</p>
 </thead>
 <tbody>
 <tr>
-<td><code>CMTreeRoots</code></td>
-<td><code>Set CMtree.Value</code></td>
-<td>A set of valid commitment tree roots used to prove the existence of the resources being consumed in the transaction. This set is not a part of actions to avoid duplication of data</td>
-</tr>
-<tr>
 <td><code>actions</code></td>
 <td><code>Set Action</code></td>
 <td>A set of actions that comprise the transaction</td>
@@ -801,34 +796,40 @@ It is a composite structure that contains the following components:</p>
 <td><code>DeltaProvingSystem.Proof</code></td>
 <td>Balance proof. It makes sure that <code>transactionDelta</code> is correctly derived from the actions' deltas and commits to the expected publicly known value, called a <em>balancing value</em>. There is just one delta proof per transaction</td>
 </tr>
+<tr>
+<td><code>delta_vk</code></td>
+<td><code>DeltaProvingSystem.VerifyingKey</code></td>
+<td>Used to verify the delta proof. Might be optional in case the key is computable from other components</td>
+</tr>
+<tr>
+<td><code>expectedBalance</code></td>
+<td>Balanced transactions have delta pre-image 0 for all involved kinds, for unbalanced transactions <code>expectedBalance</code> is a non-zero value.</td>
+<td></td>
+</tr>
 </tbody>
 </table>
 <h2 id="interface">Interface<a class="headerlink" href="#interface" title="Anchor link to this section for reference">¶</a></h2>
 <ol>
-<li><code>create(Set CMtree.Value, Set Actions) -&gt; Transaction</code></li>
+<li><code>create(Set Actions, DeltaProvingSystem.ProvingKey, DeltaProvingSystem.Instance, DeltaProvingSystem.Witness) -&gt; Transaction</code></li>
 <li><code>compose(Transaction, Transaction) -&gt; Transaction</code></li>
 <li><code>verify(Transaction) -&gt; Bool</code></li>
 <li><code>delta(Transaction) -&gt; DeltaHash</code></li>
 </ol>
 <h2 id="create"><code>create</code><a class="headerlink" href="#create" title="Anchor link to this section for reference">¶</a></h2>
-<p>Given a set of roots and a set of actions, a transaction is formed as follows:</p>
+<p>Given a set of actions alongside delta data, a transaction is formed as follows:</p>
 <ol>
-<li><code>tx.CMTreeRoots = CMTreeRoots</code></li>
 <li><code>tx.actions = actions</code></li>
-<li><code>tx.transactionDelta = sum(action.Delta() for action in actions)</code></li>
-<li><code>tx.deltaProof = DeltaProvingSystem(deltaProvingKey, deltaInstance, deltaWitness)</code></li>
+<li><code>tx.deltaProof = DeltaProvingSystem.Prove(DeltaProvingSystem.ProvingKey, DeltaProvingSystem.Instance, DeltaProvingSystem.Witness)</code></li>
 </ol>
 <h2 id="compose"><code>compose</code><a class="headerlink" href="#compose" title="Anchor link to this section for reference">¶</a></h2>
 <p>Having two transactions <code>tx1</code> and <code>tx2</code>, their composition <code>compose(tx1, tx2)</code> is defined as a transaction <code>tx</code>, where:</p>
 <ol>
-<li><code>tx.CMTreeRoots = Set.union(tx1.CMTreeRoots, tx2.CMTreeRoots)</code></li>
 <li><code>tx.actions = Set.union(tx1.actions, tx2.actions)</code></li>
-<li><code>tx.deltaProof = DeltaProvingSystem.aggregate(tx1.deltaProof, tx2.deltaProof)</code></li>
-<li><code>tx.transactionDelta = tx1.transactionDelta + tx2.transactionDelta</code></li>
+<li><code>tx.deltaProof, tx.delta_vk = DeltaProvingSystem.aggregate(tx1.deltaProof, tx1.delta_vk, tx2.deltaProof, tx2.delta_vk)</code></li>
 </ol>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>When composing transactions, action sets are simply united without composing the actions themselves. For example, composing a transaction with two actions and another transaction with three actions will result in a transaction with five actions.</p>
+<p>When composing transactions, action sets are simply united. For example, composing a transaction with two actions and another transaction with three actions will result in a transaction with five actions, given all actions are distinct.</p>
 </div>
 <h2 id="verify"><code>verify</code><a class="headerlink" href="#verify" title="Anchor link to this section for reference">¶</a></h2>
 <p>A transaction is considered <em>valid</em> if the following statements hold:</p>
@@ -841,11 +842,6 @@ It is a composite structure that contains the following components:</p>
 </ol>
 </li>
 <li><code>deltaProof</code> is valid</li>
-</ol>
-<p>Checks that require access to global <code>CMTree</code> and <code>NullifierSet</code>:</p>
-<ol>
-<li>each created resource wasn't created in prior transactions</li>
-<li>each consumed resource wasn't consumed in prior transactions</li>
 </ol>
 <p>A transaction is <em>executable</em> if it is valid and <code>transactionDelta</code> commits to the expected balancing value.</p>
 <h2 id="delta"><code>delta</code><a class="headerlink" href="#delta" title="Anchor link to this section for reference">¶</a></h2>
@@ -894,8 +890,8 @@ It is a composite structure that contains the following components:</p>
 <div class="md-copyright__highlight">
       © 2025 <a href="https://anoma.net">Anoma Foundation</a>
 </div>
-<strong>Version: (PR 356) - Updated: April 29,
-    2025 at 02:26 PM UTC</strong>
+<strong>Version: (PR 356) - Updated: May 05,
+    2025 at 02:12 PM UTC</strong>
 <br/>
 <strong>Latest version: <a href="https://specs.anoma.net/latest">
     https://specs.anoma.net/latest</a></strong>

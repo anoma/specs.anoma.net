@@ -626,6 +626,13 @@
     </span>
 </a>
 </li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#to_instance">
+<span class="md-ellipsis">
+      to_instance
+    </span>
+</a>
+</li>
 </ul>
 </nav>
 </div>
@@ -716,68 +723,60 @@ search:
 </thead>
 <tbody>
 <tr>
-<td><code>created</code></td>
-<td><code>OrderedSet Commitment</code></td>
-<td>contains commitments of resources created in this action</td>
-</tr>
-<tr>
-<td><code>consumed</code></td>
-<td><code>OrderedSet Nullifier</code></td>
-<td>contains nullifiers of resources consumed in this action</td>
-</tr>
-<tr>
 <td><code>resourceLogicProofs</code></td>
-<td><code>Map Tag (LogicRef, PS.Proof)</code></td>
-<td>contains a map of resource logic proofs associated with this action. The key is the <code>self</code> resource for which the proof is computed, the first parameter of the value opens to the required verifying key, the second one is the corresponding proof</td>
+<td><code>Map Tag (isConsumed: Bool, logicVKOuter: LogicVKOuterHash, applicationData: List (BitString, DeletionCriterion), proof: ResourceLogicProvingSystem.Proof)</code></td>
+<td>Resource logic proofs for resources associated with the action. The key of each map entry is the tag of the resource for which a RL proof is provided. The deletion criterion field is described <a href="https://specs.anoma.net/pr-356/arch/system/state/resource_machine/notes/storage.html">here</a>.</td>
 </tr>
 <tr>
 <td><code>complianceUnits</code></td>
-<td><code>Set ComplianceUnit</code></td>
+<td><code>List ComplianceUnit</code></td>
 <td>The set of transaction's <a href="https://specs.anoma.net/pr-356/arch/system/state/resource_machine/data_structures/compliance_unit/compliance_unit.html">compliance units</a></td>
-</tr>
-<tr>
-<td><code>applicationData</code></td>
-<td><code>Map Tag OrderedSet (BitString, DeletionCriterion)</code></td>
-<td>maps tags to relevant application data needed to verify resource logic proofs. The deletion criterion field is described <a href="https://specs.anoma.net/pr-356/arch/system/state/resource_machine/notes/storage.html">here</a>. The openings are expected to be ordered.</td>
 </tr>
 </tbody>
 </table>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>For function privacy in the shielded contenxt, instead of a logic proof we verify a proof of a logic proof validity - a recursive proof. <code>LogicRefHash</code> type corresponds to the RL VK commitment while verifying key in <code>resourceLogicProofs</code> refers to the key to be used for verification (i.e., verifier circuit verifying key as opposed to a resource logic verifying key). RL VK commitment should be included somewhere else, e.g., <code>applicationData[tag]</code>, and the compliance instance must reference it in <code>refInstance</code> as it is also a compliance proof instance.</p>
+<p>For function privacy in the shielded context, instead of a logic proof we verify a proof of a logic proof validity - a recursive proof. <code>LogicVKOuterHash</code> type corresponds to the RL VK commitment while verifying key in <code>resourceLogicProofs</code> refers to the key to be used for verification (i.e., verifier circuit verifying key as opposed to a resource logic verifying key). RL VK commitment should be included somewhere else, e.g., <code>applicationData</code>.</p>
 </div>
-<p>Actions partition the state change induced by a transaction and limit the resource logics evaluation context: proofs created in the context of an action have access only to the resources associated with the action. A resource is said to be <em>associated with an action</em> if its commitment or nullifier is present in the action's <code>created</code> or <code>consumed</code> correspondingly. A resource is associated with exactly one action. A resource is said to be <em>consumed in the action</em> for a valid action if its nullifier is present in the action's <code>consumed</code> list. A resource is said to be <em>created in the action</em> for a valid action if its commitment is in the action's <code>created</code> list.</p>
+<p>Actions partition the state change induced by a transaction and limit the resource logics evaluation context: proofs created in the context of an action have access only to the resources associated with the action. A resource is said to be <em>associated with an action</em> if its tag is present in the set of <code>resourceLogicProofs</code> keys . A resource is associated with at most two actions: resource creation is associated with exactly one action and resource consumption is associated with exactly one action. A resource is said to be <em>consumed in the action</em> for a valid action if its <em>nullifier</em> is present in the set of <code>resourceLogicProofs</code> keys. A resource is said to be <em>created in the action</em> for a valid action if its <em>commitment</em> is in the set of <code>resourceLogicProofs</code> keys.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>Unlike transactions, actions don't need to be balanced, but if an action is valid and balanced, it is sufficient to create a balanced transaction.</p>
 </div>
 <h2 id="interface">Interface<a class="headerlink" href="#interface" title="Anchor link to this section for reference">¶</a></h2>
 <ol>
-<li><code>create(Set (NullifierKey, Resource), Set Resource, ApplicationData) -&gt; Action</code> - creates an action</li>
-<li><code>delta(Action) -&gt; DeltaHash</code></li>
+<li><code>create(List (NullifierKey, Resource, deltaExtraInput, CMtreePath, CMTreeRoot, List (BitString, DeletionCriterion)), List (Resource, deltaExtraInput, List (BitString, DeletionCriterion)), appWitness: BitString) -&gt; Action</code></li>
 <li><code>verify(Action) -&gt; Bool</code></li>
+<li><code>delta(Action) -&gt; DeltaHash</code></li>
+<li><code>to_instance(Action, Tag) -&gt; Maybe ResourceLogicProvingSystem.Instance</code></li>
 </ol>
 <h2 id="proofs">Proofs<a class="headerlink" href="#proofs" title="Anchor link to this section for reference">¶</a></h2>
 <p>For each resource consumed or created in the action, it is required to provide a proof that the logic associated with that resource evaluates to <code>True</code> given the input parameters that describe the state transition induced by the action. The number of such proofs in an action equals to the amount of resources (both created and consumed) in that action, even if some resources have the same logics. Resource logic proofs are further described <a href="https://specs.anoma.net/pr-356/arch/system/state/resource_machine/data_structures/action/resource_logic_proof.html">here</a>.</p>
 <h2 id="create"><code>create</code><a class="headerlink" href="#create" title="Anchor link to this section for reference">¶</a></h2>
-<p>Given a set of input resource objects <code>consumedResources: Set (NullifierKey, Resource, CMtreePath)</code>, a set of output resource plaintexts <code>createdResources: Set Resource</code>, and <code>applicationData</code>, including a set of application inputs required by resource logics, an action is computed the following way:</p>
 <ol>
-<li>Partition action into compliance units and compute a compliance proof for each unit. Put the information about the units in <code>action.complianceUnits</code></li>
-<li>For each resource, compute a resource logic proof. Associate each proof with the tag of the resource and the logic hash reference. Put the resulting map in <code>action.resourceLogicProofs</code></li>
-<li><code>action.consumed = r.nullifier(nullifierKey) for r in consumedResources</code></li>
-<li><code>action.created = r.commitment() for r in createdResources</code></li>
-<li><code>action.applicationData = applicationData</code></li>
+<li><code>complianceUnits</code>: Partition the resources into compliance units and compute a compliance proof for each unit</li>
+<li><code>resourceLogicProofs</code>: For each resource, compute a resource logic proof. Associate each proof (and other components needed to verify it) with the tag of the resource</li>
 </ol>
 <h2 id="verify"><code>verify</code><a class="headerlink" href="#verify" title="Anchor link to this section for reference">¶</a></h2>
 <p>Validity of an action can only be determined for actions that are associated with a transaction. Assuming that an action is associated with a transaction, an action is considered valid if all of the following conditions hold:</p>
 <ol>
-<li>action input resources have valid resource logic proofs associated with them: <code>verify(RLVerifyingKey, RLInstance, RLproof) = True</code></li>
-<li>action output resources have valid resource logic proofs associated with them: <code>verify(RLVerifyingKey, RLInstance, RLproof) = True</code></li>
-<li>all compliance proofs are valid: <code>complianceUnit.verify() = True</code></li>
-<li>transaction's <span class="arithmatex">\(rts\)</span> field contains correct <code>CMtree</code> roots (that were actual <code>CMtree</code> roots at some epochs) used to prove the existence of consumed resources in the compliance proofs.</li>
+<li>All resource logic proofs associated with the action are valid</li>
+<li>All compliance proofs associated with the action are valid: <code>cu.verify() = True for cu in complianceUnits</code></li>
+<li><code>resourceLogicProofs</code> keys = the list of tags associated with <code>complianceUnits</code> (ignoring the order)</li>
 </ol>
 <h2 id="delta"><code>delta</code><a class="headerlink" href="#delta" title="Anchor link to this section for reference">¶</a></h2>
-<p><code>action.delta() -&gt; DeltaHash</code> is a computable component used to compute <code>transactionDelta</code>. It is computed from <code>r.delta()</code> of the resources that comprise the action and defined as <code>action.delta() = sum(cu.delta() for cu in action.complianceUnits)</code>.</p>
+<p><code>action.delta()</code> computes the action delta. Action delta is computed from <code>r.delta()</code> of the resources that comprise the action and defined as <code>action.delta() = sum(cu.delta() for cu in action.complianceUnits)</code>.</p>
+<h2 id="to_instance"><code>to_instance</code><a class="headerlink" href="#to_instance" title="Anchor link to this section for reference">¶</a></h2>
+<p>This function assembles the instance required to verify a resource logic proof from the data in the action.</p>
+<p>The main task is to assemble the <code>consumed</code> and <code>created</code> lists of resources. The proposed mechanism works as follows:
+1. Iterate over all compliance units and accumulate the lists of created and consumed resources. The resulting list of consumed resources contains all consumed resources in the action. The resulting list of created resources contains all created resources in the action.
+2. Erase the <code>self</code> resource from the relevant list. If the resource is consumed and its nullifier is stored under index <code>n</code> in the list of consumed resources, the resulting list is <code>l[0], l[1], ..., l[n - 1], l[n + 1], ...</code>. Keep the list of created resources the same.
+3. If <code>self</code> is created, erase the resource from the list of created resources as in step 2. Keep the list of consumed resources the same. For each resource we assemble an instance for, we erase only one resource - itself - from one list.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+</div>
+<p>When verifying multiple logic proofs from the same action, it might make sense to create the 'full' lists once and erase resources one at a time to create a particular instance. Note that the next instance must be created from the original <code>full</code> list, not the list with previously erased resources.</p>
+<p>All other fields of the instance (resource tag, <code>isConsumed</code>, <code>applicationData</code>) are taken from the relevant entry of <code>resourceLogicProofs</code>.</p>
 <!-- list_wikilinks -->
 <!-- Source file information -->
 <!-- Was this page helpful? -->
@@ -822,8 +821,8 @@ search:
 <div class="md-copyright__highlight">
       © 2025 <a href="https://anoma.net">Anoma Foundation</a>
 </div>
-<strong>Version: (PR 356) - Updated: April 29,
-    2025 at 02:26 PM UTC</strong>
+<strong>Version: (PR 356) - Updated: May 05,
+    2025 at 02:12 PM UTC</strong>
 <br/>
 <strong>Latest version: <a href="https://specs.anoma.net/latest">
     https://specs.anoma.net/latest</a></strong>

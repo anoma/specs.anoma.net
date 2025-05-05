@@ -729,18 +729,18 @@
 <tbody>
 <tr>
 <td><code>consumed</code></td>
-<td><code>OrderedSet (NullifierRef, RootRef, LogicRef)</code></td>
-<td>Includes nullifiers' references of all consumed resources in the compliance unit, root references, and commitments to <a href="https://specs.anoma.net/pr-356/arch/system/state/resource_machine/data_structures/resource/index.html"><code>logicRef</code> resource components</a> (used for referencing the <code>logicRef</code> without explicitly using the component value) for consumed resources</td>
+<td><code>List (nf: Nullifier, root: CMTree.Value, logicVKOuter: LogicVKOuterHash)</code></td>
+<td>Each entry corresponds to a consumed resource and includes a hash of the resource's <a href="https://specs.anoma.net/pr-356/arch/system/state/resource_machine/data_structures/resource/index.html"><code>logicRef</code> component</a></td>
 </tr>
 <tr>
 <td><code>created</code></td>
-<td><code>OrderedSet (CommitmentRef, LogicRef)</code></td>
-<td>Commitments' references of all created resources in the compliance unit</td>
+<td><code>List (cm: Commitment, logicVKOuter: LogicVKOuterHash)</code></td>
+<td>Each entry corresponds to a created resource</td>
 </tr>
 <tr>
 <td><code>unitDelta</code></td>
 <td><code>DeltaHash</code></td>
-<td>Unit delta</td>
+<td></td>
 </tr>
 </tbody>
 </table>
@@ -750,9 +750,9 @@
 <p>for consumed resources:</p>
 <p>1. resource object <code>r</code></p>
 <p>2. <code>nullifierKey</code></p>
-<p>3. <code>CMtree</code> path</p>
-<p>4. resource commitment <code>cm</code></p>
-<p>5. opening of <code>logicRefHash</code> (implicitly includes <code>logicRef</code>, which is already part of the resource object, and other data used to derive <code>logicRefHash</code>, such as randomness)</p>
+<p>3. <code>CMtree</code> path to the consumed resource commitment</p>
+<p>4. pre-image of <code>logicVKOuter</code></p>
+<p>5. <code>deltaExtraInput</code> used to compute resource delta</p>
 </li>
 <li>
 <p>for created resources:</p>
@@ -761,39 +761,45 @@
 <p>resource object <code>r</code></p>
 </li>
 <li>
-<p>opening of <code>logicRefHash</code></p>
+<p>pre-image of <code>logicVKOuter</code></p>
+</li>
+<li>
+<p><code>deltaExtraInput</code> used to compute resource delta</p>
 </li>
 </ol>
 </li>
 </ol>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>The instance and witness values are expected to correspond to each other: the first tag in the instance corresponds to the first resource object in the witness, and so on. Note that in the compliance proof, the tag is recomputed from the object to verify that the tag is correct</p>
+<p>Instance and witness elements are expected to go in the same order: the first element of the instance corresponds to the first (4 for consumed and 2 for created) elements of the witness and so on.</p>
 </div>
 <h2 id="compliance-constraints">Compliance constraints<a class="headerlink" href="#compliance-constraints" title="Anchor link to this section for reference">¶</a></h2>
 <p>Each resource machine compliance proof must check the following:</p>
 <ol>
-<li>Merkle path validity (for <em>non-ephemeral</em> resources only): <code>CMTree::Verify(cm, path, root) = True</code> for each resource associated with a nullifier from the <code>consumedResourceTagSet</code></li>
 <li>
-<p>for each consumed resource <code>r</code>:</p>
+<p>Merkle path validity: <code>CMTree::Verify(r.commitment(), path, root) = True</code> for each resource associated with a nullifier from the <code>consumed</code>. For ephemeral resources a "fake" relation is checked.</p>
+</li>
+<li>
+<p>For each consumed resource <code>r</code>:</p>
 <ol>
-<li>Nullifier integrity: <code>r.nullifier(nullifierKey) is in consumedResourceTagSet</code></li>
-<li>Consumed commitment integrity: <code>r.commitment() = cm</code></li>
-<li>Logic integrity: <code>logicRefHash = hash(r.logicRef, ...)</code></li>
+<li>Nullifier integrity: <code>r.nullifier(nullifierKey) is in consumed</code></li>
+<li>Logic integrity: <code>logicVKOuter = logicVKOuterHash(r.logicRef, ...)</code></li>
 </ol>
 </li>
 <li>
-<p>for each created resource <code>r</code>:</p>
+<p>For each created resource <code>r</code>:</p>
 <ol>
-<li>Commitment integrity: <code>r.commitment() is in createdResourceTagSet</code></li>
-<li>Logic integrity: <code>logicRefHash = hash(r.logicRef, ...)</code></li>
-<li>Delta integrity: <code>unitDelta = sum(r.delta() for r in consumed) - sum(r.delta() for r in created)</code></li>
+<li>Commitment integrity: <code>r.commitment() is in created</code></li>
+<li>Logic integrity: <code>logicVKOuter = logicVKOuterHash(r.logicRef, ...)</code></li>
 </ol>
+</li>
+<li>
+<p>Delta integrity: <code>unitDelta = sum(r.delta(deltaExtraInput(r)) for r in consumed) - sum(r.delta(deltaExtraInput(r)) for r in created)</code> where <code>deltaExtraInput(r)</code> returns <code>deltaExtraInput</code> associated with resource <code>r</code></p>
 </li>
 </ol>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>Kind integrity is checked implicitly in delta checks</p>
+<p>Kind integrity is checked implicitly in delta integrity</p>
 </div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -801,13 +807,8 @@
 </div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>[2.1, 3.1]: To ensure correct computation of a commitment/nullifier, they have to be recomputed from the raw parameters (resource object and possibly <code>nullifierKey</code>) and compared to what is provided in the public tag set.</p>
+<p>[2.1, 3.1]: To ensure correct binding between the instance and the witness, resource tags have to be recomputed from the witness and compared to what is provided in the instance.</p>
 </div>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>To support function privacy, the compliance proof must also verify the logic verifying key integrity: given <code>logicRefHash</code> as public input and <code>logicRef</code> as private input, verify that <code>logicRefHash = hash(logicRef)</code></p>
-</div>
-<p>Compliance proofs must be composition-independent: composing two actions, the compliance proof sets can be simply united to provide a valid composed action compliance proof set.</p>
 <!-- list_wikilinks -->
 <!-- Source file information -->
 <!-- Was this page helpful? -->
@@ -852,8 +853,8 @@
 <div class="md-copyright__highlight">
       © 2025 <a href="https://anoma.net">Anoma Foundation</a>
 </div>
-<strong>Version: (PR 356) - Updated: April 29,
-    2025 at 02:26 PM UTC</strong>
+<strong>Version: (PR 356) - Updated: May 05,
+    2025 at 02:12 PM UTC</strong>
 <br/>
 <strong>Latest version: <a href="https://specs.anoma.net/latest">
     https://specs.anoma.net/latest</a></strong>

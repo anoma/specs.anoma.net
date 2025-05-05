@@ -665,11 +665,15 @@
 <p>Each time a commitment is added to the accumulator, the accumulator and all witnesses of the already accumulated commitments are updated.
 For a commitment that existed in the accumulator before a new one was added, both the old witness and the new witness (with the corresponding accumulated value parameter) can be used to prove membership. However, the older the witness (and, consequently, the accumulator) that is used in the proof, the more information about the resource it reveals (an older accumulator gives more concrete boundaries on the resource's creation time). For that reason, it is recommended to use fresher parameters when proving membership.</p>
 <h4 id="accumulator-functionality">Accumulator functionality<a class="headerlink" href="#accumulator-functionality" title="Anchor link to this section for reference">¶</a></h4>
-<p>The commitment accumulator has type <code>Accumulator</code> and is parametrised over the types <code>Witness</code>,<code>CommitmentIdentifier</code>, and <code>AccumulatedValue</code>. The commitment accumulator interface must support the following functionality:</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The witness we are talking about here is not related to proving system witness. It is a distinct concept of cryptographic accumulators.</p>
+</div>
+<p>The commitment accumulator has type <code>Accumulator</code> and is parametrised over the types <code>AccumulatorWitness</code>,<code>CommitmentIdentifier</code>, and <code>AccumulatedValue</code>. The commitment accumulator interface must support the following functionality:</p>
 <ol>
-<li><code>add(Accumulator, CommitmentIdentifier) -&gt; Witness</code> adds an element to the accumulator, returning the witness used to prove membership.</li>
-<li><code>witness(Accumulator, CommitmentIdentifier) -&gt; Maybe Witness</code> for a given element, returns the witness used to prove membership if the element is present, otherwise returns nothing.</li>
-<li><code>verify(CommitmentIdentifier, Witness, AccumulatedValue) -&gt; Bool</code> verifies the membership proof for a commitment identified with <code>CommitmentIdentifier</code> element with a membership witness <code>witness</code> for the accumulated value <code>value</code>.</li>
+<li><code>add(Accumulator, CommitmentIdentifier) -&gt; AccumulatorWitness</code> adds an element to the accumulator, returning the accumulator witness used to prove membership.</li>
+<li><code>witness(Accumulator, CommitmentIdentifier) -&gt; Maybe AccumulatorWitness</code> for a given element, returns the accumulator witness used to prove membership if the element is present, otherwise returns nothing.</li>
+<li><code>verify(CommitmentIdentifier, AccumulatorWitness, AccumulatedValue) -&gt; Bool</code> verifies the membership proof for a commitment identified with <code>CommitmentIdentifier</code> element with a membership witness <code>AccumulatorWitness</code> for the accumulated value <code>AccumulatedValue</code>.</li>
 <li><code>value(Accumulator) -&gt; AccumulatedValue</code> returns the accumulator value.</li>
 </ol>
 <h4 id="merkle-tree">Merkle tree<a class="headerlink" href="#merkle-tree" title="Anchor link to this section for reference">¶</a></h4>
@@ -682,7 +686,7 @@ For a commitment that existed in the accumulator before a new one was added, bot
 <p>For a Merkle tree:</p>
 <ol>
 <li><code>CommitmentIdentifier</code> type corresponds to the identifier of the resource commitment used to locate the commitment's position in the tree</li>
-<li><code>Witness</code> element is a path to the stored commitment</li>
+<li><code>AccumulatorWitness</code> element is a path to the stored commitment</li>
 <li><code>AccumulatedValue</code> corresponds to the Merkle tree root</li>
 </ol>
 <p>and the functions:</p>
@@ -740,8 +744,8 @@ For a commitment that existed in the accumulator before a new one was added, bot
 <div class="md-copyright__highlight">
       © 2025 <a href="https://anoma.net">Anoma Foundation</a>
 </div>
-<strong>Version: (PR 356) - Updated: April 29,
-    2025 at 02:26 PM UTC</strong>
+<strong>Version: (PR 356) - Updated: May 05,
+    2025 at 02:12 PM UTC</strong>
 <br/>
 <strong>Latest version: <a href="https://specs.anoma.net/latest">
     https://specs.anoma.net/latest</a></strong>
