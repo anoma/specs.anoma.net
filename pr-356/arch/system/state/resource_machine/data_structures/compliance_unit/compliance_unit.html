@@ -98,7 +98,7 @@
                 <span class="first-letter">s</span>pecs
               
               
-                <span class="md-header__topic-version">(PR356 - michael/evm-protocol-adapter-22b2e1be)</span>
+                <span class="md-header__topic-version">(PR356 - michael/evm-protocol-adapter-626a527c)</span>
 </span>
 </div>
 <div class="md-header__topic" data-md-component="header-topic">
@@ -210,7 +210,7 @@
 <ul class="md-nav__list">
 <li class="md-nav__item">
 <a class="md-nav__link" href="https://specs.anoma.net/latest" target="_blank">
-     Latest version ((PR356 - michael/evm-protocol-adapter-22b2e1be))
+     Latest version ((PR356 - michael/evm-protocol-adapter-626a527c))
       </a>
 </li>
 <li class="md-nav__item">
@@ -620,6 +620,25 @@
     </label>
 <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
 <li class="md-nav__item">
+<a class="md-nav__link" href="#interface">
+<span class="md-ellipsis">
+      
+        Interface
+      
+    </span>
+</a>
+<nav aria-label="Interface" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#create">
+<span class="md-ellipsis">
+      
+        create
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
 <a class="md-nav__link" href="#delta">
 <span class="md-ellipsis">
       
@@ -629,13 +648,16 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#interface">
+<a class="md-nav__link" href="#verify">
 <span class="md-ellipsis">
       
-        Interface
+        verify
       
     </span>
 </a>
+</li>
+</ul>
+</nav>
 </li>
 </ul>
 </nav>
@@ -813,6 +835,25 @@
     </label>
 <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
 <li class="md-nav__item">
+<a class="md-nav__link" href="#interface">
+<span class="md-ellipsis">
+      
+        Interface
+      
+    </span>
+</a>
+<nav aria-label="Interface" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#create">
+<span class="md-ellipsis">
+      
+        create
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
 <a class="md-nav__link" href="#delta">
 <span class="md-ellipsis">
       
@@ -822,13 +863,16 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#interface">
+<a class="md-nav__link" href="#verify">
 <span class="md-ellipsis">
       
-        Interface
+        verify
       
     </span>
 </a>
+</li>
+</ul>
+</nav>
 </li>
 </ul>
 </nav>
@@ -948,7 +992,13 @@
 <!-- Page content -->
 <pre class="highlight"><code class="juvix"><pre class="src-content"><span class="ju-keyword">module</span> <span id="arch.system.state.resource_machine.data_structures.compliance_unit.compliance_unit"><span class="annot"><a class="ju-code-link ju-module" href="https://specs.anoma.net/pr-356/arch/system/state/resource_machine/data_structures/compliance_unit/compliance_unit.html#arch.system.state.resource_machine.data_structures.compliance_unit.compliance_unit"><span class="annot"><a class="ju-code-link ju-module" href="https://specs.anoma.net/pr-356/arch/system/state/resource_machine/data_structures/compliance_unit/compliance_unit.html#arch.system.state.resource_machine.data_structures.compliance_unit.compliance_unit"><span class="ju-module"><span class="ju-module">arch.system.state.resource_machine.data_structures.compliance_unit.compliance_unit</span></span></a></span></a></span></span><span class="ju-delimiter">;</span><br/></pre></code></pre>
 <h1 id="compliance-unit">Compliance unit<a class="headerlink" href="#compliance-unit" title="Anchor link to this section for reference">¶</a></h1>
-<p><code>ComplianceUnit</code> is a data structure that partitions the <a href="https://specs.anoma.net/pr-356/arch/system/state/resource_machine/data_structures/action/index.html">action</a>, meaning that there might be multiple compliance units for a single action, the sets of resources covered by any two compliance units cover don't intersect, and together the compliance units cover all of the resources in the action. This partition corresponds to the format expected by the compliance proving system used to produce compliance proofs. The table below describes the components of a compliance unit:</p>
+<p><code>ComplianceUnit</code> is a data structure used to verify compliance proofs. It partitions the <a href="https://specs.anoma.net/pr-356/arch/system/state/resource_machine/data_structures/action/index.html">action</a>, meaning that:</p>
+<ol>
+<li>there might be multiple compliance units for a single action</li>
+<li>the sets of resource tags validated by any two compliance units don't intersect</li>
+<li>together the compliance units cover all of the resources in the action</li>
+</ol>
+<p>The table below describes the components of a compliance unit:</p>
 <table>
 <thead>
 <tr>
@@ -959,48 +1009,56 @@
 </thead>
 <tbody>
 <tr>
-<td><code>proof</code></td>
-<td><code>PS.Proof</code></td>
+<td><code>vk</code></td>
+<td><code>ComplianceProvingSystem.VerifyingKey</code></td>
 <td></td>
 </tr>
 <tr>
-<td><code>refInstance</code></td>
-<td><code>ReferencedInstance</code></td>
-<td>The instance required to verify the compliance proof. Includes the references to the tags of the checked resources, compliance unit delta, <code>CMtree</code> roots references</td>
+<td><code>instance</code></td>
+<td><code>ComplianceProvingSystem.Instance</code></td>
+<td>The instance required to verify the compliance proof. Includes the tags of the checked resources, compliance unit delta, <code>CMtree</code> roots for consumed resources.</td>
 </tr>
 <tr>
-<td><code>vk</code></td>
-<td><code>PS.VerifyingKey</code></td>
+<td><code>proof</code></td>
+<td><code>ComplianceProvingSystem.Proof</code></td>
 <td></td>
 </tr>
 </tbody>
 </table>
-<div class="admonition warning">
-<p class="admonition-title">Warning</p>
-<p><code>ReferenceInstance</code> is a modified <code>PS.Instance</code> structure in which some elements are replaced by their references. To get <code>PS.Instance</code> from <code>ReferencedInstance</code> the referenced structures must be dereferenced. The structures we assume to be referenced here are:</p>
-<p>- CMtree roots (stored in transaction)</p>
-<p>- commitments and nullifiers (stored in action)</p>
-<p>All other instance elements are assumed to be as the instance requires.</p>
-</div>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Referencing Merkle tree roots: the Merkle tree roots required to verify the compliance proofs are stored in the transaction (not in action or a compliance unit), and are referenced by a short hash in <code>refInstance</code>. To find the right roots corresponding to the proof, the verifier has to compute the hashes of the roots in the transaction, match them with the short hashes in the <code>refInstance</code> structure, and use the ones that match for verification. A similar approach is used to reference the tags of the checked in the compliance unit resources.</p>
-</div>
-<p>The size of a compliance unit - the number of created and consumed resources in each unit - is determined by the resource machine <em>instantiation</em>. The total number of compliance proofs required for an action is determined by the number of compliance units that comprise the action. For example, if the instantiation defines a single compliance proof to include 1 input and 1 output resource, and an action contains 3 input and 2 output resources, the total number of compliance units will be 3 (with a placeholder output resource in the third compliance unit).</p>
-<h2 id="delta">Delta<a class="headerlink" href="#delta" title="Anchor link to this section for reference">¶</a></h2>
-<p>Compliance unit delta is used to compute action and transaction deltas and is itself computed from resource deltas: <code>delta = sum(r.delta() for r in outputResources - sum(r.delta() for r in inputResources))</code>. Note that the delta is computed by the prover (who knows the resource objects of resources associated with the unit) and is a part of the instance. The compliance proof must ensure the correct computation of delta from the resource deltas available at the proving time.</p>
+<p>The number of created and consumed resources in each unit is determined by the resource machine <em>instantiation</em>. The total number of compliance proofs required for an action is determined by the number of compliance units that comprise the action. For example, if the instantiation defines a single compliance proof to include 1 input and 1 output resource, and an action contains 3 input and 2 output resources, the total number of compliance units will be 3 (with a placeholder output resource in the third compliance unit).</p>
+<h2 id="interface">Interface<a class="headerlink" href="#interface" title="Anchor link to this section for reference">¶</a></h2>
+<ol>
+<li><code>create(ComplianceProvingSystem.ProvingKey, ComplianceProvingSystem.VerifyingKey, ComplianceProvingSystem.Instance, ComplianceProvingSystem.Witness) -&gt; ComplianceUnit</code> - computes the compliance unit proof and populates the compliance unit</li>
+<li><code>created(ComplianceUnit) -&gt; List Commimtent</code> - returns the commitments of the created resources checked in the unit</li>
+<li><code>consumed(ComplianceUnit) -&gt; List Nullifier</code> - returns the nullifiers of the consumed resources checked in the unit</li>
+<li><code>verify(ComplianceUnit) -&gt; Bool</code> - returns <code>ComplianceProvingSystem.Verify(vk, instance, proof)</code></li>
+<li><code>delta(ComplianceUnit) -&gt; DeltaHash</code> - returns the compliance unit delta, which is stored in <code>complianceData</code>: <code>unit.delta() = unit.complianceData.delta</code></li>
+</ol>
+<h3 id="create"><code>create</code><a class="headerlink" href="#create" title="Anchor link to this section for reference">¶</a></h3>
+<p>Create is a function that provers use to create a compliance unit.</p>
+<ol>
+<li>Compute the compliance proof: <code>ComplianceProvingSystem.Prove(ComplianceProvingSystem.ProvingKey, ComplianceProvingSystem.Instance, ComplianceProvingSystem.Witness) -&gt; ComplianceProvingSystem.Proof</code>. What comprises the instance and witness here is described in <a href="https://specs.anoma.net/pr-356/arch/system/state/resource_machine/data_structures/compliance_unit/compliance_proof.html">Compliance proof</a>.</li>
+<li>Create the compliance unit given the proof, verifying key, and instance.</li>
+</ol>
+<h3 id="delta">Delta<a class="headerlink" href="#delta" title="Anchor link to this section for reference">¶</a></h3>
+<p>Compliance unit delta is used to compute action and transaction deltas and is itself computed from resource deltas: <code>delta = sum(r.delta(deltaExtraInput(r))) for r in outputResources - sum(r.delta(deltaExtraInput(r)) for r in inputResources))</code>. Note that the delta is computed by the prover (who knows the resource objects of resources associated with the unit) and is a part of the instance. The compliance proof must ensure the correct computation of delta from the resource deltas available at the proving time.</p>
 <h4 id="delta-for-computing-balance">Delta for computing balance<a class="headerlink" href="#delta-for-computing-balance" title="Anchor link to this section for reference">¶</a></h4>
 <p>From the homomorphic properties of <a href="https://specs.anoma.net/pr-356/arch/system/state/resource_machine/primitive_interfaces/fixed_size_type/delta_hash.html">Delta hash</a>, for the resources of the same kind <span class="arithmatex">\(kind\)</span>, adding together the deltas of the resources results in the delta corresponding to the total quantity of that resource kind: <span class="arithmatex">\(\sum_j{h_\Delta(kind, q_{r_{i_j}})} - \sum_j{h_\Delta(kind, q_{r_{o_j}})} = \sum_j{\Delta_{r_{i_j}}} - \sum_j{\Delta_{r_{o_j}}} =  h_\Delta(kind, q_{kind})\)</span>, where <span class="arithmatex">\(q_{kind}\)</span> is the total quantity of the resources of kind <span class="arithmatex">\(kind\)</span>.</p>
 <p>The kind-distinctness property of <span class="arithmatex">\(h_\Delta\)</span> allows computing <span class="arithmatex">\(\Delta = \sum_j{\Delta_{r_{i_j}}} - \sum_j{\Delta_{r_{o_j}}}\)</span> adding resources of all kinds together without the need to account for distinct resource kinds explicitly: <span class="arithmatex">\(\sum_j{\Delta_{r_{i_j}}} - \sum_j{\Delta_{r_{o_j}}} = \sum_j{h_\Delta(kind_j, q_{kind_j})}\)</span>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+</div>
+<p>The delta extra inputs omitted in the formulae above are added/subtracted accordingly.</p>
 <p>As a result, the properties of <code>DeltaHash</code> allow computing the total balance for a compliance unit, action, or transaction, without having direct access to quantities and kinds of the resources that comprise the data structure.</p>
-<h2 id="interface">Interface<a class="headerlink" href="#interface" title="Anchor link to this section for reference">¶</a></h2>
+<h3 id="verify"><code>verify</code><a class="headerlink" href="#verify" title="Anchor link to this section for reference">¶</a></h3>
 <ol>
-<li><code>delta(ComplianceUnit) -&gt; DeltaHash</code> - returns the compliance unit delta, which is stored in <code>complianceData</code>: <code>unit.delta() = unit.complianceData.delta</code></li>
-<li><code>created(ComplianceUnit) -&gt; Set Commimtent</code> - returns the commitments of the created resources checked in the unit</li>
-<li><code>consumed(ComplianceUnit) -&gt; Set Nullifier</code> - returns the nullifiers of the consumed resources checked in the unit</li>
-<li><code>create(PS.ProvingKey, PS.Instance, PS.Proof) -&gt; ComplianceUnit</code> - computes the compliance proof and stores the data (or references to it, if stored elsewhere) required to verify it in the compliance unit</li>
-<li><code>verify(ComplianceUnit) -&gt; Bool</code> - returns <code>ComplianceProvingSystem.Verify(vk, instance, proof)</code>, where <code>instance</code> is computed from <code>refInstance</code> by dereferencing</li>
+<li><code>ComplianceProvingSystem.Verify(vk, instance, proof) = True</code></li>
+<li>Global check: <code>CMTree</code> roots used to verify the proof are valid <code>CMTree</code> roots</li>
 </ol>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+</div>
+<p>Compliance units can be verified as parts of supposedly valid transactions and individually, when building a valid transaction (e.g., in the partial solving case). In case the compliance units are verified <em>not</em> individually, all global checks can be aggregated and verified at once to reduce the amount of global communication.</p>
 <!-- list_wikilinks -->
 <!-- Source file information -->
 <!-- Was this page helpful? -->
@@ -1088,8 +1146,8 @@
 <div class="md-copyright__highlight">
       Powered by Mkdocs, Poetry , Material 9.6.12-insiders-4.53.16 and Juvix v0.6.10
     </div>
-<strong>Version: (PR356 - michael/evm-protocol-adapter-22b2e1be) - Updated: April 29,
-    2025 at 02:43 PM UTC</strong>
+<strong>Version: (PR356 - michael/evm-protocol-adapter-626a527c) - Updated: May 05,
+    2025 at 02:32 PM UTC</strong>
 <br/>
 <strong>Latest version: <a href="https://specs.anoma.net/latest">
     https://specs.anoma.net/latest</a></strong>

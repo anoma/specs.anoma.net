@@ -7,34 +7,34 @@
 <meta content="width=device-width,initial-scale=1" name="viewport"/>
 <meta content="The Anoma specs is a collection of documents that describe the architecture, design, and implementation of the Anoma Network." name="description"/>
 <meta content="Anoma Foundation" name="author"/>
-<link href="https://specs.anoma.net/pr-356/arch/node/types.juvix.html" rel="canonical"/>
-<link href="../../assets/logo.svg" rel="icon"/>
+<link href="https://specs.anoma.net/pr-356/arch/system/state/resource_machine/primitive_interfaces/list.juvix.html" rel="canonical"/>
+<link href="../../../../../assets/logo.svg" rel="icon"/>
 <meta content="mkdocs-1.6.1, mkdocs-material-9.6.12+insiders-4.53.16" name="generator"/>
-<title>Types - Anoma specs</title>
-<link href="../../assets/stylesheets/main.ff49f96f.min.css" rel="stylesheet"/>
-<link href="../../assets/stylesheets/palette.ab4e12ef.min.css" rel="stylesheet"/>
+<title>List - Anoma specs</title>
+<link href="../../../../../assets/stylesheets/main.ff49f96f.min.css" rel="stylesheet"/>
+<link href="../../../../../assets/stylesheets/palette.ab4e12ef.min.css" rel="stylesheet"/>
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
 <link href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&amp;display=fallback" rel="stylesheet"/>
 <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
-<link href="../../assets/css/juvix-material-style.css" rel="stylesheet"/>
-<link href="../../assets/css/juvix-highlighting.css" rel="stylesheet"/>
-<link href="../../assets/css/juvix_codeblock_footer.css" rel="stylesheet"/>
-<link href="../../assets/css/latte-light.css" rel="stylesheet"/>
-<link href="../../assets/css/extra.css" rel="stylesheet"/>
-<script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+<link href="../../../../../assets/css/juvix-material-style.css" rel="stylesheet"/>
+<link href="../../../../../assets/css/juvix-highlighting.css" rel="stylesheet"/>
+<link href="../../../../../assets/css/juvix_codeblock_footer.css" rel="stylesheet"/>
+<link href="../../../../../assets/css/latte-light.css" rel="stylesheet"/>
+<link href="../../../../../assets/css/extra.css" rel="stylesheet"/>
+<script>__md_scope=new URL("../../../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
 <meta content="website" property="og:type">
-<meta content="Types - Anoma specs" property="og:title">
+<meta content="List - Anoma specs" property="og:title">
 <meta content="The Anoma specs is a collection of documents that describe the architecture, design, and implementation of the Anoma Network." property="og:description">
-<meta content="https://specs.anoma.net/pr-356/assets/images/social/arch/node/types.png" property="og:image">
+<meta content="https://specs.anoma.net/pr-356/assets/images/social/arch/system/state/resource_machine/primitive_interfaces/list.png" property="og:image">
 <meta content="image/png" property="og:image:type">
 <meta content="1200" property="og:image:width"/>
 <meta content="630" property="og:image:height"/>
-<meta content="https://specs.anoma.net/pr-356/arch/node/types.juvix.html" property="og:url"/>
+<meta content="https://specs.anoma.net/pr-356/arch/system/state/resource_machine/primitive_interfaces/list.juvix.html" property="og:url"/>
 <meta content="summary_large_image" property="twitter:card"/>
-<meta content="Types - Anoma specs" property="twitter:title"/>
+<meta content="List - Anoma specs" property="twitter:title"/>
 <meta content="The Anoma specs is a collection of documents that describe the architecture, design, and implementation of the Anoma Network." property="twitter:description"/>
-<meta content="https://specs.anoma.net/pr-356/assets/images/social/arch/node/types.png" property="twitter:image"/>
-<link href="../../assets/stylesheets/glightbox.min.css" rel="stylesheet"><style>
+<meta content="https://specs.anoma.net/pr-356/assets/images/social/arch/system/state/resource_machine/primitive_interfaces/list.png" property="twitter:image"/>
+<link href="../../../../../assets/stylesheets/glightbox.min.css" rel="stylesheet"><style>
     html.glightbox-open { overflow: initial; height: 100%; }
     .gslide-title { margin-top: 0px; user-select: text; }
     .gslide-desc { color: #666; user-select: text; }
@@ -43,13 +43,13 @@
     .gdesc-inner { font-size: 0.75rem; }
     body[data-md-color-scheme="slate"] .gdesc-inner { background: var(--md-default-bg-color);}
     body[data-md-color-scheme="slate"] .gslide-title { color: var(--md-default-fg-color);}
-    body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color);}</style> <script src="../../assets/javascripts/glightbox.min.js"></script></link></meta></meta></meta></meta></meta></head>
+    body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color);}</style> <script src="../../../../../assets/javascripts/glightbox.min.js"></script></link></meta></meta></meta></meta></meta></head>
 <body data-md-color-accent="indigo" data-md-color-primary="white" data-md-color-scheme="default" dir="ltr">
 <input autocomplete="off" class="md-toggle" data-md-toggle="drawer" id="__drawer" type="checkbox"/>
 <input autocomplete="off" class="md-toggle" data-md-toggle="search" id="__search" type="checkbox"/>
 <label class="md-overlay" for="__drawer"></label>
 <div data-md-component="skip">
-<a class="md-skip" href="#types">
+<a class="md-skip" href="#list">
           Skip to content
         </a>
 </div>
@@ -81,8 +81,8 @@
 </div>
 <header class="md-header md-header--shadow" data-md-component="header">
 <nav aria-label="Header" class="md-header__inner md-grid">
-<a aria-label="Anoma specs" class="md-header__button md-logo" data-md-component="logo" href="../../index.html" title="Anoma specs">
-<img alt="logo" src="../../assets/logo.svg"/>
+<a aria-label="Anoma specs" class="md-header__button md-logo" data-md-component="logo" href="../../../../../index.html" title="Anoma specs">
+<img alt="logo" src="../../../../../assets/logo.svg"/>
 </a>
 <label class="md-header__button md-icon" for="__drawer">
 <svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"></path></svg>
@@ -102,7 +102,7 @@
 <div class="md-header__topic" data-md-component="header-topic">
 <span class="md-ellipsis">
               
-                Types
+                List
               
             </span>
 </div>
@@ -199,8 +199,8 @@
 <nav aria-label="Navigation" class="md-nav md-nav--primary" data-md-level="0">
 <!-- Site title -->
 <label class="md-nav__title" for="__drawer">
-<a aria-label="Anoma specs" class="md-nav__button md-logo" data-md-component="logo" href="../../index.html" title="Anoma specs">
-<img alt="logo" src="../../assets/logo.svg"/>
+<a aria-label="Anoma specs" class="md-nav__button md-logo" data-md-component="logo" href="../../../../../index.html" title="Anoma specs">
+<img alt="logo" src="../../../../../assets/logo.svg"/>
 </a>
     Anoma specs
   </label>
@@ -220,7 +220,7 @@
 <!-- Navigation list -->
 <ul class="md-nav__list" data-md-scrollfix="">
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../index.html">
+<a class="md-nav__link" href="../../../../../index.html">
 <svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"></path></svg>
 <span class="md-ellipsis">
     
@@ -233,7 +233,7 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../changelog.html">
+<a class="md-nav__link" href="../../../../../changelog.html">
 <svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 21.5c-1.35-.85-3.8-1.5-5.5-1.5-1.65 0-3.35.3-4.75 1.05-.1.05-.15.05-.25.05-.25 0-.5-.25-.5-.5V6c.6-.45 1.25-.75 2-1 1.11-.35 2.33-.5 3.5-.5 1.95 0 4.05.4 5.5 1.5 1.45-1.1 3.55-1.5 5.5-1.5 1.17 0 2.39.15 3.5.5.75.25 1.4.55 2 1v14.6c0 .25-.25.5-.5.5-.1 0-.15 0-.25-.05-1.4-.75-3.1-1.05-4.75-1.05-1.7 0-4.15.65-5.5 1.5M12 8v11.5c1.35-.85 3.8-1.5 5.5-1.5 1.2 0 2.4.15 3.5.5V7c-1.1-.35-2.3-.5-3.5-.5-1.7 0-4.15.65-5.5 1.5m1 3.5c1.11-.68 2.6-1 4.5-1 .91 0 1.76.09 2.5.28V9.23c-.87-.15-1.71-.23-2.5-.23q-2.655 0-4.5.84zm4.5.17c-1.71 0-3.21.26-4.5.79v1.69c1.11-.65 2.6-.99 4.5-.99 1.04 0 1.88.08 2.5.24v-1.5c-.87-.16-1.71-.23-2.5-.23m2.5 2.9c-.87-.16-1.71-.24-2.5-.24-1.83 0-3.33.27-4.5.8v1.69c1.11-.66 2.6-.99 4.5-.99 1.04 0 1.88.08 2.5.24z"></path></svg>
 <span class="md-ellipsis">
     
@@ -269,7 +269,7 @@
           </label>
 <ul class="md-nav__list" data-md-scrollfix="">
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../indexes/tags.html">
+<a class="md-nav__link" href="../../../../../indexes/tags.html">
 <svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M5.5 7A1.5 1.5 0 0 1 4 5.5 1.5 1.5 0 0 1 5.5 4 1.5 1.5 0 0 1 7 5.5 1.5 1.5 0 0 1 5.5 7m15.91 4.58-9-9C12.05 2.22 11.55 2 11 2H4c-1.11 0-2 .89-2 2v7c0 .55.22 1.05.59 1.41l8.99 9c.37.36.87.59 1.42.59s1.05-.23 1.41-.59l7-7c.37-.36.59-.86.59-1.41 0-.56-.23-1.06-.59-1.42"></path></svg>
 <span class="md-ellipsis">
     
@@ -282,7 +282,7 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../indexes/modules.html">
+<a class="md-nav__link" href="../../../../../indexes/modules.html">
 <svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19 10h-2V8h2m0 5h-2v-2h2m-3-1h-2V8h2m0 5h-2v-2h2m0 6H8v-2h8m-9-5H5V8h2m0 5H5v-2h2m1 0h2v2H8m0-5h2v2H8m3 1h2v2h-2m0-5h2v2h-2m9-5H4c-1.11 0-2 .89-2 2v10a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2"></path></svg>
 <span class="md-ellipsis">
     
@@ -295,7 +295,7 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../prelude.html">
+<a class="md-nav__link" href="../../../../../prelude.html">
 <svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M6 2a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm0 2h7v5h5v11H6zm2 8v2h8v-2zm0 4v2h5v-2z"></path></svg>
 <span class="md-ellipsis">
     
@@ -334,7 +334,7 @@
           </label>
 <ul class="md-nav__list" data-md-scrollfix="">
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../anomian.html">
+<a class="md-nav__link" href="../../../../../anomian.html">
 <svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 3C6.5 3 2 6.6 2 11c0 2.1 1 4.1 2.8 5.5 0 .6-.4 2.2-2.8 4.5 0 0 3.5 0 6.5-2.5 1.1.3 2.3.5 3.5.5 5.5 0 10-3.6 10-8s-4.5-8-10-8m1 12h-2v-2h2zm1.8-5c-.3.4-.7.6-1.1.8-.3.2-.4.3-.5.5-.2.2-.2.4-.2.7h-2c0-.5.1-.8.3-1.1.2-.2.6-.5 1.1-.8.3-.1.5-.3.6-.5s.2-.5.2-.7c0-.3-.1-.5-.3-.7s-.5-.3-.8-.3-.5.1-.7.2q-.3.15-.3.6h-2c.1-.7.4-1.3.9-1.7s1.2-.5 2.1-.5 1.7.2 2.2.6.8 1 .8 1.7q.15.6-.3 1.2"></path></svg>
 <span class="md-ellipsis">
     
@@ -347,7 +347,7 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../overview.html">
+<a class="md-nav__link" href="../../../../overview.html">
 <svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M24 18.714v4.8c0 .288-.192.48-.48.48h-4.8c-.288 0-.48-.192-.48-.48v-4.8c0-.288.192-.48.48-.48h1.92v-1.92h-8.16v1.92h1.92c.288 0 .48.192.48.48v4.8c0 .288-.192.48-.48.48H9.6c-.288 0-.48-.192-.48-.48v-4.8c0-.288.192-.48.48-.48h1.92v-1.92H3.36v1.92h1.92c.288 0 .48.192.48.48v4.8c0 .288-.192.48-.48.48H.48c-.288 0-.48-.192-.48-.48v-4.8c0-.288.192-.48.48-.48H2.4v-2.4c0-.288.192-.48.48-.48h8.64v-1.44h.96v1.44h8.64c.288 0 .48.192.48.48v2.4h1.92c.288 0 .48.192.48.48m-13.92 4.32h3.84v-3.84h-3.84zm-9.12 0H4.8v-3.84H.96Zm18.24 0h3.84v-3.84H19.2ZM6.24 9.642V3.546c0-.192.096-.336.24-.432L11.76.042a.8.8 0 0 1 .48 0l5.28 3.072c.144.096.24.24.24.432v6.096c0 .144-.096.288-.24.384l-5.28 3.072q-.096.048-.24.048t-.24-.048l-5.28-3.072c-.144-.096-.24-.24-.24-.384m10.56-.288V4.362l-4.32 2.496v4.992zm-9.6 0 4.32 2.496V6.858L7.2 4.362Zm.48-5.808L12 5.994l4.32-2.448L12 1.05Z"></path></svg>
 <span class="md-ellipsis">
     
@@ -386,7 +386,7 @@
           </label>
 <ul class="md-nav__list" data-md-scrollfix="">
 <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
-<a class="md-nav__link" href="concepts/engine.html">
+<a class="md-nav__link" href="../../../../node/concepts/engine.html">
 <span class="md-ellipsis">
     
   
@@ -399,7 +399,7 @@
 </a>
 </li>
 <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
-<a class="md-nav__link" href="types/anoma_message.html">
+<a class="md-nav__link" href="../../../../node/types/anoma_message.html">
 <span class="md-ellipsis">
     
   
@@ -412,7 +412,7 @@
 </a>
 </li>
 <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
-<a class="md-nav__link" href="subsystems/hardware.html">
+<a class="md-nav__link" href="../../../../node/subsystems/hardware.html">
 <span class="md-ellipsis">
     
   
@@ -451,7 +451,7 @@
           </label>
 <ul class="md-nav__list" data-md-scrollfix="">
 <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
-<a class="md-nav__link" href="../system/identity/identity.html">
+<a class="md-nav__link" href="../../../identity/identity.html">
 <span class="md-ellipsis">
     
   
@@ -464,7 +464,7 @@
 </a>
 </li>
 <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
-<a class="md-nav__link" href="../system/state/resource_machine/index.html">
+<a class="md-nav__link" href="../index.html">
 <span class="md-ellipsis">
     
   
@@ -503,7 +503,7 @@
           </label>
 <ul class="md-nav__list" data-md-scrollfix="">
 <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
-<a class="md-nav__link" href="../integrations/adapters/index.html">
+<a class="md-nav__link" href="../../../../integrations/adapters/index.html">
 <span class="md-ellipsis">
     
   
@@ -542,7 +542,7 @@
           </label>
 <ul class="md-nav__list" data-md-scrollfix="">
 <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
-<a class="md-nav__link" href="../../tutorial/principles_and_guidelines.html">
+<a class="md-nav__link" href="../../../../../tutorial/principles_and_guidelines.html">
 <span class="md-ellipsis">
     
   
@@ -566,6 +566,21 @@
 <div class="md-sidebar__scrollwrap">
 <div class="md-sidebar__inner">
 <nav aria-label="Table of contents" class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">
+<span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#used-in">
+<span class="md-ellipsis">
+      
+        Used in
+      
+    </span>
+</a>
+</li>
+</ul>
 </nav>
 </div>
 </div>
@@ -595,11 +610,6 @@
   IN THE SOFTWARE.
 -->
 <!-- Tags -->
-<nav class="md-tags">
-<span class="md-tag">index</span>
-<span class="md-tag">node-architecture</span>
-<span class="md-tag">prelude</span>
-</nav>
 <!-- Actions -->
 <!--
   Copyright (c) 2016-2025 Martin Donath <martin.donath@squidfunk.com>
@@ -624,15 +634,15 @@
 -->
 <!-- Actions -->
 <!-- Edit button -->
-<a class="md-content__button md-icon" href="https://github.com/anoma/nspec/edit/main/docs/arch/node/types.juvix.md" title="Edit this page">
+<a class="md-content__button md-icon" href="https://github.com/anoma/nspec/edit/main/docs/arch/system/state/resource_machine/primitive_interfaces/list.juvix.md" title="Edit this page">
 <svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M6 2c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4v-1.9l10-10V8l-6-6zm7 1.5L18.5 9H13zm7.1 9.5c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-2 1.8L12 20.9V23h2.1l6.1-6.1z"></path></svg>
 </a>
 <!-- View button -->
-<a class="md-content__button md-icon" href="https://github.com/anoma/nspec/raw/main/docs/arch/node/types.juvix.md" title="View source of this page">
+<a class="md-content__button md-icon" href="https://github.com/anoma/nspec/raw/main/docs/arch/system/state/resource_machine/primitive_interfaces/list.juvix.md" title="View source of this page">
 <svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20.56 18H3.44C2.65 18 2 17.37 2 16.59V7.41C2 6.63 2.65 6 3.44 6h17.12c.79 0 1.44.63 1.44 1.41v9.18c0 .78-.65 1.41-1.44 1.41M6.81 15.19v-3.66l1.92 2.35 1.92-2.35v3.66h1.93V8.81h-1.93l-1.92 2.35-1.92-2.35H4.89v6.38zM19.69 12h-1.92V8.81h-1.92V12h-1.93l2.89 3.28z"></path></svg>
 </a>
 <!-- If the page source ends with .juvix.md, we show a button to view the raw code -->
-<a class="md-content__button md-icon" href="arch/node/types-src.html" title="View Raw Juvix Code">
+<a class="md-content__button md-icon" href="arch/system/state/resource_machine/primitive_interfaces/list-src.html" title="View Raw Juvix Code">
 <svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M8 3a2 2 0 0 0-2 2v4a2 2 0 0 1-2 2H3v2h1a2 2 0 0 1 2 2v4a2 2 0 0 0 2 2h2v-2H8v-5a2 2 0 0 0-2-2 2 2 0 0 0 2-2V5h2V3m6 0a2 2 0 0 1 2 2v4a2 2 0 0 0 2 2h1v2h-1a2 2 0 0 0-2 2v4a2 2 0 0 1-2 2h-2v-2h2v-5a2 2 0 0 1 2-2 2 2 0 0 1-2-2V5h-2V3z"></path></svg>
 </a>
 <!--
@@ -640,8 +650,29 @@
   page title (or respectively site name) is used as the main headline.
 -->
 <!-- Page content -->
-<h1 id="types">Types<a class="headerlink" href="#types" title="Anchor link to this section for reference">¶</a></h1>
-<pre class="highlight"><code class="juvix"><pre class="src-content"><span class="ju-keyword">module</span> <span id="arch.node.types"><span class="annot"><a class="ju-code-link ju-module" href="https://specs.anoma.net/pr-356/arch/node/types.html#arch.node.types"><span class="annot"><a class="ju-code-link ju-module" href="https://specs.anoma.net/pr-356/arch/node/types.html#arch.node.types"><span class="ju-module"><span class="ju-module">arch.node.types</span></span></a></span></a></span></span><span class="ju-delimiter">;</span><br/><br/><span class="ju-keyword">import</span> <span id="arch.node.types.basics"><span class="annot"><a class="ju-code-link ju-module" href="https://specs.anoma.net/pr-356/arch/node/types/basics.html#arch.node.types.basics"><span class="annot"><a class="ju-code-link ju-module" href="https://specs.anoma.net/pr-356/arch/node/types/basics.html#arch.node.types.basics"><span class="ju-module"><span class="ju-module">arch.node.types.basics</span></span></a></span></a></span></span> <span class="ju-keyword">open</span> <span class="ju-keyword">public</span><span class="ju-delimiter">;</span><br/><span class="ju-keyword">import</span> <span id="arch.node.types.crypto"><span class="annot"><a class="ju-code-link ju-module" href="https://specs.anoma.net/pr-356/arch/node/types/crypto.html#arch.node.types.crypto"><span class="annot"><a class="ju-code-link ju-module" href="https://specs.anoma.net/pr-356/arch/node/types/crypto.html#arch.node.types.crypto"><span class="ju-module"><span class="ju-module">arch.node.types.crypto</span></span></a></span></a></span></span> <span class="ju-keyword">open</span> <span class="ju-keyword">public</span><span class="ju-delimiter">;</span><br/><span class="ju-keyword">import</span> <span id="arch.node.types.identities"><span class="annot"><a class="ju-code-link ju-module" href="https://specs.anoma.net/pr-356/arch/node/types/identities.html#arch.node.types.identities"><span class="annot"><a class="ju-code-link ju-module" href="https://specs.anoma.net/pr-356/arch/node/types/identities.html#arch.node.types.identities"><span class="ju-module"><span class="ju-module">arch.node.types.identities</span></span></a></span></a></span></span> <span class="ju-keyword">open</span> <span class="ju-keyword">public</span><span class="ju-delimiter">;</span><br/><span class="ju-keyword">import</span> <span id="arch.node.types.messages"><span class="annot"><a class="ju-code-link ju-module" href="https://specs.anoma.net/pr-356/arch/node/types/messages.html#arch.node.types.messages"><span class="annot"><a class="ju-code-link ju-module" href="https://specs.anoma.net/pr-356/arch/node/types/messages.html#arch.node.types.messages"><span class="ju-module"><span class="ju-module">arch.node.types.messages</span></span></a></span></a></span></span> <span class="ju-keyword">open</span> <span class="ju-keyword">public</span><span class="ju-delimiter">;</span><br/><span class="ju-keyword">import</span> <span id="arch.node.types.anoma"><span class="annot"><a class="ju-code-link ju-module" href="https://specs.anoma.net/pr-356/arch/node/types/anoma.html#arch.node.types.anoma"><span class="annot"><a class="ju-code-link ju-module" href="https://specs.anoma.net/pr-356/arch/node/types/anoma.html#arch.node.types.anoma"><span class="ju-module"><span class="ju-module">arch.node.types.anoma</span></span></a></span></a></span></span> <span class="ju-keyword">open</span> <span class="ju-keyword">public</span><span class="ju-delimiter">;</span><br/><span class="ju-keyword">import</span> <span id="arch.node.types.engine"><span class="annot"><a class="ju-code-link ju-module" href="https://specs.anoma.net/pr-356/arch/node/types/engine.html#arch.node.types.engine"><span class="annot"><a class="ju-code-link ju-module" href="https://specs.anoma.net/pr-356/arch/node/types/engine.html#arch.node.types.engine"><span class="ju-module"><span class="ju-module">arch.node.types.engine</span></span></a></span></a></span></span> <span class="ju-keyword">open</span> <span class="ju-keyword">public</span><span class="ju-delimiter">;</span><br/><span class="ju-keyword">import</span> <span id="arch.node.types.transport"><span class="annot"><a class="ju-code-link ju-module" href="https://specs.anoma.net/pr-356/arch/node/types/transport.html#arch.node.types.transport"><span class="annot"><a class="ju-code-link ju-module" href="https://specs.anoma.net/pr-356/arch/node/types/transport.html#arch.node.types.transport"><span class="ju-module"><span class="ju-module">arch.node.types.transport</span></span></a></span></a></span></span> <span class="ju-keyword">open</span> <span class="ju-keyword">public</span><span class="ju-delimiter">;</span><br/><span class="ju-keyword">import</span> <span id="arch.node.types.storage"><span class="annot"><a class="ju-code-link ju-module" href="https://specs.anoma.net/pr-356/arch/node/types/storage.html#arch.node.types.storage"><span class="annot"><a class="ju-code-link ju-module" href="https://specs.anoma.net/pr-356/arch/node/types/storage.html#arch.node.types.storage"><span class="ju-module"><span class="ju-module">arch.node.types.storage</span></span></a></span></a></span></span> <span class="ju-keyword">open</span> <span class="ju-keyword">public</span><span class="ju-delimiter">;</span><br/><span class="ju-keyword">import</span> <span id="arch.node.types.router"><span class="annot"><a class="ju-code-link ju-module" href="https://specs.anoma.net/pr-356/arch/node/types/router.html#arch.node.types.router"><span class="annot"><a class="ju-code-link ju-module" href="https://specs.anoma.net/pr-356/arch/node/types/router.html#arch.node.types.router"><span class="ju-module"><span class="ju-module">arch.node.types.router</span></span></a></span></a></span></span> <span class="ju-keyword">open</span> <span class="ju-keyword">public</span><span class="ju-delimiter">;</span><br/></pre></code></pre>
+<details class="failure"><summary>Juvix Markdown error</summary>
+<pre><code>
+    ***/arch/system/state/resource_machine/primitive_interfaces/list.juvix.md:9:8-75: error: The top module
+arch.system.state.resource_machine.primitive_interfaces.ordered_set is defined in the file:
+***/arch/system/state/resource_machine/primitive_interfaces/list.juvix.md But it should be in the file:
+***/arch/system/state/resource_machine/primitive_interfaces/ordered_set.juvix.md
+
+</code></pre></details>
+<div class="language-text highlight"><pre><span></span><code><span id="__ispan-0-1">module arch.system.state.resource_machine.primitive_interfaces.ordered_set;
+</span></code></pre></div>
+<h1 id="list">List<a class="headerlink" href="#list" title="Anchor link to this section for reference">¶</a></h1>
+<ol>
+<li><code>new() -&gt; List</code> - creates an empty list</li>
+<li><code>size(Set) -&gt; Nat</code> - returns the number of elements in the list</li>
+<li><code>elem(List, Nat) -&gt; Maybe T</code> - returns an element from the list at the given position</li>
+<li><code>append(List, T) -&gt; List</code> - appends an element to the list</li>
+<li><code>delete(List, Nat) -&gt; List</code> - removes an element at the given position from the list</li>
+<li><code>contains(List, T) -&gt; Bool</code> - checks if an element is in the list</li>
+</ol>
+<h2 id="used-in">Used in<a class="headerlink" href="#used-in" title="Anchor link to this section for reference">¶</a></h2>
+<ol>
+<li>Action</li>
+</ol>
 <!-- list_wikilinks -->
 <!-- Source file information -->
 <!-- Was this page helpful? -->
@@ -748,12 +779,12 @@
 <div class="md-dialog" data-md-component="dialog">
 <div class="md-dialog__inner md-typeset"></div>
 </div>
-<script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["announce.dismiss", "content.code.annotate", "content.code.copy", "content.tooltips", "content.action.edit", "content.action.view", "search.highlight", "search.suggest", "search.sharing", "navigation.instant.preview", "navigation.tracking", "navigation.prune", "navigation.indexes", "navigation.sections", "navigation.footer", "navigation.path", "toc.follow"], "search": "../../assets/javascripts/workers/search.c7c1ca2c.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
-<script src="../../assets/javascripts/bundle.f807c082.min.js"></script>
-<script src="../../assets/js/extra.js"></script>
-<script src="../../assets/js/highlight.js"></script>
-<script src="../../assets/js/mathjax.js"></script>
-<script src="../../assets/js/tex-svg-full.js"></script>
+<script id="__config" type="application/json">{"annotate": null, "base": "../../../../..", "features": ["announce.dismiss", "content.code.annotate", "content.code.copy", "content.tooltips", "content.action.edit", "content.action.view", "search.highlight", "search.suggest", "search.sharing", "navigation.instant.preview", "navigation.tracking", "navigation.prune", "navigation.indexes", "navigation.sections", "navigation.footer", "navigation.path", "toc.follow"], "search": "../../../../../assets/javascripts/workers/search.c7c1ca2c.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+<script src="../../../../../assets/javascripts/bundle.f807c082.min.js"></script>
+<script src="../../../../../assets/js/extra.js"></script>
+<script src="../../../../../assets/js/highlight.js"></script>
+<script src="../../../../../assets/js/mathjax.js"></script>
+<script src="../../../../../assets/js/tex-svg-full.js"></script>
 <script id="init-glightbox">const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "slide"});
 document$.subscribe(() => { lightbox.reload() });
 </script></body>

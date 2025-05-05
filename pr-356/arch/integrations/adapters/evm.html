@@ -98,7 +98,7 @@
                 <span class="first-letter">s</span>pecs
               
               
-                <span class="md-header__topic-version">(PR356 - michael/evm-protocol-adapter-22b2e1be)</span>
+                <span class="md-header__topic-version">(PR356 - michael/evm-protocol-adapter-626a527c)</span>
 </span>
 </div>
 <div class="md-header__topic" data-md-component="header-topic">
@@ -210,7 +210,7 @@
 <ul class="md-nav__list">
 <li class="md-nav__item">
 <a class="md-nav__link" href="https://specs.anoma.net/latest" target="_blank">
-     Latest version ((PR356 - michael/evm-protocol-adapter-22b2e1be))
+     Latest version ((PR356 - michael/evm-protocol-adapter-626a527c))
       </a>
 </li>
 <li class="md-nav__item">
@@ -1068,7 +1068,7 @@
 <h2 id="supported-networks">Supported Networks<a class="headerlink" href="#supported-networks" title="Anchor link to this section for reference">¶</a></h2>
 <p>For the upcoming product version v0.3, only the <a href="https://ethereum.org/en/developers/docs/networks/#sepolia">Sepolia network</a> will be supported.</p>
 <h2 id="storage">Storage<a class="headerlink" href="#storage" title="Anchor link to this section for reference">¶</a></h2>
-<p>The protocol adapter contract inherits the following storage components</p>
+<p>The protocol adapter contract inherits the following storage components as Solidity contracts:</p>
 <ul>
 <li><a href="https://specs.anoma.net/pr-356/arch/system/state/resource_machine/primitive_interfaces/commitment_accumulator.html">Commitment Accumulator</a></li>
 <li><a href="https://specs.anoma.net/pr-356/arch/system/state/resource_machine/primitive_interfaces/nullifier_set.html">Nullifier Set</a></li>
@@ -1138,7 +1138,7 @@ the external contract and resources that should be created and consumed in conse
     - must be part of the action data structure containing the forwarder call instruction
     - carries the inputs and outputs of the forwarded call
     - expresses constraints over other resources that must be present and correspond to the external call</p>
-<p>and allows the protocol adapter to ensure the correspondence.</p>
+<p>and allows the application to ensure the correspondence.</p>
 <p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="https://specs.anoma.net/pr-356/images/pa-evm.drawio.svg"><img alt="Schematic depiction of the state correspondence design." src="https://specs.anoma.net/pr-356/images/pa-evm.drawio.svg"/></a></p>
 <p>This works as follows:</p>
 <p>The protocol adapter accepts an optional <code>ForwarderCalldata</code> struct with the RM transaction object as part of the action object (see <a href="https://github.com/anoma/evm-protocol-adapter/blob/main/src/Types.sol"><code>src/Types.sol</code></a>):</p>
@@ -1428,8 +1428,8 @@ Moreover, it can integrity check that its own label matches the <code>untrustedF
 <div class="md-copyright__highlight">
       Powered by Mkdocs, Poetry , Material 9.6.12-insiders-4.53.16 and Juvix v0.6.10
     </div>
-<strong>Version: (PR356 - michael/evm-protocol-adapter-22b2e1be) - Updated: April 29,
-    2025 at 02:43 PM UTC</strong>
+<strong>Version: (PR356 - michael/evm-protocol-adapter-626a527c) - Updated: May 05,
+    2025 at 02:32 PM UTC</strong>
 <br/>
 <strong>Latest version: <a href="https://specs.anoma.net/latest">
     https://specs.anoma.net/latest</a></strong>

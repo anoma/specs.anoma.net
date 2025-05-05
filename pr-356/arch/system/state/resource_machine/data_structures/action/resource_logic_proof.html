@@ -98,7 +98,7 @@
                 <span class="first-letter">s</span>pecs
               
               
-                <span class="md-header__topic-version">(PR356 - michael/evm-protocol-adapter-22b2e1be)</span>
+                <span class="md-header__topic-version">(PR356 - michael/evm-protocol-adapter-626a527c)</span>
 </span>
 </div>
 <div class="md-header__topic" data-md-component="header-topic">
@@ -210,7 +210,7 @@
 <ul class="md-nav__list">
 <li class="md-nav__item">
 <a class="md-nav__link" href="https://specs.anoma.net/latest" target="_blank">
-     Latest version ((PR356 - michael/evm-protocol-adapter-22b2e1be))
+     Latest version ((PR356 - michael/evm-protocol-adapter-626a527c))
       </a>
 </li>
 <li class="md-nav__item">
@@ -922,39 +922,44 @@
 <!-- Page content -->
 <pre class="highlight"><code class="juvix"><pre class="src-content"><span class="ju-keyword">module</span> <span id="arch.system.state.resource_machine.data_structures.action.resource_logic_proof"><span class="annot"><a class="ju-code-link ju-module" href="https://specs.anoma.net/pr-356/arch/system/state/resource_machine/data_structures/action/resource_logic_proof.html#arch.system.state.resource_machine.data_structures.action.resource_logic_proof"><span class="annot"><a class="ju-code-link ju-module" href="https://specs.anoma.net/pr-356/arch/system/state/resource_machine/data_structures/action/resource_logic_proof.html#arch.system.state.resource_machine.data_structures.action.resource_logic_proof"><span class="ju-module"><span class="ju-module">arch.system.state.resource_machine.data_structures.action.resource_logic_proof</span></span></a></span></a></span></span><span class="ju-delimiter">;</span><br/></pre></code></pre>
 <h1 id="resource-logic-proof">Resource logic proof<a class="headerlink" href="#resource-logic-proof" title="Anchor link to this section for reference">¶</a></h1>
-<p>Resource logic proofs attest to validity of resource logics. A resource logic is a computable predicate associated with a resource that constrains the creation and consumption of a resource. Each time a resource is created or consumed, the corresponding resource logic proof is required in order for the action (and thus the transaction) to be valid.</p>
+<p>Resource logic proofs attest to validity of resource logics. A resource logic is a computable predicate associated with a resource (this resource is referred to as <code>self</code> in this context) that constrains the creation and consumption of a resource. Each time a resource is created or consumed, the corresponding resource logic proof is required in order for the action (and thus the transaction) to be valid.</p>
 <h2 id="proving">Proving<a class="headerlink" href="#proving" title="Anchor link to this section for reference">¶</a></h2>
-<p>When proving, resource logics take as input resources created and consumed in the action:</p>
+<p>When proving, resource logics take as input resources created and consumed in that action.</p>
 <h4 id="instance">Instance<a class="headerlink" href="#instance" title="Anchor link to this section for reference">¶</a></h4>
 <ol>
-<li><a href="https://specs.anoma.net/pr-356/arch/system/state/resource_machine/data_structures/resource/computable_components/introduction.html#Tag">Resource tag</a> — identifies the current resource being checked</li>
+<li>Resource's commitment/nullifier</li>
 <li><code>isConsumed</code> - a flag that tells the logic if the resource is consumed or created</li>
-<li><code>action.consumed</code> (possibly excluding the tagged resource, if it is consumed)</li>
-<li><code>action.created</code> (possibly excluding the tagged resource, if it is created)</li>
-<li><code>action.applicationData[tag]</code></li>
+<li><code>consumed</code> (excluding the tagged resource, if it is consumed)</li>
+<li><code>created</code> (excluding the tagged resource, if it is created)</li>
+<li><code>applicationData</code></li>
 </ol>
 <h4 id="witness">Witness<a class="headerlink" href="#witness" title="Anchor link to this section for reference">¶</a></h4>
 <ol>
-<li>
-<p>for consumed resources: <code>OrderedSet (Resource, NullifierKey)</code></p>
-</li>
-<li>
-<p>for created resources: <code>OrderedSet Resource</code></p>
-</li>
-<li>
-<p>Application inputs</p>
-</li>
+<li><code>self</code> resource object</li>
+<li>If <code>isConsumed = True</code>: nullifier key of <code>self</code></li>
+<li>Resource objects of consumed resources: <code>List (Resource, NullifierKey)</code></li>
+<li>Resource objects of created resources: <code>List Resource</code></li>
+<li>Application-specific inputs</li>
 </ol>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>The instance and witness values are expected to correspond to each other: the first tag in the instance corresponds to the first resource object in the witness (and corresponds to the resource being checked), and so on. Note that the tag has to be recomputed from the object to verify that it indeed corresponds to the tag (this condition is included in the constraints)</p>
+<p>Instance and witness elements are expected to go in the same order: the first element of the instance corresponds to the first elements of the witness and so on.</p>
 </div>
 <h4 id="constraints">Constraints<a class="headerlink" href="#constraints" title="Anchor link to this section for reference">¶</a></h4>
 <ol>
-<li>Created commitment integrity: <code>r.commitment() = cm</code></li>
-<li>Consumed nullifier integrity: <code>r.nullifier(nullifierKey) = nf</code></li>
-<li>Application constraints</li>
+<li>For created resources: created commitment integrity: <code>r.commitment() = cm</code></li>
+<li>For consumed resources: <code>r.nullifier(nullifierKey) = nf</code></li>
+<li>Application-specific constraints</li>
 </ol>
+<p>Checks that require access to global <code>CMTree</code> and <code>NullifierSet</code>:</p>
+<ol>
+<li>each created resource wasn't created in prior transactions</li>
+<li>each consumed resource wasn't consumed in prior transactions</li>
+</ol>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+</div>
+<p>Actions can be verified as parts of supposedly valid transactions and individually, when building a valid transaction (e.g., in the partial solving case). In case the actions are verified <em>not</em> individually, all global checks can be aggregated and verified at once to reduce the amount of global communication.</p>
 <!-- list_wikilinks -->
 <!-- Source file information -->
 <!-- Was this page helpful? -->
@@ -1042,8 +1047,8 @@
 <div class="md-copyright__highlight">
       Powered by Mkdocs, Poetry , Material 9.6.12-insiders-4.53.16 and Juvix v0.6.10
     </div>
-<strong>Version: (PR356 - michael/evm-protocol-adapter-22b2e1be) - Updated: April 29,
-    2025 at 02:43 PM UTC</strong>
+<strong>Version: (PR356 - michael/evm-protocol-adapter-626a527c) - Updated: May 05,
+    2025 at 02:32 PM UTC</strong>
 <br/>
 <strong>Latest version: <a href="https://specs.anoma.net/latest">
     https://specs.anoma.net/latest</a></strong>
