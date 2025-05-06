@@ -841,8 +841,8 @@
 -->
 <!-- Page content -->
 <h1 id="ethereum-virtual-machine-protocol-adapter">Ethereum Virtual Machine Protocol Adapter<a class="headerlink" href="#ethereum-virtual-machine-protocol-adapter" title="Anchor link to this section for reference">¶</a></h1>
-<p>The Ethereum Virtual Machine (EVM) protocol adapter is a smart contract written in <a href="https://soliditylang.org/">Solidity</a> that can be deployed to EVM compatible chains and rollups to connect them to the a Anoma protocol. In general, the aim of the protocol adapter is to allow Anoma applications to be run on existing EVM-compatible chains (similar to how drivers allow an operating system to be run on different pieces of physical hardware).</p>
-<p>The current prototype is a <strong>settlement-only</strong> protocol adapter, i.e., it is only capable of processing fully-evaluated transaction functions and therefore does not implement the full <a href="https://specs.anoma.net/pr-356/arch/node/engines/executor.html">executor engine</a> behavior.</p>
+<p>The Ethereum Virtual Machine (EVM) protocol adapter is a smart contract written in <a href="https://soliditylang.org/">Solidity</a> that can be deployed to EVM compatible chains and roll-ups to connect them to the Anoma protocol. In general, the aim of the protocol adapter is to allow Anoma applications to be run on existing EVM-compatible chains (similar to how drivers allow an operating system to be run on different pieces of physical hardware).</p>
+<p>The current prototype is a <strong>settlement-only</strong> protocol adapter, i.e., it is only capable of processing fully-evaluated transaction functions and therefore does not implement the full <a href="https://specs.anoma.net/pr-356/arch/node/engines/executor.html">executor engine</a> behaviour.</p>
 <p>The implementation can be found in the <a href="https://github.com/anoma/evm-protocol-adapter"><code>anoma/evm-protocol-adapter</code> GH repo</a>.</p>
 <h2 id="supported-networks">Supported Networks<a class="headerlink" href="#supported-networks" title="Anchor link to this section for reference">¶</a></h2>
 <p>For the upcoming product version v0.3, only the <a href="https://ethereum.org/en/developers/docs/networks/#sepolia">Sepolia network</a> will be supported.</p>
@@ -908,15 +908,24 @@
 <li>External state existing in smart contracts which are independent of the protocol adapter and its internal RM state.</li>
 </ol>
 <p>To <strong>interoperate with state in external contracts</strong>, the protocol adapter contract can, during transaction execution, <strong>make read and write calls</strong> to them and <strong>create and consume corresponding resources</strong> in its internal state reflecting the external state reads and writes.</p>
-<p>We achieve this by creating an indirection layer separating the protocol adapter from the
-the external contract and resources that should be created and consumed in consequence. It consists of:
-- A <a href="#forwarder-contract">forwarder contract</a> that
-    - performs the actual state read or write calls into the target contract and returns eventual return data
-    - is custom-built for the target contract to call and permissionlessly deployed by 3rd parties
-- A <a href="#calldata-carrier-resource">calldata carrier resource</a> (singleton) that
-    - must be part of the action data structure containing the forwarder call instruction
-    - carries the inputs and outputs of the forwarded call
-    - expresses constraints over other resources that must be present and correspond to the external call</p>
+<p>We achieve this by creating an indirection layer separating the protocol adapter from
+the external contract and resources that should be created and consumed in
+consequence. It consists of:</p>
+<ul>
+<li>A <a href="#forwarder-contract">forwarder contract</a> that<ul>
+<li>performs the actual state read or write calls into the target contract and returns eventual return data</li>
+<li>is custom-built for the target contract to call and permissionlessly deployed by 3rd parties</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li>A <a href="#calldata-carrier-resource">calldata carrier resource</a> (singleton) that<ul>
+<li>must be part of the action data structure containing the forwarder call instruction</li>
+<li>carries the inputs and outputs of the forwarded call</li>
+<li>expresses constraints over other resources that must be present and correspond to the external call</li>
+</ul>
+</li>
+</ul>
 <p>and allows the application to ensure the correspondence.</p>
 <p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="https://specs.anoma.net/pr-356/images/pa-evm.drawio.svg"><img alt="Schematic depiction of the state correspondence design." src="https://specs.anoma.net/pr-356/images/pa-evm.drawio.svg"/></a></p>
 <p>This works as follows:</p>
@@ -957,8 +966,8 @@ The struct contains the address of the <a href="#forwarder-contract">forwarder c
 <li>escrow logic (e.g., required to wrap owned state into resources)</li>
 <li>event logic (e.g., required for EVM indexers)</li>
 </ul>
-<p>separate and independent from the protocol adapter contract. This allows the forwarder contract to be custom-built and permissionlessly deployed by untrusted 3rd parties.</p>
-<p>Besides referencing the external contract by its address, the forwarder contract must also reference the
+<p>separate and independent of the protocol adapter contract. This allows the forwarder contract to be custom-built and permissionlessly deployed by untrusted 3rd parties.</p>
+<p>Besides referencing the external contract by its address, the forwarder contract must also reference
 the resource kind of the associated <a href="#calldata-carrier-resource">calldata carrier resource</a> that the protocol adapter will require be created. This allows the forwarder contract to also to enforce its own contract address to be part of the carrier resource label, which ensures that the correspondence between the forwarder and carrier resource is unique.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -1032,73 +1041,7 @@ Moreover, it can integrity check that its own label matches the <code>untrustedF
 <p>Resources can correspond to EVM state and correspond to a specific <a href="#calldata-carrier-resource">calldata carrier resource</a> kind being referenced in their label. Their initialization and finalization logic requires a created calldata carrier resource to be part of the same action.</p>
 <h2 id="transaction-flow">Transaction Flow<a class="headerlink" href="#transaction-flow" title="Anchor link to this section for reference">¶</a></h2>
 <p>The protocol adapter transaction flow is shown below:</p>
-<pre class="mermaid"><code>sequenceDiagram
-  autonumber
-  title: Transaction Flow of the Settlement-Only EVM Protocol Adapter
-
-
-  actor Alice as User Alice
-  actor Bob as User Bob
-
-  Note over TF, R0B: Resource Logic, Compliance, &lt;br&gt; and Delta Proof Computation
-  box Anoma Client (Local)
-    participant TF as Transaction&lt;br&gt;Function
-    participant R0B as RISC ZERO&lt;br&gt;Backend
-  end
-
-  Alice -&gt;&gt; TF: call
-
-  par Local Proving
-  activate TF
-    TF -&gt;&gt; R0B: prove
-    R0B --&gt;&gt; TF: proofs
-  end
-  TF -&gt;&gt; IP: send tx1 (intent)
-  deactivate TF
-
-  Bob -&gt;&gt; TF: call
-
-  activate TF
-    TF -&gt;&gt; IP: send tx2 (intent)
-  deactivate TF
-
-  Note over IP, Sally: Intent Matching
-  box Anoma P2P Node
-    participant IP as Intent&lt;br&gt;Pool
-    actor Sally as Solver Sally
-  end
-
-  Sally --&gt;&gt; IP: monitor pool
-  activate Sally
-    Sally -&gt;&gt; Sally: compose(tx1,tx2)
-
-    box EVM
-      participant R0V as RISC ZERO&lt;br&gt;Verifier Contract
-      participant PA as Protocol Adapter&lt;br&gt;Contract
-      participant Forwarder as Forwarder&lt;br&gt;Contract
-      participant Ext as External&lt;br&gt;Contract
-    end
-    Sally -&gt;&gt; PA: eth_sendTransaction [execute(tx)]
-  deactivate Sally
-
-  %%par verify(tx)
-  PA -&gt;&gt; R0V: verify(tx)
-  %%end
-
-  par Settlement
-    opt Optional Forwarder Calls
-      Note over PA,Ext: Read/write external state
-      PA -&gt;&gt; Forwarder: Forwarder Call &lt;br&gt;forwardCall(call.input)
-      Forwarder -&gt;&gt; Ext: Forwarded Call
-      opt
-        Ext --&gt;&gt; Forwarder: Return Data
-      end
-      Forwarder --&gt;&gt; PA: Return Data&lt;br&gt;call.output
-    end
-    Note over PA: Update internal state
-    PA -&gt;&gt; PA: add nullifiers,&lt;br&gt;commitments, blobs
-  end
-</code></pre>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="https://kroki.io/mermaid/svg/eNqFVMtu2zAQvOcr9mLABuQ-chSKALYTAwaSRrAdH1oUBU0xCVGKq1KU4_x9dynqYadNL7a0nJmdfYiV-l0rK9W1Fk9OFBcAovZo62KvHL147Y1KYeuErYT0Gi0sDb4APoJ_VrBRns4LZf303ppXuNndQebQo0QDs1yUnlQuWFR6dDAzWioQFTxUKr51Z3Pcdyf0zKSv6BXggQLbZQLrT_MU1qrC2pHILT5pmcACi9JoQQUk8GXvrkDYHK6V8YJ9kEsG1F6wc1Lc4xFmFgsBC6PJNYxvUQozoSOAUjivpS4FxbdLNjMom8WXtZVR6BRN1hi-Xm0W8O1mfc_guZC_lM0Jy7_01xQ_vboi8RQoq-EoyUDwwH4P2j41DdEHQbVvlyEVmWFaaEBJKBWinHTaypVcbBWTdYxVlkJFEfDHzzDW1lPJXGuuhikowM0_d_YPFwPNy3c1--mtsgQ2pPqawirg4U54-dwU248ku8yIlKs37V1l3N2Gyq3NEE0ANZsTpBmxQcPpwnvf9-Z42nov0GpmlY1IZ7pldQTCR9OSdggrNaYuJlT15CLA2Djte3g-X4fdm3XYKacfNblboPWOsv6Fl82Ydv79MPsd0hLdi3A5KRO3e_kP6eboGU5_yllh3qCbLRq2IpuloPzzTx798Db4ro5K1p6bM_lxugZNRyk2GvGWH7gDr4yjEJXarPQuPT0YjeLYmNJfL8ENlh7uS05Ln0tf94LyVLHIfumyWULl8Y0h8o8vTlNcxXKhogtBRUZ00smlZ8rhWnlsQvw-5u_jg7Z0q0yiRE9gpZC1DeVBI-LIf3yCMIHpWeK18rWzcC28iLh2Dic52nEM4Owx-MLak7GTGQ5bksJDmfNs-Ls9a0VsBINEnoOtjQkbWyVBHYtCex5FlcDe4L69bP4Azcv0zw==?"><img alt="Kroki" src="https://kroki.io/mermaid/svg/eNqFVMtu2zAQvOcr9mLABuQ-chSKALYTAwaSRrAdH1oUBU0xCVGKq1KU4_x9dynqYadNL7a0nJmdfYiV-l0rK9W1Fk9OFBcAovZo62KvHL147Y1KYeuErYT0Gi0sDb4APoJ_VrBRns4LZf303ppXuNndQebQo0QDs1yUnlQuWFR6dDAzWioQFTxUKr51Z3Pcdyf0zKSv6BXggQLbZQLrT_MU1qrC2pHILT5pmcACi9JoQQUk8GXvrkDYHK6V8YJ9kEsG1F6wc1Lc4xFmFgsBC6PJNYxvUQozoSOAUjivpS4FxbdLNjMom8WXtZVR6BRN1hi-Xm0W8O1mfc_guZC_lM0Jy7_01xQ_vboi8RQoq-EoyUDwwH4P2j41DdEHQbVvlyEVmWFaaEBJKBWinHTaypVcbBWTdYxVlkJFEfDHzzDW1lPJXGuuhikowM0_d_YPFwPNy3c1--mtsgQ2pPqawirg4U54-dwU248ku8yIlKs37V1l3N2Gyq3NEE0ANZsTpBmxQcPpwnvf9-Z42nov0GpmlY1IZ7pldQTCR9OSdggrNaYuJlT15CLA2Djte3g-X4fdm3XYKacfNblboPWOsv6Fl82Ydv79MPsd0hLdi3A5KRO3e_kP6eboGU5_yllh3qCbLRq2IpuloPzzTx798Db4ro5K1p6bM_lxugZNRyk2GvGWH7gDr4yjEJXarPQuPT0YjeLYmNJfL8ENlh7uS05Ln0tf94LyVLHIfumyWULl8Y0h8o8vTlNcxXKhogtBRUZ00smlZ8rhWnlsQvw-5u_jg7Z0q0yiRE9gpZC1DeVBI-LIf3yCMIHpWeK18rWzcC28iLh2Dic52nEM4Owx-MLak7GTGQ5bksJDmfNs-Ls9a0VsBINEnoOtjQkbWyVBHYtCex5FlcDe4L69bP4Azcv0zw==?"/></a></p>
 <ol>
 <li>A user Alice calls a transaction function of a Juvix application to produce an ARM transaction object (here expressing an intent) as well as the instances and witnesses for the various proof types (resource logic, compliance, and delta proofs).</li>
 <li>The transaction function requests proofs from the RISC ZERO backend.</li>
@@ -1108,16 +1051,24 @@ Moreover, it can integrity check that its own label matches the <code>untrustedF
 <li>Another user Bob expresses his intent (see 1. to 3.).</li>
 <li>See 4.</li>
 <li>A solver Sally monitors the intent pool and sees the intent transactions by Alice and Bob and finds a match (using her algorithm).</li>
-<li>Sally composes the the intent transactions and adds her own actions s.t. the transaction becomes balanced &amp; valid. She converts the transaction object into the format required by the EVM protocol adapter.</li>
+<li>Sally composes the intent transactions and adds her own actions s.t. the transaction becomes balanced &amp; valid. She converts the transaction object into the format required by the EVM protocol adapter.</li>
 <li>Sally being connected to an Ethereum node makes an <a href="https://ethereum.org/en/developers/docs/apis/json-rpc/#eth_sendtransaction"><code>eth_sendTransaction</code></a> call into the protocol adapter's <code>execute(Transaction tx)</code> function, which she signs with the private key of her account.</li>
 <li>The protocol adapter verifies the proofs from 3. by calling a RISC ZERO verifier contract deployed on the network.</li>
 <li>The protocol adapter makes an optional forwarder contract call by using the <code>ForwarderCalldata.input</code> data.</li>
 <li>The forwarder contract forwards the call to an external target contract to read from or write to its state.</li>
 <li>Optional return data is passed back to the forwarder contract.</li>
 <li>Return data (that can be empty) is passed to the protocol adapter contract allowing it to conduct integrity checks (by requiring the same data to be part of <code>action.appData</code>).</li>
-<li>The protocol adapter updates its internal state by storing<p>- nullifiers of consumed resources</p>
-<p>- commitments of created resources</p>
-<p>- blobs with deletion criteria <code>!= DeletionCriterion.Immediately</code>.</p>
+<li>
+<p>The protocol adapter updates its internal state by storing</p>
+<ul>
+<li>nullifiers of consumed resources</li>
+</ul>
+<ul>
+<li>commitments of created resources</li>
+</ul>
+<ul>
+<li>blobs with deletion criteria <code>!= DeletionCriterion.Immediately</code>.</li>
+</ul>
 </li>
 </ol>
 <!-- list_wikilinks -->
@@ -1164,8 +1115,8 @@ Moreover, it can integrity check that its own label matches the <code>untrustedF
 <div class="md-copyright__highlight">
       © 2025 <a href="https://anoma.net">Anoma Foundation</a>
 </div>
-<strong>Version: (PR 356) - Updated: May 05,
-    2025 at 02:14 PM UTC</strong>
+<strong>Version: (PR 356) - Updated: May 06,
+    2025 at 05:53 AM UTC</strong>
 <br/>
 <strong>Latest version: <a href="https://specs.anoma.net/latest">
     https://specs.anoma.net/latest</a></strong>
