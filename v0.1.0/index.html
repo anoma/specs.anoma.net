@@ -1,0 +1,1998 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="A work-in-progress specification for the Anoma protocol.">
+      
+      
+        <meta name="author" content="Anoma Foundation">
+      
+      
+        <link rel="canonical" href="https://anoma.github.io/nspec/v2/index.html">
+      
+      
+      
+        <link rel="next" href="changelog.html">
+      
+      
+      <link rel="icon" href="assets/logo.svg">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.37">
+    
+    
+      
+        <title>Anoma Specification</title>
+      
+    
+    
+      <link rel="stylesheet" href="assets/stylesheets/main.8c3ca2c6.min.css">
+      
+        
+        <link rel="stylesheet" href="assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,700,700i%7CFira+Code:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Open Sans";--md-code-font:"Fira Code"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="css/timeago.css">
+    
+      <link rel="stylesheet" href="assets/css/style.css">
+    
+      <link rel="stylesheet" href="assets/css/juvix-highlighting.css">
+    
+      <link rel="stylesheet" href="assets/css/juvix_codeblock_footer.css">
+    
+      <link rel="stylesheet" href="assets/css/juvix_codeblock_footer.css">
+    
+      <link rel="stylesheet" href="assets/css">
+    
+    <script>__md_scope=new URL(".",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+  
+
+
+    
+    
+      
+        <meta  property="og:type"  content="website" >
+      
+        <meta  property="og:title"  content="Home" >
+      
+        <meta  property="og:description"  content="A work-in-progress specification for the Anoma protocol." >
+      
+        <meta  property="og:image"  content="https://anoma.github.io/nspec/v2/assets/images/social/index.png" >
+      
+        <meta  property="og:image:type"  content="image/png" >
+      
+        <meta  property="og:image:width"  content="1200" >
+      
+        <meta  property="og:image:height"  content="630" >
+      
+        <meta  property="og:url"  content="https://anoma.github.io/nspec/v2/index.html" >
+      
+        <meta  name="twitter:card"  content="summary_large_image" >
+      
+        <meta  name="twitter:title"  content="Home" >
+      
+        <meta  name="twitter:description"  content="A work-in-progress specification for the Anoma protocol." >
+      
+        <meta  name="twitter:image"  content="https://anoma.github.io/nspec/v2/assets/images/social/index.png" >
+      
+    
+    
+   <link href="assets/stylesheets/glightbox.min.css" rel="stylesheet"/><style>
+    html.glightbox-open { overflow: initial; height: 100%; }
+    .gslide-title { margin-top: 0px; user-select: text; }
+    .gslide-desc { color: #666; user-select: text; }
+    .gslide-image img { background: white; }
+    .gscrollbar-fixer { padding-right: 15px; }
+    .gdesc-inner { font-size: 0.75rem; }
+    body[data-md-color-scheme="slate"] .gdesc-inner { background: var(--md-default-bg-color);}
+    body[data-md-color-scheme="slate"] .gslide-title { color: var(--md-default-fg-color);}
+    body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color);}</style> <script src="assets/javascripts/glightbox.min.js"></script></head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="white" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#anoma-specification" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+        <aside class="md-banner">
+          <div class="md-banner__inner md-grid md-typeset">
+            
+              <button class="md-banner__button md-icon" aria-label="Don't show this again">
+                
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+              </button>
+            
+            
+  For updates follow <strong>@anoma</strong> on
+  <a rel="me" href="https://x.com/anoma">
+    <span class="twemoji x-twitter">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M389.2 48h70.6L305.6 224.2 487 464H345L233.7 318.6 106.5 464H35.8l164.9-188.5L26.8 48h145.6l100.5 132.9zm-24.8 373.8h39.1L151.1 88h-42z"/></svg>
+    </span>
+    <strong></strong>
+  </a>
+  and discuss on our
+  <a href="https://research.anoma.net">
+    <span class="twemoji discourse">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M225.9 32C103.3 32 0 130.5 0 252.1 0 256 .1 480 .1 480l225.8-.2c122.7 0 222.1-102.3 222.1-223.9S348.6 32 225.9 32M224 384c-19.4 0-37.9-4.3-54.4-12.1L88.5 392l22.9-75c-9.8-18.1-15.4-38.9-15.4-61 0-70.7 57.3-128 128-128s128 57.3 128 128-57.3 128-128 128"/></svg>
+    </span>
+    <strong>forum</strong>
+  </a>
+
+          </div>
+          
+            <script>var el=document.querySelector("[data-md-component=announce]");if(el){var content=el.querySelector(".md-typeset");__md_hash(content.innerHTML)===__md_get("__announce")&&(el.hidden=!0)}</script>
+          
+        </aside>
+      
+    </div>
+    
+      <div data-md-color-scheme="default" data-md-component="outdated" hidden>
+        
+          <aside class="md-banner md-banner--warning">
+            <div class="md-banner__inner md-grid md-typeset">
+              
+  You're not viewing the latest official version.
+  <a href="../.">
+    <strong>Click here to go to latest.</strong>
+  </a>
+
+            </div>
+            <script>var el=document.querySelector("[data-md-component=outdated]"),outdated=__md_get("__outdated",sessionStorage);!0===outdated&&el&&(el.hidden=!1)</script>
+          </aside>
+        
+      </div>
+    
+    
+        
+  
+    
+  
+  <header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+    <nav class="md-header__inner md-grid" aria-label="Header">
+      <a href="index.html" title="Anoma Specification" class="md-header__button md-logo" aria-label="Anoma Specification" data-md-component="logo">
+        
+  <img src="assets/logo.svg" alt="logo">
+
+      </a>
+      <label class="md-header__button md-icon" for="__drawer">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+      </label>
+      <div class="md-header__title" data-md-component="header-title">
+        <div class="md-header__ellipsis">
+          <div class="md-header__topic">
+            <span class="md-ellipsis">
+                
+                <span class="first-letter">A</span>noma 
+              
+                <span class="first-letter">S</span>pecification
+              
+              
+                <span class="md-header__topic-version">v0.1.0</span>
+              
+            </span>
+          </div>
+          <div class="md-header__topic" data-md-component="header-topic">
+            <span class="md-ellipsis">
+              
+                Home
+              
+            </span>
+          </div>
+        </div>
+      </div>
+      
+        
+          <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme)" data-md-color-scheme="default" data-md-color-primary="white" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m14.3 16-.7-2h-3.2l-.7 2H7.8L11 7h2l3.2 9zM20 8.69V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12zm-9.15 3.96h2.3L12 9z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="white" data-md-color-accent="red"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_2" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="black" data-md-color-accent="red"  aria-label="Switch to system preference"  type="radio" name="__palette" id="__palette_2">
+    
+      <label class="md-header__button md-icon" title="Switch to system preference" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+        
+      
+      
+        <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+      
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+      
+    </nav>
+    
+      
+        <!--
+  Copyright (c) 2016-2024 Martin Donath <martin.donath@squidfunk.com>
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to
+  deal in the Software without restriction, including without limitation the
+  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+  sell copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in
+  all copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+  IN THE SOFTWARE.
+-->
+
+
+
+<!-- Navigation tabs -->
+<nav
+  class="md-tabs"
+  aria-label="Tabs"
+  data-md-component="tabs"
+>
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+      
+            
+  
+  
+    
+  
+  
+    <li class="md-tabs__item md-tabs__item--active">
+      <a href="index.html" class="md-tabs__link">
+        
+  
+    
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+        
+      
+      
+            
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="changelog.html" class="md-tabs__link">
+        
+  
+    
+  
+  Changelog
+
+      </a>
+    </li>
+  
+
+        
+      
+      
+            
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="scope/index.html" class="md-tabs__link">
+          
+  
+    
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M5 3c-1.11 0-2 .89-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2zm10.78 2H19v12.18c-.26-.8-1.31-1.39-2.2-1.39h-1v-3a1 1 0 0 0-1-1h-6v-2h2a1 1 0 0 0 1-1v-2h2c1.03 0 1.87-.79 1.98-1.79M5 10.29l4.8 4.5v1a2 2 0 0 0 2 2V19H5z"/></svg>
+    
+  
+  Scope
+
+        </a>
+      </li>
+    
+  
+
+        
+      
+      
+            
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="basic_abstractions/index.html" class="md-tabs__link">
+          
+  
+    
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M6 2a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm0 2h7v5h5v11H6zm2 8v2h8v-2zm0 4v2h5v-2z"/></svg>
+    
+  
+  Basic Abstractions
+
+        </a>
+      </li>
+    
+  
+
+        
+      
+      
+            
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="arch/index.html" class="md-tabs__link">
+          
+  
+    
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M24 18.714v4.8c0 .288-.192.48-.48.48h-4.8c-.288 0-.48-.192-.48-.48v-4.8c0-.288.192-.48.48-.48h1.92v-1.92h-8.16v1.92h1.92c.288 0 .48.192.48.48v4.8c0 .288-.192.48-.48.48H9.6c-.288 0-.48-.192-.48-.48v-4.8c0-.288.192-.48.48-.48h1.92v-1.92H3.36v1.92h1.92c.288 0 .48.192.48.48v4.8c0 .288-.192.48-.48.48H.48c-.288 0-.48-.192-.48-.48v-4.8c0-.288.192-.48.48-.48H2.4v-2.4c0-.288.192-.48.48-.48h8.64v-1.44h.96v1.44h8.64c.288 0 .48.192.48.48v2.4h1.92c.288 0 .48.192.48.48m-13.92 4.32h3.84v-3.84h-3.84zm-9.12 0H4.8v-3.84H.96Zm18.24 0h3.84v-3.84H19.2ZM6.24 9.642V3.546c0-.192.096-.336.24-.432L11.76.042a.8.8 0 0 1 .48 0l5.28 3.072c.144.096.24.24.24.432v6.096c0 .144-.096.288-.24.384l-5.28 3.072q-.096.048-.24.048t-.24-.048l-5.28-3.072c-.144-.096-.24-.24-.24-.384m10.56-.288V4.362l-4.32 2.496v4.992zm-9.6 0 4.32 2.496V6.858L7.2 4.362Zm.48-5.808L12 5.994l4.32-2.448L12 1.05Z"/></svg>
+    
+  
+  Protocol Architecture
+
+        </a>
+      </li>
+    
+  
+
+        
+      
+      
+            
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="application_architecture/index.html" class="md-tabs__link">
+          
+  
+    
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16 20h4v-4h-4m0-2h4v-4h-4m-6-2h4V4h-4m6 4h4V4h-4m-6 10h4v-4h-4m-6 4h4v-4H4m0 10h4v-4H4m6 4h4v-4h-4M4 8h4V4H4z"/></svg>
+    
+  
+  Application Architecture
+
+        </a>
+      </li>
+    
+  
+
+        
+      
+      
+            
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="implementation/index.html" class="md-tabs__link">
+          
+  
+    
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19.793 16.575c0 3.752-2.927 7.426-7.743 7.426-5.249 0-7.843-3.71-7.843-8.29 0-5.21 3.892-12.952 8-15.647a.397.397 0 0 1 .61.371 9.72 9.72 0 0 0 1.694 6.518c.522.795 1.092 1.478 1.763 2.352.94 1.227 1.637 1.906 2.644 3.842l.015.028a7.1 7.1 0 0 1 .86 3.4"/></svg>
+    
+  
+  Implementation
+
+        </a>
+      </li>
+    
+  
+
+        
+      
+      
+      
+      
+      
+      
+      
+    </ul>
+  </div>
+</nav>
+      
+    
+  </header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+                
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" hidden>
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="index.html" title="Anoma Specification" class="md-nav__button md-logo" aria-label="Anoma Specification" data-md-component="logo">
+      
+  <img src="assets/logo.svg" alt="logo">
+
+    </a>
+    Anoma Specification
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+      <a href="index.html" class="md-nav__link md-nav__link--active">
+        
+  
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+  
+  <span class="md-ellipsis">
+    Home
+  </span>
+  
+
+      </a>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="changelog.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Changelog
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+    <a href="scope/index.html" class="md-nav__link">
+      
+  
+  <span class="md-ellipsis">
+    Scope
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+    <a href="basic_abstractions/index.html" class="md-nav__link">
+      
+  
+  <span class="md-ellipsis">
+    Basic Abstractions
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+    <a href="arch/index.html" class="md-nav__link">
+      
+  
+  <span class="md-ellipsis">
+    Protocol Architecture
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+    <a href="application_architecture/index.html" class="md-nav__link">
+      
+  
+  <span class="md-ellipsis">
+    Application Architecture
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+    <a href="implementation/index.html" class="md-nav__link">
+      
+  
+  <span class="md-ellipsis">
+    Implementation
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="indexes/links.html" class="md-nav__link">
+        
+  
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7a5 5 0 0 0-5 5 5 5 0 0 0 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1M8 13h8v-2H8zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4a5 5 0 0 0 5-5 5 5 0 0 0-5-5"/></svg>
+  
+  <span class="md-ellipsis">
+    Quick links
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+    <a href="prelude.html" class="md-nav__link">
+      
+  
+  <span class="md-ellipsis">
+    Juvix modules
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+    <a href="tutorial/index.html" class="md-nav__link">
+      
+  
+  <span class="md-ellipsis">
+    Tutorials for contributors
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+<h1 id="anoma-specification">Anoma Specification<a class="headerlink" href="#anoma-specification" title="Permanent link">&para;</a></h1>
+<div class="admonition info inline end">
+<p class="admonition-title">Anoma entities</p>
+<p>The term "Anoma" as used on this site refers specifically to the Anoma Protocol. However, it may
+also be used elsewhere to refer to related entities such as the Anoma Network or the Anoma
+Foundation.</p>
+<ul>
+<li>The Anoma Network, which consists of nodes using the Anoma protocol.</li>
+</ul>
+<ul>
+<li>The Anoma Foundation, a Swiss foundation (Stiftung) established to support and coordinate the
+Anoma protocol, network, and the surrounding ecosystem.</li>
+</ul>
+<p>For more information about the foundation, please visit <a href="https://anoma.foundation">https://anoma.foundation</a>.</p>
+</div>
+<p>Anoma is a distributed operating system for intent-centric
+applications<sup id="fnref:1"><a class="footnote-ref" href="#fn:1">1</a></sup>. The Anoma protocol architecture supports
+interoperability at  state, network, and application levels without restricting
+the types of intents or computational methods used to solve them.</p>
+<p>As a multi-party intent-centric architecture, Anoma is designed for applications
+concerned with</p>
+<ul>
+<li>coordination of socio-economic processes dealing with resources,</li>
+<li>distributed capabilities (freedom of action, and control over resources), and</li>
+<li>agreement between agents (users) under conditions of heterogeneous trust.</li>
+</ul>
+<p>The same architecture supports both arbitrary fungible measures of value (e.g.
+currencies) and unique (non-fungible) objects, so users can choose the
+representations and level of precision most appropriate to model aspects of the
+world which they care about.</p>
+<p>This site aims to describe the architecture required to implement the
+Anoma protocol and serves as a guide for Anoma researchers and implementors.</p>
+<!-- The following todo would desapear on the online version. -->
+
+<details>
+<summary>Table of Contents</summary>
+<ul>
+<li><a href="index.html">Home</a></li>
+</ul>
+<ul>
+<li><a href="changelog.html">Changelog</a></li>
+</ul>
+<ul>
+<li><a href="scope/index.html">Scope</a>
+    - <a href="scope/world_model.html">World model</a><p>- <a href="scope/protocol_desiderata.html">Protocol desiderata</a></p>
+</li>
+</ul>
+<ul>
+<li><a href="basic_abstractions/index.html">Basic Abstractions</a>
+    - <a href="basic_abstractions/preliminaries/index.html">Preliminaries</a>
+        - <a href="basic_abstractions/preliminaries/multiformats.html">Multiformats</a><p>- <a href="basic_abstractions/encoding/index.html">Encoding</a>
+      - <a href="basic_abstractions/encoding/data_type.html">Data type</a></p>
+<div class="language-text highlight"><pre><span></span><code>  - [Encoding scheme](./basic_abstractions/encoding/encoding_scheme.md)
+
+  - [Virtual machine](./basic_abstractions/encoding/virtual_machine.md)
+
+  - [Multifunctions](./basic_abstractions/encoding/multifunctions.md)
+</code></pre></div>
+<p>- <a href="basic_abstractions/proving/index.html">Proving</a>
+      - <a href="basic_abstractions/proving/assumption.html">Assumption</a></p>
+<div class="language-text highlight"><pre><span></span><code>  - [Proof](./basic_abstractions/proving/proof.md)
+
+  - [Multifunctions](./basic_abstractions/proving/multifunctions.md)
+</code></pre></div>
+<p>- <a href="basic_abstractions/cryptographic_primitives/index.html">Cryptographic primitives</a>
+      - <a href="basic_abstractions/cryptographic_primitives/hash_function.html">Hash function</a></p>
+<div class="language-text highlight"><pre><span></span><code>  - [Accumulator](./basic_abstractions/cryptographic_primitives/accumulator.md)
+</code></pre></div>
+</li>
+</ul>
+<ul>
+<li><a href="arch/index.html">Protocol Architecture</a>
+    - <a href="arch/system/index.html">System Architecture</a>
+        - <a href="arch/system/concepts/index.html">Basic Concepts</a><div class="language-text highlight"><pre><span></span><code>  - [Identity Architecture](./arch/system/identity/identity.juvix.md)
+
+  - [Network Architecture](./arch/system/network/index.md)
+
+  - [Service Architecture](./arch/system/service/index.md)
+
+  - [State Architecture](./arch/system/state/index.md)
+      - [Resource Machine](./arch/system/state/resource_machine/index.md)
+          - Resource
+              - [Definition](./arch/system/state/resource_machine/resource/definition.md)
+
+              - Computable components
+                  - [Introduction](./arch/system/state/resource_machine/resource/computable_components/introduction.md)
+
+                  - [Commitment](./arch/system/state/resource_machine/resource/computable_components/commitment.md)
+
+                  - [Nullifier](./arch/system/state/resource_machine/resource/computable_components/nullifier.md)
+
+                  - [Kind](./arch/system/state/resource_machine/resource/computable_components/kind.md)
+
+                  - [Delta](./arch/system/state/resource_machine/resource/computable_components/delta.md)
+
+          - [Non-linear resources](./arch/system/state/resource_machine/resource/non_linear_resources.md)
+
+          - [Roles and requirements](./arch/system/state/resource_machine/roles_and_requirements.md)
+
+          - [Action](./arch/system/state/resource_machine/action.md)
+
+          - [Transaction](./arch/system/state/resource_machine/transaction.md)
+
+          - Resource machine
+              - [Definition](./arch/system/state/resource_machine/rm_def/definition.md)
+
+              - [Stored data format](./arch/system/state/resource_machine/rm_def/storage.md)
+
+          - Function formats
+              - [Transaction function](./arch/system/state/resource_machine/function_formats/transaction_function.md)
+
+              - [Resource logic](./arch/system/state/resource_machine/function_formats/resource_logic.md)
+
+              - [Preference function](./arch/system/state/resource_machine/function_formats/preference_function.md)
+
+              - [Nockma](./arch/system/state/resource_machine/function_formats/nockma.md)
+
+          - [Applications](./arch/system/state/resource_machine/applications.md)
+</code></pre></div>
+<p>- <a href="arch/node/index.html">Node Architecture</a>
+      - <a href="./arch/node/modules/index.md">Modules</a></p>
+<div class="language-text highlight"><pre><span></span><code>  - Basic Types
+      - [None](./arch/node/types/basics.juvix.md)
+
+      - [Cryptographic Primitives](./arch/node/types/crypto.juvix.md)
+
+      - [Identities](./arch/node/types/identities.juvix.md)
+
+      - [Messages &amp; Mailboxes](./arch/node/types/messages.juvix.md)
+
+  - [Engine Types](./arch/node/engines/index.md)
+      - Engine
+          - [None](./arch/node/types/engine.juvix.md)
+
+          - [Engine Environment](./arch/node/types/engine_environment.juvix.md)
+
+          - [Engine Behaviour](./arch/node/types/engine_behaviour.juvix.md)
+
+      - Anoma
+          - [Anoma Message](./arch/node/types/anoma_message.juvix.md)
+
+          - [Anoma Environment](./arch/node/types/anoma_environment.juvix.md)
+
+  - [Hardware Abstraction Machine](./arch/node/hardware/index.md)
+      - [Local Storage Engines](./arch/node/hardware/local_storage_engines/index.md)
+          - [Local Key Value Storage Engine](./arch/node/hardware/local_storage_engines/local_key_value_storage_engine/index.md)
+              - Messages
+                  - [GetValueKVStoreRequest](./arch/node/hardware/local_storage_engines/local_kv_storage_engine/messages/get_value_kv_store_request.md)
+
+                  - [GetValueKVStoreResponse](./arch/node/hardware/local_storage_engines/local_kv_storage_engine/messages/get_value_kv_store_response.md)
+
+                  - [SetValueKVStoreRequest](./arch/node/hardware/local_storage_engines/local_kv_storage_engine/messages/set_value_kv_store_request.md)
+
+                  - [SetValueKVStoreResponse](./arch/node/hardware/local_storage_engines/local_kv_storage_engine/messages/set_value_kv_store_response.md)
+
+                  - [DeleteValueKVStoreRequest](./arch/node/hardware/local_storage_engines/local_kv_storage_engine/messages/delete_value_kv_store_request.md)
+
+                  - [DeleteValueKVStoreResponse](./arch/node/hardware/local_storage_engines/local_kv_storage_engine/messages/delete_value_kv_store_response.md)
+
+                  - [ValueChangedKVStore](./arch/node/hardware/local_storage_engines/local_kv_storage_engine/notifications/value_changed_kv_store.md)
+
+              - Types
+                  - [GetValueKVStoreRequestV1](./arch/node/hardware/local_storage_engines/local_kv_storage_engine/types/get_value_kv_store_request_v1.md)
+
+                  - [GetValueKVStoreResponseV1](./arch/node/hardware/local_storage_engines/local_kv_storage_engine/types/get_value_kv_store_response_v1.md)
+
+                  - [SetValueKVStoreRequestV1](./arch/node/hardware/local_storage_engines/local_kv_storage_engine/types/set_value_kv_store_request_v1.md)
+
+                  - [SetValueKVStoreResponseV1](./arch/node/hardware/local_storage_engines/local_kv_storage_engine/types/set_value_kv_store_response_v1.md)
+
+                  - [DeleteValueKVStoreRequestV1](./arch/node/hardware/local_storage_engines/local_kv_storage_engine/types/delete_value_kv_store_request_v1.md)
+
+                  - [DeleteValueKVStoreResponseV1](./arch/node/hardware/local_storage_engines/local_kv_storage_engine/types/delete_value_kv_store_response_v1.md)
+
+                  - [StorageKeyV1](./arch/node/hardware/local_storage_engines/local_kv_storage_engine/types/storage_key_v1.md)
+
+                  - [StorageValueV1](./arch/node/hardware/local_storage_engines/local_kv_storage_engine/types/storage_value_v1.md)
+
+                  - [SuccessOperationV1](./arch/node/hardware/local_storage_engines/local_kv_storage_engine/types/success_operation_kv_store_v1.md)
+
+          - [Local Time Series Storage Engine](./arch/node/hardware/local_storage_engines/local_timeseries_storage_engine/index.md)
+              - Messages
+                  - [GetDataTimeSeriesDBRequest](./arch/node/hardware/local_storage_engines/local_timeseries_storage_engine/messages/get_data_time_series_db_request.md)
+
+                  - [GetDataTimeSeriesDBResponse](./arch/node/hardware/local_storage_engines/local_timeseries_storage_engine/messages/get_data_time_series_db_response.md)
+
+                  - [RecordDataTimeSeriesDBRequest](./arch/node/hardware/local_storage_engines/local_timeseries_storage_engine/messages/record_data_time_series_db_request.md)
+
+                  - [RecordDataTimeSeriesDBResponse](./arch/node/hardware/local_storage_engines/local_timeseries_storage_engine/messages/record_data_time_series_db_response.md)
+
+                  - [DeleteDataTimeSeriesDBRequest](./arch/node/hardware/local_storage_engines/local_timeseries_storage_engine/messages/delete_data_time_series_db_request.md)
+
+                  - [DeleteDataTimeSeriesDBResponse](./arch/node/hardware/local_storage_engines/local_timeseries_storage_engine/messages/delete_data_time_series_db_response.md)
+
+              - Notifications
+                  - [DataChangedTimeSeriesDB](./arch/node/hardware/local_storage_engines/local_timeseries_storage_engine/notifications/data_changed_time_series_db.md)
+
+              - Types
+                  - [GetDataTimeSeriesDBRequestV1](./arch/node/hardware/local_storage_engines/local_timeseries_storage_engine/types/get_data_time_series_db_request_v1.md)
+
+                  - [GetDataTimeSeriesDBResponseV1](./arch/node/hardware/local_storage_engines/local_timeseries_storage_engine/types/get_data_time_series_db_response_v1.md)
+
+                  - [RecordDataTimeSeriesDBRequestV1](./arch/node/hardware/local_storage_engines/local_timeseries_storage_engine/types/record_data_time_series_db_request_v1.md)
+
+                  - [RecordDataTimeSeriesDBResponseV1](./arch/node/hardware/local_storage_engines/local_timeseries_storage_engine/types/record_data_time_series_db_response_v1.md)
+
+                  - [DeleteDataTimeSeriesDBRequestV1](./arch/node/hardware/local_storage_engines/local_timeseries_storage_engine/types/delete_data_time_series_db_request_v1.md)
+
+                  - [DeleteDataTimeSeriesDBResponseV1](./arch/node/hardware/local_storage_engines/local_timeseries_storage_engine/types/delete_data_time_series_db_response_v1.md)
+
+                  - [TimeSeriesDBDataV1](./arch/node/hardware/local_storage_engines/local_timeseries_storage_engine/types/time_series_db_data_v1.md)
+
+                  - [TimeSeriesDBQueryV1](./arch/node/hardware/local_storage_engines/local_timeseries_storage_engine/types/time_series_db_query_v1.md)
+
+          - [Local Wall Clock Engine](./arch/node/hardware/local_wall_clock_engine/index.md)
+              - Messages
+                  - [LocalWallClockGetTime](./arch/node/hardware/local_wall_clock_engine/messages/local_wall_clock_get_time.md)
+
+                  - [LocalWallClockGetTimeResult](./arch/node/hardware/local_wall_clock_engine/messages/local_wall_clock_get_time_result.md)
+
+              - Types
+                  - [LocalWallClockGetTimeV1](./arch/node/hardware/local_wall_clock_engine/types/local_wall_clock_get_time_v1.md)
+
+                  - [LocalWallClockGetTimeResultV1](./arch/node/hardware/local_wall_clock_engine/types/local_wall_clock_get_time_result_v1.md)
+
+                  - [EpochTimestampV1](./arch/node/hardware/local_wall_clock_engine/types/epoch_timestamp_v1.md)
+
+          - [Local Logging Engine](./arch/node/hardware/local_logging_engine/index.md)
+              - Messages
+                  - [LocalLoggingAppend](./arch/node/hardware/local_logging_engine/messages/local_logging_append.md)
+
+              - [Notifications](./arch/node/hardware/local_logging_engine/notifications.md)
+
+              - Types
+                  - [LocalLoggingAppendV1](./arch/node/hardware/local_logging_engine/types/local_logging_append_v1.md)
+
+                  - [AppendValueV1](./arch/node/hardware/local_logging_engine/types/append_value_v1.md)
+
+      - [Identity Machine](./arch/node/identity/index.md)
+          - Types
+              - [Backend](./arch/node/identity/types/backend.md)
+
+              - [Capabilities](./arch/node/identity/types/capabilities.md)
+
+              - [ExternalIdentity](./arch/node/identity/types/external_identity.md)
+
+              - [IdentityName](./arch/node/identity/types/identity_name.md)
+
+              - [IdentityNameEvidence](./arch/node/identity/types/identity_name_evidence.md)
+
+              - [Params](./arch/node/identity/types/params.md)
+
+              - [GenerateIdentityRequest](./arch/node/identity/types/generate_identity_request.md)
+
+              - [GenerateIdentityResponse](./arch/node/identity/types/generate_identity_response.md)
+
+              - [ConnectIdentityRequest](./arch/node/identity/types/connect_identity_request.md)
+
+              - [ConnectIdentityResponse](./arch/node/identity/types/connect_identity_response.md)
+
+              - [DeleteIdentityRequest](./arch/node/identity/types/delete_identity_request.md)
+
+              - [DeleteIdentityResponse](./arch/node/identity/types/delete_identity_response.md)
+
+              - [DecryptRequest](./arch/node/identity/types/decrypt_request.md)
+
+              - [DecryptResponse](./arch/node/identity/types/decrypt_response.md)
+
+              - [EncryptRequest](./arch/node/identity/types/encrypt_request.md)
+
+              - [EncryptResponse](./arch/node/identity/types/encrypt_response.md)
+
+              - [CommitRequest](./arch/node/identity/types/commit_request.md)
+
+              - [CommitResponse](./arch/node/identity/types/commit_response.md)
+
+              - [VerifyRequest](./arch/node/identity/types/verify_request.md)
+
+              - [VerifyResponse](./arch/node/identity/types/verify_response.md)
+
+              - [ReadsForRequest](./arch/node/identity/types/reads_for_request.md)
+
+              - [ReadsForResponse](./arch/node/identity/types/reads_for_response.md)
+
+              - [SubmitReadsForEvidenceRequest](./arch/node/identity/types/submit_reads_for_evidence_request.md)
+
+              - [SubmitReadsForEvidenceResponse](./arch/node/identity/types/submit_reads_for_evidence_response.md)
+
+              - [QueryReadsForEvidenceRequest](./arch/node/identity/types/query_reads_for_evidence_request.md)
+
+              - [QueryReadsForEvidenceResponse](./arch/node/identity/types/query_reads_for_evidence_response.md)
+
+              - [SignsForRequest](./arch/node/identity/types/signs_for_request.md)
+
+              - [SignsForResponse](./arch/node/identity/types/signs_for_response.md)
+
+              - [SubmitSignsForEvidenceRequest](./arch/node/identity/types/submit_signs_for_evidence_request.md)
+
+              - [SubmitSignsForEvidenceResponse](./arch/node/identity/types/submit_signs_for_evidence_response.md)
+
+              - [QuerySignsForEvidenceRequest](./arch/node/identity/types/query_signs_for_evidence_request.md)
+
+              - [QuerySignsForEvidenceResponse](./arch/node/identity/types/query_signs_for_evidence_response.md)
+
+              - [ResolveNameRequest](./arch/node/identity/types/resolve_name_request.md)
+
+              - [ResolveNameResponse](./arch/node/identity/types/resolve_name_response.md)
+
+              - [SubmitNameEvidenceRequest](./arch/node/identity/types/submit_name_evidence_request.md)
+
+              - [SubmitNameForEvidenceResponse](./arch/node/identity/types/submit_name_evidence_response.md)
+
+              - [QueryNameEvidenceRequest](./arch/node/identity/types/query_name_evidence_request.md)
+
+              - [QueryNameEvidenceResponse](./arch/node/identity/types/query_name_evidence_response.md)
+
+          - [Identity Management Engine](./arch/node/modules/identity_management/index.md)
+              - [GenerateIdentityRequestResponse](./arch/node/modules/identity_management/generate_identity_request_response.md)
+
+              - [ConnectIdentityRequestResponse](./arch/node/modules/identity_management/connect_identity_request_response.md)
+
+          - [Decryption Engine](./arch/node/identity/decryption/index.md)
+              - [DecryptRequestResponse](./arch/node/identity/decryption/decrypt_request_response.md)
+
+          - [Encryption Engine](./arch/node/modules/encryption/index.md)
+              - [EncryptRequestResponse](./arch/node/modules/encryption/encrypt_request_response.md)
+
+          - [Commitment Engine](./arch/node/identity/commitment/index.md)
+              - [CommitRequestResponse](./arch/node/identity/commitment/commit_request_response.md)
+
+          - [Verification Engine](./arch/node/modules/verification/index.md)
+              - [VerifyRequestResponse](./arch/node/modules/verification/verify_request_response.md)
+
+          - [Reads For Engine](./arch/node/modules/reads_for/index.md)
+              - [ReadsForRequestResponse](./arch/node/modules/reads_for/reads_for_request_response.md)
+
+              - [SubmitReadsForEvidenceRequestResponse](./arch/node/modules/reads_for/submit_reads_for_evidence_request_response.md)
+
+              - [QueryReadsForEvidenceRequestResponse](./arch/node/modules/reads_for/query_reads_for_evidence_request_response.md)
+
+          - [Signs For Engine](./arch/node/modules/signs_for/index.md)
+              - [SignsForRequestResponse](./arch/node/modules/signs_for/signs_for_request_response.md)
+
+              - [SubmitSignsForEvidenceRequestResponse](./arch/node/modules/signs_for/submit_signs_for_evidence_request_response.md)
+
+              - [QuerySignsForEvidenceRequestResponse](./arch/node/modules/signs_for/query_signs_for_evidence_request_response.md)
+
+          - [Name Engine](./arch/node/modules/name/index.md)
+              - [ResolveNameRequestResponse](./arch/node/modules/name/resolve_name_request_response.md)
+
+              - [SubmitNameEvidenceRequestResponse](./arch/node/modules/name/submit_name_evidence_request_response.md)
+
+              - [QueryNameEvidencRequestResponse](./arch/node/modules/name/query_name_evidence_request_response.md)
+
+      - [Networking Machine](./arch/node/networking/index.md)
+          - [Intra node &amp; inter node protocols](./arch/node/networking/node/index.md)
+              - [Router](./arch/node/networking/node/router/index.md)
+                  - Messages
+                      - [EngineMessage](./arch/node/networking/node/router/messages/engine_message.md)
+
+                      - [RelayMessage](./arch/node/networking/node/router/messages/relay_message.md)
+
+                      - [P2PMessage](./arch/node/networking/node/router/messages/p2p_message.md)
+
+                      - [TopicCreateRequest](./arch/node/networking/node/router/messages/topic_create_request.md)
+
+                      - [TopicCreateRequest](./arch/node/networking/node/router/messages/topic_create_request.md)
+
+                      - [TopicDeleteRequest](./arch/node/networking/node/router/messages/topic_delete_request.md)
+
+                      - [TopicDeleteRequest](./arch/node/networking/node/router/messages/topic_delete_request.md)
+
+                      - [TopicSubRequest](./arch/node/networking/node/router/messages/topic_sub_request.md)
+
+                      - [TopicSubRequest](./arch/node/networking/node/router/messages/topic_sub_request.md)
+
+                      - [TopicUnsubRequest](./arch/node/networking/node/router/messages/topic_unsub_request.md)
+
+                      - [TopicUnsubRequest](./arch/node/networking/node/router/messages/topic_unsub_request.md)
+
+                      - [StartAdvertRequest](./arch/node/networking/node/router/messages/start_advert_request.md)
+
+                      - [StartAdvertRequest](./arch/node/networking/node/router/messages/start_advert_request.md)
+
+                      - [StopAdvertRequest](./arch/node/networking/node/router/messages/stop_advert_request.md)
+
+                      - [StopAdvertRequest](./arch/node/networking/node/router/messages/stop_advert_request.md)
+
+                  - Types
+                      - [RoutingTable](./arch/node/networking/node/router/types/routing_table.md)
+
+                      - [RoutingTableEntry](./arch/node/networking/node/router/types/routing_table_entry.md)
+
+                      - [RoutingTableDest](./arch/node/networking/node/router/types/routing_table_dest.md)
+
+                      - [RoutingTableTopic](./arch/node/networking/node/router/types/routing_table_topic.md)
+
+                      - [RoutingTableDomain](./arch/node/networking/node/router/types/routing_table_domain.md)
+
+                      - [RoutingPrefs](./arch/node/networking/node/router/types/routing_prefs.md)
+
+                      - [RoutingScope](./arch/node/networking/node/router/types/routing_scope.md)
+
+                      - [DestinationIdentity](./arch/node/networking/node/router/types/destination_identity.md)
+
+                      - [EngineIdentity](./arch/node/networking/node/router/types/engine_identity.md)
+
+                      - [NodeIdentity](./arch/node/networking/node/router/types/node_identity.md)
+
+                      - [TopicIdentity](./arch/node/networking/node/router/types/topic_identity.md)
+
+                      - [DomainIdentity](./arch/node/networking/node/router/types/domain_identity.md)
+
+                      - [NodeAdvert](./arch/node/networking/node/router/types/node_advert_v1.md)
+
+                      - [NodeAdvert](./arch/node/networking/node/router/types/node_advert_v1.md)
+
+                      - [EngineAdvert](./arch/node/networking/node/router/types/engine_advert_v1.md)
+
+                      - [EngineAdvert](./arch/node/networking/node/router/types/engine_advert_v1.md)
+
+                      - [EngineMessageV1](./arch/node/networking/node/router/types/engine_message_v1.md)
+
+                      - [P2PMessageV1](./arch/node/networking/node/router/types/p2p_message_v1.md)
+
+                      - [RelayMessageV1](./arch/node/networking/node/router/types/relay_message_v1.md)
+
+                      - [TopicCreateRequestV1](./arch/node/networking/node/router/types/topic_create_request_v1.md)
+
+                      - [TopicCreateResponseV1](./arch/node/networking/node/router/types/topic_create_response_v1.md)
+
+                      - [TopicDeleteRequestV1](./arch/node/networking/node/router/types/topic_delete_request_v1.md)
+
+                      - [TopicDeleteResponseV1](./arch/node/networking/node/router/types/topic_delete_response_v1.md)
+
+                      - [TopicSubRequestV1](./arch/node/networking/node/router/types/topic_sub_request_v1.md)
+
+                      - [TopicSubResponseV1](./arch/node/networking/node/router/types/topic_sub_response_v1.md)
+
+                      - [TopicUnsubRequestV1](./arch/node/networking/node/router/types/topic_unsub_request_v1.md)
+
+                      - [TopicUnsubResponseV1](./arch/node/networking/node/router/types/topic_unsub_response_v1.md)
+
+                      - [TopicSubRequestV1](./arch/node/networking/node/router/types/topic_sub_request_v1.md)
+
+              - [Transport](./arch/node/networking/node/transport/index.md)
+                  - Messages
+                      - [P2PMessage to Transport](./arch/node/networking/node/transport/messages/p2p_message.md)
+
+                      - [TransportMessage](./arch/node/networking/node/transport/messages/transport_message.md)
+
+                      - [ConnectRequest](./arch/node/networking/node/transport/messages/connect_request.md)
+
+                      - [ConnectRequest](./arch/node/networking/node/transport/messages/connect_request.md)
+
+                      - [DisconnectRequest](./arch/node/networking/node/transport/messages/disconnect_request.md)
+
+                      - [DisconnectRequest](./arch/node/networking/node/transport/messages/disconnect_request.md)
+
+                      - [ConnectedNodesRequest](./arch/node/networking/node/transport/messages/connected_nodes_request.md)
+
+                  - Notifications
+                      - [NodeConnected](./arch/node/networking/node/transport/notifications/node_connected.md)
+
+                      - [NodeConnectFailed](./arch/node/networking/node/transport/notifications/node_connect_failed.md)
+
+                      - [NodeDisconnected](./arch/node/networking/node/transport/notifications/node_disconnected.md)
+
+                  - Types
+                      - [TransportAddress](./arch/node/networking/node/transport/types/transport_address.md)
+
+                      - [ConnectionPrefs](./arch/node/networking/node/transport/types/connection_prefs.md)
+
+                      - [TransportPrefs](./arch/node/networking/node/transport/types/transport_prefs.md)
+
+                      - [OrderingPrefs](./arch/node/networking/node/transport/types/ordering_prefs.md)
+
+                      - [ReliabilityPrefs](./arch/node/networking/node/transport/types/reliability_prefs.md)
+
+                      - [SecurityPrefs](./arch/node/networking/node/transport/types/security_prefs.md)
+
+                      - [NodeTransportAddress](./arch/node/networking/node/transport/types/node_transport_address.md)
+
+                      - [TransportMessageV1](./arch/node/networking/node/transport/types/transport_message_v1.md)
+
+                      - [ConnectRequestV1](./arch/node/networking/node/transport/types/connect_request_v1.md)
+
+                      - [ConnectResponseV1](./arch/node/networking/node/transport/types/connect_response_v1.md)
+
+                      - [DisconnectRequestV1](./arch/node/networking/node/transport/types/disconnect_request_v1.md)
+
+                      - [DisconnectResponseV1](./arch/node/networking/node/transport/types/disconnect_response_v1.md)
+
+                      - [ConnectedNodesResponseV1](./arch/node/networking/node/transport/types/connected_nodes_response_v1.md)
+
+              - [Network Identity Store](./arch/node/networking/node/id_store/index.md)
+                  - Messages
+                      - [LookupIdentityRequest](./arch/node/networking/node/id_store/messages/lookup_identity_request.md)
+
+                      - [LookupIdentityRequest](./arch/node/networking/node/id_store/messages/lookup_identity_request.md)
+
+                      - [UpdateIdentityRequest](./arch/node/networking/node/id_store/messages/update_identity_request.md)
+
+                      - [UpdateIdentityRequest](./arch/node/networking/node/id_store/messages/update_identity_request.md)
+
+                  - [Notifications](./arch/node/networking/node/id_store/notifications/index.md)
+                      - [IdentityUpdated](./arch/node/networking/node/id_store/notifications/identity_updated.md)
+
+                  - Types
+                      - [IdentityStore](./arch/node/networking/node/id_store/types/identity_store.md)
+
+                      - [IdentityRecord](./arch/node/networking/node/id_store/types/identity_record.md)
+
+                      - [EngineIdentityRecord](./arch/node/networking/node/id_store/types/engine_identity_record.md)
+
+                      - [NodeIdentityRecord](./arch/node/networking/node/id_store/types/node_identity_record.md)
+
+                      - [DomainIdentityRecord](./arch/node/networking/node/id_store/types/domain_identity_record.md)
+
+                      - [TopicIdentityRecord](./arch/node/networking/node/id_store/types/topic_identity_record.md)
+
+                      - [TrustValue](./arch/node/networking/node/id_store/types/trust_value.md)
+
+                      - [ReputationValue](./arch/node/networking/node/id_store/types/reputation_value.md)
+
+                      - [LookupIdentityRequestV1](./arch/node/networking/node/id_store/types/lookup_identity_request_v1.md)
+
+                      - [LookupIdentityResponseV1](./arch/node/networking/node/id_store/types/lookup_identity_response_v1.md)
+
+                      - [UpdateIdentityRequestV1](./arch/node/networking/node/id_store/types/update_identity_request_v1.md)
+
+                      - [UpdateIdentityResponseV1](./arch/node/networking/node/id_store/types/update_identity_response_v1.md)
+
+                      - [IdentityUpdatedV1](./arch/node/networking/node/id_store/types/identity_updated_v1.md)
+
+          - [Intra domain protocols](./arch/node/networking/intra_domain/index.md)
+              - [PubSub](./arch/node/networking/intra_domain/pubsub/index.md)
+                  - Messages
+                      - [TopicAdvert](./arch/node/networking/intra_domain/pubsub/messages/topic_advert.md)
+
+                      - [Event](./arch/node/networking/intra_domain/pubsub/messages/event.md)
+
+                      - [EngineMessage to PubSub](./arch/node/networking/intra_domain/pubsub/messages/engine_message.md)
+
+                      - [SubscribeRequest](./arch/node/networking/intra_domain/pubsub/messages/subscribe_request.md)
+
+                      - [UnsubscribeRequest](./arch/node/networking/intra_domain/pubsub/messages/unsubscribe_request.md)
+
+                      - [Subscribe](./arch/node/networking/intra_domain/pubsub/messages/subscribe.md)
+
+                      - [SubscribeAck](./arch/node/networking/intra_domain/pubsub/messages/subscribe_ack.md)
+
+                      - [Unsubscribe](./arch/node/networking/intra_domain/pubsub/messages/unsubscribe.md)
+
+                      - [UnsubscribeAck](./arch/node/networking/intra_domain/pubsub/messages/unsubscribe_ack.md)
+
+                  - [Notifications](./arch/node/networking/intra_domain/pubsub/notifications/index.md)
+                      - [TopicSubscribed](./arch/node/networking/intra_domain/pubsub/notifications/topic_subscribed.md)
+
+                      - [TopicUnsubscribed](./arch/node/networking/intra_domain/pubsub/notifications/topic_unsubscribed.md)
+
+                      - [TopicAdvertReceived](./arch/node/networking/intra_domain/pubsub/notifications/topic_advert_received.md)
+
+                  - Types
+                      - [PubSubRoutingTable](./arch/node/networking/intra_domain/pubsub/types/pubsub_routing_table.md)
+
+                      - [PubSubRoutingTableEntry](./arch/node/networking/intra_domain/pubsub/types/pubsub_routing_table_entry.md)
+
+                      - [TopicAdvertV1](./arch/node/networking/intra_domain/pubsub/types/topic_advert_v1.md)
+
+                      - [EventV1](./arch/node/networking/intra_domain/pubsub/types/event_v1.md)
+
+                      - [TopicRequestV1](./arch/node/networking/intra_domain/pubsub/types/topic_request_v1.md)
+
+                      - [TopicRequestV1](./arch/node/networking/intra_domain/pubsub/types/topic_request_v1.md)
+
+              - [Storage](./arch/node/networking/intra_domain/storage/index.md)
+                  - Messages
+                      - [BlockLookupRequest](./arch/node/networking/intra_domain/storage/messages/block_lookup_request.md)
+
+                      - [BlockResult](./arch/node/networking/intra_domain/storage/messages/block_result.md)
+
+                      - [BlockGetRequest](./arch/node/networking/intra_domain/storage/messages/block_get_request.md)
+
+                      - [BlockPutRequest](./arch/node/networking/intra_domain/storage/messages/block_put_request.md)
+
+                      - [BlockPutResponse](./arch/node/networking/intra_domain/storage/messages/block_put_response.md)
+
+                      - [BlockSearchTopic](./arch/node/networking/intra_domain/storage/messages/block_search_topic.md)
+
+                      - [BlockSearchRandom](./arch/node/networking/intra_domain/storage/messages/block_search_random.md)
+
+                  - Types
+                      - [StoragePrefs](./arch/node/networking/intra_domain/storage/types/storage_prefs.md)
+
+      - [Ordering Machine](./arch/node/ordering/index.md)
+          - [Common types](./arch/node/ordering/types/allofthem/index.md)
+              - [KVSDatum](./arch/node/ordering/types/kvs_datum.md)
+
+              - [KVSKey](./arch/node/ordering/types/kvs_key.md)
+
+              - [ExecutionSummary](./arch/node/ordering/types/execution_summary.md)
+
+              - [TxData](./arch/node/ordering/types/tx_data.md)
+
+              - [TransactionCandidate](./arch/node/ordering/types/transaction_candidate.md)
+
+              - [TransactionExecutable](./arch/node/ordering/types/transaction_executable.md)
+
+              - [TxFingerprint](./arch/node/ordering/types/tx_fingerprint.md)
+
+              - [TransactionAck](./arch/node/ordering/types/transaction_ack.md)
+
+              - [TransactionLabel](./arch/node/ordering/types/transaction_label.md)
+
+              - [ReadLabel](./arch/node/ordering/types/read_label.md)
+
+              - [WriteLabel](./arch/node/ordering/types/write_label.md)
+
+              - [WorkerHash](./arch/node/ordering/types/worker_hash.md)
+
+          - [Mempool engines](./arch/node/ordering/mempool/index.md)
+              - [Execution Supervisor](./arch/node/ordering/mempool/execution_supervisor/index.md)
+                  - [SpawnExecutor](./arch/node/ordering/mempool/execution_supervisor/spawn_executor.md)
+
+              - [Worker Engine](./arch/node/ordering/mempool/worker/index.md)
+                  - [ExecutorFinished](./arch/node/ordering/mempool/worker/executor_finished.md)
+
+                  - [ExecutorPIDAssigned](./arch/node/ordering/mempool/worker/executor_pid_assigned.md)
+
+                  - [KVSLockAcquired](./arch/node/ordering/mempool/worker/kvs_lock_acquired.md)
+
+                  - [TransactionRequest](./arch/node/ordering/mempool/worker/transaction_request.md)
+
+                  - [RequestLogs](./arch/node/ordering/mempool/worker/request_logs.md)
+
+          - Consensus Engine
+              - [None](./arch/node/ordering/consensus_v1.md)
+
+          - [Execution engines](./arch/node/ordering/execution/index.md)
+              - [Shard](./arch/node/ordering/execution/shard/index.md)
+                  - [KVSAcquireLock](./arch/node/ordering/execution/shard/kvs_acquire_lock.md)
+
+                  - [KVSReadRequest](./arch/node/ordering/execution/shard/kvs_read_request.md)
+
+                  - [KVSWrite](./arch/node/ordering/execution/shard/kvs_write.md)
+
+                  - [UpdateSeenAll](./arch/node/ordering/execution/shard/update_seen_all.md)
+
+              - [Executor](./arch/node/ordering/execution/executor/index.md)
+                  - [ExecuteTransaction](./arch/node/ordering/execution/executor/execute_transaction.md)
+
+                  - [KVSRead](./arch/node/ordering/execution/executor/kvs_read.md)
+</code></pre></div>
+</li>
+</ul>
+<ul>
+<li><a href="application_architecture/index.html">Application Architecture</a>
+    - <a href="application_architecture/definitions/index.html">Definitions</a><p>- <a href="application_architecture/techniques/index.html">Techniques</a>
+      - <a href="application_architecture/techniques/dynamic_code_loading.html">Dynamic code loading</a></p>
+<div class="language-text highlight"><pre><span></span><code>  - [Schelling tests](./application_architecture/techniques/schelling_tests.md)
+</code></pre></div>
+<p>- <a href="application_architecture/primitives/index.html">Primitives</a>
+      - <a href="application_architecture/primitives/tokens.html">Tokens</a></p>
+<div class="language-text highlight"><pre><span></span><code>  - [Attestation](./application_architecture/primitives/attestation.md)
+
+  - [Authorization](./application_architecture/primitives/authorization.md)
+
+  - [Counter](./application_architecture/primitives/counter.md)
+</code></pre></div>
+<p>- <a href="application_architecture/system_applications/index.html">System applications</a>
+      - <a href="application_architecture/system_applications/proof_of_stake.html">Proof of stake</a></p>
+<p>- <a href="application_architecture/archetypal_applications/index.html">Archetypal applications</a>
+      - <a href="application_architecture/archetypal_applications/kudos.html">Kudos</a></p>
+</li>
+</ul>
+<ul>
+<li><a href="implementation/index.html">Implementation</a>
+    - <a href="implementation/data_encoding.html">Data encoding</a><p>- Resource machine backends
+      - <a href="implementation/resource_machine_backends.html">None</a></p>
+<div class="language-text highlight"><pre><span></span><code>  - [Transparent Backend](./implementation/transparent.md)
+
+  - [Cairo Backend](./implementation/cairo.md)
+
+  - [RISC0 Backend](./implementation/risc0.md)
+</code></pre></div>
+</li>
+</ul>
+<ul>
+<li><a href="indexes/links.html">Quick links</a></li>
+</ul>
+<ul>
+<li>Juvix modules
+    - <a href="prelude.juvix.html">Juvix Base Prelude</a><p>- <a href="indexes/juvix_modules.html">Juvix Module Index</a></p>
+<p>- <a href="https://docs.juvix.org">Juvix Documentation</a></p>
+</li>
+</ul>
+<ul>
+<li><a href="tutorial/index.html">Tutorials for contributors</a>
+    - <a href="tutorial/install/index.html">Prepare working environment</a><p>- <a href="tutorial/branch.html">Use Git and GitHub</a></p>
+<p>- <a href="tutorial/changelog.html">Updating the changelog</a></p>
+<p>- <a href="tutorial/versioning.html">Versioning</a></p>
+<p>- <a href="tutorial/file_naming.html">File naming conventions</a></p>
+<p>- <a href="tutorial/md/index.html">Write Markdown</a></p>
+<p>- <a href="tutorial/md/headers_and_other_conventions.html">Headers and other Markdown formatting conventions</a></p>
+<p>- <a href="tutorial/md/links.html">Use Wiki style links</a></p>
+<p>- <a href="tutorial/md/images.html">Include images in Markdown</a></p>
+<p>- <a href="tutorial/md/snippets.html">Include code snippets</a></p>
+<p>- <a href="tutorial/juvix.html">Add Juvix code for specification</a></p>
+<p>- <a href="tutorial/md/todos.html">Add pending tasks with Todos admonition</a></p>
+<p>- <a href="tutorial/md/citations.html">Add literature references</a></p>
+<p>- <a href="tutorial/differ/index.html">Add diffs for versioning</a></p>
+<p>- <a href="tutorial/commit_checks.html">Run pre commit checks</a></p>
+<p>- <a href="tutorial/engines/index.html">Engines in Anoma</a>
+      - <a href="tutorial/engines/writing_conventions.html">Engine writing conventions</a></p>
+<div class="language-text highlight"><pre><span></span><code>  - Examples
+      - Template Engine
+          - [Template Engine](./arch/node/engines/template.juvix.md)
+
+          - [Template Messages](./arch/node/engines/template_messages.juvix.md)
+
+          - [Template Environment](./arch/node/engines/template_environment.juvix.md)
+
+          - [Template Behaviour](./arch/node/engines/template_behaviour.juvix.md)
+
+      - Ticker Engine
+          - [Ticker Engine](./arch/node/engines/ticker.juvix.md)
+
+          - [Ticker Messages](./arch/node/engines/ticker_messages.juvix.md)
+
+          - [Ticker Environment](./arch/node/engines/ticker_environment.juvix.md)
+
+          - [Ticker Behaviour](./arch/node/engines/ticker_behaviour.juvix.md)
+</code></pre></div>
+</li>
+</ul>
+</details>
+<!-- list_wikilinks -->
+
+<!-- mermaid_wikilinks -->
+
+<div class="footnote">
+<hr />
+<ol>
+<li id="fn:1">
+<p>Christopher Goes. Anoma as the universal intent machine for ethereum. Ethereum Research, 2024. Draft. URL: <a href="https://ethresear.ch/t/rfc-draft-anoma-as-the-universal-intent-machine-for-ethereum/19109">https://ethresear.ch/t/rfc-draft-anoma-as-the-universal-intent-machine-for-ethereum/19109</a> (visited on 2024-06-17).&#160;<a class="footnote-backref" href="#fnref:1" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+</li>
+</ol>
+</div>
+
+
+
+
+
+
+
+  
+  
+
+
+
+  
+
+
+  
+
+
+  <form class="md-feedback" name="feedback" hidden>
+    <fieldset>
+      <legend class="md-feedback__title">
+        Was this page helpful?
+      </legend>
+      <div class="md-feedback__inner">
+        <div class="md-feedback__list">
+          
+            <button class="md-feedback__icon md-icon" type="submit" title="This page was helpful" data-md-value="1">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12 21.35-1.45-1.32C5.4 15.36 2 12.27 2 8.5 2 5.41 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.08C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.41 22 8.5c0 3.77-3.4 6.86-8.55 11.53z"/></svg>
+            </button>
+          
+            <button class="md-feedback__icon md-icon" type="submit" title="This page could be improved" data-md-value="0">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12 21.35-1.45-1.32C5.4 15.36 2 12.27 2 8.5 2 5.41 4.42 3 7.5 3c.67 0 1.32.12 1.94.33L13 9.35l-4 5zM16.5 3C19.58 3 22 5.41 22 8.5c0 3.77-3.4 6.86-8.55 11.53L12 21.35l-1-7 4.5-5-2.65-5.08C13.87 3.47 15.17 3 16.5 3"/></svg>
+            </button>
+          
+        </div>
+        <div class="md-feedback__note">
+          
+            <div data-md-value="1" hidden>
+              
+              
+                
+              
+              Thanks for your feedback!
+            </div>
+          
+            <div data-md-value="0" hidden>
+              
+              
+                
+              
+              Thanks for your feedback! We'll try to improve this page in the future.
+            </div>
+          
+        </div>
+      </div>
+    </fieldset>
+  </form>
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  <div class="md-copyright__highlight">
+    Powered by Mkdocs, Material 9.5.37-insiders-4.53.13 and Juvix v0.6.6 - Last updated: December 03, 2024 at 01:26 PM UTC
+  </div>
+  
+
+  <ul>
+    <li><a href="https://anoma.net/" target="_blank">Anoma Official Website</a> </li>
+    <li><a href="https://art.anoma.net" target="_blank">Anoma Research Topics (ART)</a></li>
+    <li><a href="https://anoma.net/blog" target="_blank">Anoma Blog</a></li>
+    <li><a href="https://anoma.net/talks" target="_blank">Anoma Talks</a></li>
+  </ul>
+  <ul>
+    <span class="md-copyright__highlight">Extra resources for Anoma
+      Specification collaborators</span>
+      
+      <li><a href="https://anoma.github.io/nspec/v2/indexes/links.html">Quick links</a></li>
+      <li><a href="https://anoma.github.io/nspec/v2/indexes/juvix_modules.html">Juvix modules</a></li>
+      <li><a href="https://anoma.github.io/nspec/v2/tutorial/index.html">Markdown tutorials for writing Anoma
+          Specification</a></li>
+      <li><a href="https://anoma.github.io/nspec/v2/tutorial/engines/index.html">On engines in Anoma</a></li>
+  </ul>
+</div>
+      
+        <div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://x.com/anoma" target="_blank" rel="noopener" title="x.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M389.2 48h70.6L305.6 224.2 487 464H345L233.7 318.6 106.5 464H35.8l164.9-188.5L26.8 48h145.6l100.5 132.9zm-24.8 373.8h39.1L151.1 88h-42z"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/anoma" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8M97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://anoma.net/blog" target="_blank" rel="noopener" title="anoma.net" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M192 32c0 17.7 14.3 32 32 32 123.7 0 224 100.3 224 224 0 17.7 14.3 32 32 32s32-14.3 32-32C512 128.9 383.1 0 224 0c-17.7 0-32 14.3-32 32m0 96c0 17.7 14.3 32 32 32 70.7 0 128 57.3 128 128 0 17.7 14.3 32 32 32s32-14.3 32-32c0-106-86-192-192-192-17.7 0-32 14.3-32 32m-96 16c0-26.5-21.5-48-48-48S0 117.5 0 144v224c0 79.5 64.5 144 144 144s144-64.5 144-144-64.5-144-144-144h-16v96h16c26.5 0 48 21.5 48 48s-21.5 48-48 48-48-21.5-48-48z"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://research.anoma.net" target="_blank" rel="noopener" title="research.anoma.net" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M225.9 32C103.3 32 0 130.5 0 252.1 0 256 .1 480 .1 480l225.8-.2c122.7 0 222.1-102.3 222.1-223.9S348.6 32 225.9 32M224 384c-19.4 0-37.9-4.3-54.4-12.1L88.5 392l22.9-75c-9.8-18.1-15.4-38.9-15.4-61 0-70.7 57.3-128 128-128s128 57.3 128 128-57.3 128-128 128"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://youtube.com/anoma" target="_blank" rel="noopener" title="youtube.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M549.655 124.083c-6.281-23.65-24.787-42.276-48.284-48.597C458.781 64 288 64 288 64S117.22 64 74.629 75.486c-23.497 6.322-42.003 24.947-48.284 48.597-11.412 42.867-11.412 132.305-11.412 132.305s0 89.438 11.412 132.305c6.281 23.65 24.787 41.5 48.284 47.821C117.22 448 288 448 288 448s170.78 0 213.371-11.486c23.497-6.321 42.003-24.171 48.284-47.821 11.412-42.867 11.412-132.305 11.412-132.305s0-89.438-11.412-132.305m-317.51 213.508V175.185l142.739 81.205z"/></svg>
+    </a>
+  
+    
+    
+    
+    
+    <a href="mailto:arts@heliax.dev" target="_blank" rel="noopener" title="" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m20 8-8 5-8-5V6l8 5 8-5m0-2H4c-1.11 0-2 .89-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+      <div class="md-progress" data-md-component="progress" role="progressbar"></div>
+    
+    
+    <script id="__config" type="application/json">{"base": ".", "features": ["announce.dismiss", "content.code.annotate", "content.code.copy", "content.tooltips", "search.highlight", "search.suggest", "search.sharing", "navigation.instant", "navigation.instant.prefetch", "navigation.instant.progress", "navigation.instant.preview", "navigation.tracking", "navigation.tabs", "navigation.tabs.sticky", "navigation.prune", "navigation.indexes", "navigation.top", "toc.follow", "toc.integrate"], "search": "assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="assets/javascripts/bundle.d6f25eb3.min.js"></script>
+      
+        <script src="js/timeago.min.js"></script>
+      
+        <script src="js/timeago_mkdocs_material.js"></script>
+      
+        <script src="assets/js/extra.js"></script>
+      
+        <script src="assets/js/highlight.js"></script>
+      
+        <script src="assets/js/mathjax.js"></script>
+      
+        <script src="assets/js/tex-svg-full.js"></script>
+      
+    
+  <script id="init-glightbox">const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "slide"});
+document$.subscribe(() => { lightbox.reload() });
+</script></body>
+</html>

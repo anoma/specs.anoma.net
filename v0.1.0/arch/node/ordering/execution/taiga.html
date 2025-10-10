@@ -1,0 +1,1785 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="The Anoma Specification is a collection of documents that describe the architecture, design, and implementation of the Anoma Network.">
+      
+      
+        <meta name="author" content="Anoma Foundation">
+      
+      
+        <link rel="canonical" href="https://anoma.github.io/nspec/v2/arch/node/ordering/execution/taiga.html">
+      
+      
+      
+      
+      <link rel="icon" href="../../../../assets/logo.svg">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.37">
+    
+    
+      
+        <title>Taiga - Anoma Specification</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../assets/stylesheets/main.8c3ca2c6.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,700,700i%7CFira+Code:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Open Sans";--md-code-font:"Fira Code"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../css/timeago.css">
+    
+      <link rel="stylesheet" href="../../../../assets/css/style.css">
+    
+      <link rel="stylesheet" href="../../../../assets/css/juvix-highlighting.css">
+    
+      <link rel="stylesheet" href="../../../../assets/css/juvix_codeblock_footer.css">
+    
+      <link rel="stylesheet" href="../../../../assets/css/juvix_codeblock_footer.css">
+    
+      <link rel="stylesheet" href="../../../../assets/css">
+    
+    <script>__md_scope=new URL("../../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+  
+
+
+    
+    
+      
+        <meta  property="og:type"  content="website" >
+      
+        <meta  property="og:title"  content="Taiga - Anoma Specification" >
+      
+        <meta  property="og:description"  content="The Anoma Specification is a collection of documents that describe the architecture, design, and implementation of the Anoma Network." >
+      
+        <meta  property="og:image"  content="https://anoma.github.io/nspec/v2/assets/images/social/arch/node/ordering/execution/taiga.png" >
+      
+        <meta  property="og:image:type"  content="image/png" >
+      
+        <meta  property="og:image:width"  content="1200" >
+      
+        <meta  property="og:image:height"  content="630" >
+      
+        <meta  property="og:url"  content="https://anoma.github.io/nspec/v2/arch/node/ordering/execution/taiga.html" >
+      
+        <meta  name="twitter:card"  content="summary_large_image" >
+      
+        <meta  name="twitter:title"  content="Taiga - Anoma Specification" >
+      
+        <meta  name="twitter:description"  content="The Anoma Specification is a collection of documents that describe the architecture, design, and implementation of the Anoma Network." >
+      
+        <meta  name="twitter:image"  content="https://anoma.github.io/nspec/v2/assets/images/social/arch/node/ordering/execution/taiga.png" >
+      
+    
+    
+   <link href="../../../../assets/stylesheets/glightbox.min.css" rel="stylesheet"/><style>
+    html.glightbox-open { overflow: initial; height: 100%; }
+    .gslide-title { margin-top: 0px; user-select: text; }
+    .gslide-desc { color: #666; user-select: text; }
+    .gslide-image img { background: white; }
+    .gscrollbar-fixer { padding-right: 15px; }
+    .gdesc-inner { font-size: 0.75rem; }
+    body[data-md-color-scheme="slate"] .gdesc-inner { background: var(--md-default-bg-color);}
+    body[data-md-color-scheme="slate"] .gslide-title { color: var(--md-default-fg-color);}
+    body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color);}</style> <script src="../../../../assets/javascripts/glightbox.min.js"></script></head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="white" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#taiga" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+        <aside class="md-banner">
+          <div class="md-banner__inner md-grid md-typeset">
+            
+              <button class="md-banner__button md-icon" aria-label="Don't show this again">
+                
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+              </button>
+            
+            
+  For updates follow <strong>@anoma</strong> on
+  <a rel="me" href="https://x.com/anoma">
+    <span class="twemoji x-twitter">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M389.2 48h70.6L305.6 224.2 487 464H345L233.7 318.6 106.5 464H35.8l164.9-188.5L26.8 48h145.6l100.5 132.9zm-24.8 373.8h39.1L151.1 88h-42z"/></svg>
+    </span>
+    <strong></strong>
+  </a>
+  and discuss on our
+  <a href="https://research.anoma.net">
+    <span class="twemoji discourse">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M225.9 32C103.3 32 0 130.5 0 252.1 0 256 .1 480 .1 480l225.8-.2c122.7 0 222.1-102.3 222.1-223.9S348.6 32 225.9 32M224 384c-19.4 0-37.9-4.3-54.4-12.1L88.5 392l22.9-75c-9.8-18.1-15.4-38.9-15.4-61 0-70.7 57.3-128 128-128s128 57.3 128 128-57.3 128-128 128"/></svg>
+    </span>
+    <strong>forum</strong>
+  </a>
+
+          </div>
+          
+            <script>var el=document.querySelector("[data-md-component=announce]");if(el){var content=el.querySelector(".md-typeset");__md_hash(content.innerHTML)===__md_get("__announce")&&(el.hidden=!0)}</script>
+          
+        </aside>
+      
+    </div>
+    
+      <div data-md-color-scheme="default" data-md-component="outdated" hidden>
+        
+          <aside class="md-banner md-banner--warning">
+            <div class="md-banner__inner md-grid md-typeset">
+              
+  You're not viewing the latest official version.
+  <a href="../../../../..">
+    <strong>Click here to go to latest.</strong>
+  </a>
+
+            </div>
+            <script>var el=document.querySelector("[data-md-component=outdated]"),outdated=__md_get("__outdated",sessionStorage);!0===outdated&&el&&(el.hidden=!1)</script>
+          </aside>
+        
+      </div>
+    
+    
+        
+  
+    
+  
+  <header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+    <nav class="md-header__inner md-grid" aria-label="Header">
+      <a href="../../../../index.html" title="Anoma Specification" class="md-header__button md-logo" aria-label="Anoma Specification" data-md-component="logo">
+        
+  <img src="../../../../assets/logo.svg" alt="logo">
+
+      </a>
+      <label class="md-header__button md-icon" for="__drawer">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+      </label>
+      <div class="md-header__title" data-md-component="header-title">
+        <div class="md-header__ellipsis">
+          <div class="md-header__topic">
+            <span class="md-ellipsis">
+                
+                <span class="first-letter">A</span>noma 
+              
+                <span class="first-letter">S</span>pecification
+              
+              
+                <span class="md-header__topic-version">v0.1.0</span>
+              
+            </span>
+          </div>
+          <div class="md-header__topic" data-md-component="header-topic">
+            <span class="md-ellipsis">
+              
+                Taiga
+              
+            </span>
+          </div>
+        </div>
+      </div>
+      
+        
+          <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme)" data-md-color-scheme="default" data-md-color-primary="white" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m14.3 16-.7-2h-3.2l-.7 2H7.8L11 7h2l3.2 9zM20 8.69V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12zm-9.15 3.96h2.3L12 9z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="white" data-md-color-accent="red"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_2" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="black" data-md-color-accent="red"  aria-label="Switch to system preference"  type="radio" name="__palette" id="__palette_2">
+    
+      <label class="md-header__button md-icon" title="Switch to system preference" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+        
+      
+      
+        <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+      
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+      
+    </nav>
+    
+      
+        <!--
+  Copyright (c) 2016-2024 Martin Donath <martin.donath@squidfunk.com>
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to
+  deal in the Software without restriction, including without limitation the
+  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+  sell copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in
+  all copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+  IN THE SOFTWARE.
+-->
+
+
+
+<!-- Navigation tabs -->
+<nav
+  class="md-tabs"
+  aria-label="Tabs"
+  data-md-component="tabs"
+>
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+      
+            
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../../index.html" class="md-tabs__link">
+        
+  
+    
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+        
+      
+      
+            
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../../changelog.html" class="md-tabs__link">
+        
+  
+    
+  
+  Changelog
+
+      </a>
+    </li>
+  
+
+        
+      
+      
+            
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../scope/index.html" class="md-tabs__link">
+          
+  
+    
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M5 3c-1.11 0-2 .89-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2zm10.78 2H19v12.18c-.26-.8-1.31-1.39-2.2-1.39h-1v-3a1 1 0 0 0-1-1h-6v-2h2a1 1 0 0 0 1-1v-2h2c1.03 0 1.87-.79 1.98-1.79M5 10.29l4.8 4.5v1a2 2 0 0 0 2 2V19H5z"/></svg>
+    
+  
+  Scope
+
+        </a>
+      </li>
+    
+  
+
+        
+      
+      
+            
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../basic_abstractions/index.html" class="md-tabs__link">
+          
+  
+    
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M6 2a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm0 2h7v5h5v11H6zm2 8v2h8v-2zm0 4v2h5v-2z"/></svg>
+    
+  
+  Basic Abstractions
+
+        </a>
+      </li>
+    
+  
+
+        
+      
+      
+            
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../index.html" class="md-tabs__link">
+          
+  
+    
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M24 18.714v4.8c0 .288-.192.48-.48.48h-4.8c-.288 0-.48-.192-.48-.48v-4.8c0-.288.192-.48.48-.48h1.92v-1.92h-8.16v1.92h1.92c.288 0 .48.192.48.48v4.8c0 .288-.192.48-.48.48H9.6c-.288 0-.48-.192-.48-.48v-4.8c0-.288.192-.48.48-.48h1.92v-1.92H3.36v1.92h1.92c.288 0 .48.192.48.48v4.8c0 .288-.192.48-.48.48H.48c-.288 0-.48-.192-.48-.48v-4.8c0-.288.192-.48.48-.48H2.4v-2.4c0-.288.192-.48.48-.48h8.64v-1.44h.96v1.44h8.64c.288 0 .48.192.48.48v2.4h1.92c.288 0 .48.192.48.48m-13.92 4.32h3.84v-3.84h-3.84zm-9.12 0H4.8v-3.84H.96Zm18.24 0h3.84v-3.84H19.2ZM6.24 9.642V3.546c0-.192.096-.336.24-.432L11.76.042a.8.8 0 0 1 .48 0l5.28 3.072c.144.096.24.24.24.432v6.096c0 .144-.096.288-.24.384l-5.28 3.072q-.096.048-.24.048t-.24-.048l-5.28-3.072c-.144-.096-.24-.24-.24-.384m10.56-.288V4.362l-4.32 2.496v4.992zm-9.6 0 4.32 2.496V6.858L7.2 4.362Zm.48-5.808L12 5.994l4.32-2.448L12 1.05Z"/></svg>
+    
+  
+  Protocol Architecture
+
+        </a>
+      </li>
+    
+  
+
+        
+      
+      
+            
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../application_architecture/index.html" class="md-tabs__link">
+          
+  
+    
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16 20h4v-4h-4m0-2h4v-4h-4m-6-2h4V4h-4m6 4h4V4h-4m-6 10h4v-4h-4m-6 4h4v-4H4m0 10h4v-4H4m6 4h4v-4h-4M4 8h4V4H4z"/></svg>
+    
+  
+  Application Architecture
+
+        </a>
+      </li>
+    
+  
+
+        
+      
+      
+            
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../implementation/index.html" class="md-tabs__link">
+          
+  
+    
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19.793 16.575c0 3.752-2.927 7.426-7.743 7.426-5.249 0-7.843-3.71-7.843-8.29 0-5.21 3.892-12.952 8-15.647a.397.397 0 0 1 .61.371 9.72 9.72 0 0 0 1.694 6.518c.522.795 1.092 1.478 1.763 2.352.94 1.227 1.637 1.906 2.644 3.842l.015.028a7.1 7.1 0 0 1 .86 3.4"/></svg>
+    
+  
+  Implementation
+
+        </a>
+      </li>
+    
+  
+
+        
+      
+      
+      
+      
+      
+      
+      
+    </ul>
+  </div>
+</nav>
+      
+    
+  </header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../../../index.html" title="Anoma Specification" class="md-nav__button md-logo" aria-label="Anoma Specification" data-md-component="logo">
+      
+  <img src="../../../../assets/logo.svg" alt="logo">
+
+    </a>
+    Anoma Specification
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../index.html" class="md-nav__link">
+        
+  
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+  
+  <span class="md-ellipsis">
+    Home
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../changelog.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Changelog
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+    <a href="../../../../scope/index.html" class="md-nav__link">
+      
+  
+  <span class="md-ellipsis">
+    Scope
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+    <a href="../../../../basic_abstractions/index.html" class="md-nav__link">
+      
+  
+  <span class="md-ellipsis">
+    Basic Abstractions
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+    <a href="../../../index.html" class="md-nav__link">
+      
+  
+  <span class="md-ellipsis">
+    Protocol Architecture
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+    <a href="../../../../application_architecture/index.html" class="md-nav__link">
+      
+  
+  <span class="md-ellipsis">
+    Application Architecture
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+    <a href="../../../../implementation/index.html" class="md-nav__link">
+      
+  
+  <span class="md-ellipsis">
+    Implementation
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../indexes/links.html" class="md-nav__link">
+        
+  
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7a5 5 0 0 0-5 5 5 5 0 0 0 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1M8 13h8v-2H8zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4a5 5 0 0 0 5-5 5 5 0 0 0-5-5"/></svg>
+  
+  <span class="md-ellipsis">
+    Quick links
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+    <a href="../../../../prelude.html" class="md-nav__link">
+      
+  
+  <span class="md-ellipsis">
+    Juvix modules
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+    <a href="../../../../tutorial/index.html" class="md-nav__link">
+      
+  
+  <span class="md-ellipsis">
+    Tutorials for contributors
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+<h1 id="taiga">Taiga<a class="headerlink" href="#taiga" title="Permanent link">&para;</a></h1>
+<p>Taiga is a concrete instantiation of the <a href="https://anoma.github.io/nspec/v2/basic_types/resource_machine.html">Anoma Resource Machine</a> used to compute and verify state transition proposals. Taiga defines what a valid transaction is and provides the means to produce and verify transactions.</p>
+<p>A valid <strong>transaction</strong> is defined by two criteria:</p>
+<ul>
+<li>applications the state of which is being affected by the proposed state transition authorize the change</li>
+<li>the proposed state transition doesn't violate the Taiga rules</li>
+</ul>
+<p>Actors and agents use Taiga to produce and verify the proofs required to form transactions. The executor function uses Taiga to verify the transactions before applying them to the state.</p>
+<h2 id="resource-model">Resource model<a class="headerlink" href="#resource-model" title="Permanent link">&para;</a></h2>
+<p>Being an instance of the Anoma Resource Machine, Taiga is designed in the resource model, where resources represent atomic units of the state. Taiga supports shielded state transitions with the help of zero-knowledge proofs, commitment schemes, signatures, and other privacy-preserving techniques. Resources are distributed and stored in an encrypted form. Taiga uses proof recursion to provide function privacy for custom logics.</p>
+<p>Taiga was heavily inspired by <a href="https://github.com/zcash/zips/blob/main/protocol/protocol.pdf">Zcash Orchard</a> and <a href="https://eprint.iacr.org/2018/962">ZEXE</a>.</p>
+<h2 id="functions-provided-by-taiga">Functions provided by Taiga<a class="headerlink" href="#functions-provided-by-taiga" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>create a transaction:</strong> users create initial transactions to announce what they offer and request, including constraints. These transactions are sent to the intent gossip network to be matched with other transactions. Solvers create transactions to match the intents of the users.</li>
+<li><strong>verify a transaction:</strong> each transaction contains proofs attesting to its correctness. When a solver receives transactions from the intent gossip network, they must verify the proofs.</li>
+<li><strong>compose transactions:</strong> solvers combine transactions to build a balanced transaction that satisfies the intents of the involved parties.</li>
+</ul>
+<p>The following sections describe the protocol for shielded state transitions.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Instantiations and some of the exact formulas are unstable</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>To learn more about Taiga as a standalone component, check <a href="https://github.com/anoma/taiga">the Taiga repository</a></p>
+</div>
+<h2 id="1-proving-systems">1. Proving systems<a class="headerlink" href="#1-proving-systems" title="Permanent link">&para;</a></h2>
+<p>The table below contains the description of how resource machine proof types are instantiated by Taiga.</p>
+<table>
+<thead>
+<tr>
+<th>RM proof</th>
+<th>Type</th>
+<th>Instantiation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Delta proof</td>
+<td>Binding signature</td>
+<td>RedDSA + Pasta curves</td>
+</tr>
+<tr>
+<td>Compliance proof</td>
+<td>zk-SNARK</td>
+<td>Halo2 + IPA FCS + Pasta curves</td>
+</tr>
+<tr>
+<td>Resource logic proof</td>
+<td>zk-SNARK</td>
+<td>Halo2 + IPA FCS + Pasta curves</td>
+</tr>
+</tbody>
+</table>
+<p>A zero-knowledge proving system is used to produce zero-knowledge proofs for the compliance circuit and resource logic circuits. The compliance circuit is fixed, resource logic circuits are custom and require at least two-layer recursion to achieve function privacy. Currently, Taiga uses Halo2 with IPA FCS and <a href="https://github.com/zcash/pasta">Pasta curves</a> to create proofs for these circuits.</p>
+<h3 id="11-zk-snark-circuits">1.1 zk-SNARK circuits<a class="headerlink" href="#11-zk-snark-circuits" title="Permanent link">&para;</a></h3>
+<p>A circuit <span class="arithmatex">\(C\)</span> is represented as polynomials over the chosen curve's <strong>scalar field</strong>, following <a href="https://zcash.github.io/halo2/concepts/arithmetization.html">plonk-ish arithmetization</a>. Proof elements are generated over the curve's <strong>base field</strong>.</p>
+<h3 id="12-elliptic-curves">1.2 Elliptic curves<a class="headerlink" href="#12-elliptic-curves" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Name</th>
+<th>Scalar field</th>
+<th>Base field</th>
+<th>Purpose</th>
+<th>Instantiation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="arithmatex">\(E_I\)</span></td>
+<td>Inner curve</td>
+<td><span class="arithmatex">\(\mathbb{F}_q\)</span></td>
+<td><span class="arithmatex">\(\mathbb{F}_p\)</span></td>
+<td>ECC gadget</td>
+<td><a href="https://github.com/zcash/pasta#pallasvesta-supporting-evidence">Pallas</a></td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(E_M\)</span></td>
+<td>Main curve</td>
+<td><span class="arithmatex">\(\mathbb{F}_p\)</span></td>
+<td><span class="arithmatex">\(\mathbb{F}_q\)</span></td>
+<td>compliance and RL circuits</td>
+<td><a href="https://github.com/zcash/pasta#pallasvesta-supporting-evidence">Vesta</a></td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(E_O\)</span></td>
+<td>Outer curve</td>
+<td><span class="arithmatex">\(\mathbb{F}_q\)</span></td>
+<td><span class="arithmatex">\(\mathbb{F}_p\)</span></td>
+<td>Accumulation circuit</td>
+<td>Pallas</td>
+</tr>
+</tbody>
+</table>
+<h3 id="13-proving-system-interfaces">1.3 Proving system interfaces<a class="headerlink" href="#13-proving-system-interfaces" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Interface</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Generate Verifying key</strong></td>
+<td><code>keygen_vk(C) ⟶ vk</code></td>
+<td><code>C</code> is turned into a <em>verifying key</em> — a succint representation of the circuit that the verifier uses to verify a proof</td>
+</tr>
+<tr>
+<td><strong>Generate Proving key</strong></td>
+<td><code>keygen_pk(C, vk) ⟶ pk</code></td>
+<td>Generate a proving key from a verifying key and an instance of the circuit</td>
+</tr>
+<tr>
+<td><strong>Prove</strong></td>
+<td><code>P(pk, x, w) ⟶ π</code></td>
+<td>Prove that a circuit is satisfied</td>
+</tr>
+<tr>
+<td><strong>Verify</strong></td>
+<td><code>V(vk, x, π) ⟶ 0/1</code></td>
+<td>Verify the proof</td>
+</tr>
+</tbody>
+</table>
+<h2 id="2-resources">2. Resources<a class="headerlink" href="#2-resources" title="Permanent link">&para;</a></h2>
+<p>A <em>resource</em> is an immutable particle of an application state. The state is updated by consuming and creating resources.</p>
+<h3 id="21-resource-plaintext">2.1 Resource plaintext<a class="headerlink" href="#21-resource-plaintext" title="Permanent link">&para;</a></h3>
+<p>The table below describes the components of a resource, also referred as a resource plaintext.</p>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>Formula</th>
+<th>Type/size</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="arithmatex">\(l\)</span></td>
+<td><span class="arithmatex">\(VKCommit(vk_{logic})\)</span></td>
+<td></td>
+<td>Contains the application's RL verifying key. Used to identify the application the resource belongs to. As the verifying key itself is large, resources only store a commitment to it</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(label\)</span></td>
+<td></td>
+<td></td>
+<td>Contains the application data that affects fungibility of the resource. Along with <span class="arithmatex">\(l\)</span>, it is used to derive resource's kind</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(q\)</span></td>
+<td></td>
+<td><span class="arithmatex">\({0..2^{64} - 1}\)</span></td>
+<td>The quantity of fungible value</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(v\)</span></td>
+<td></td>
+<td></td>
+<td>Resource value is a commitment to the resource's extra data that doesn't affect the resource's fungibility</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(eph\)</span></td>
+<td></td>
+<td>bool</td>
+<td>Ephemeral resource flag. It indicates whether the resource's commitment Merkle path should be checked when consuming the resource.</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(nonce\)</span></td>
+<td><span class="arithmatex">\(nonce\)</span></td>
+<td><span class="arithmatex">\(\mathbb{F}_p\)</span></td>
+<td>An old nullifier from the same Compliance description</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(npk\)</span></td>
+<td><span class="arithmatex">\(cm_{nk}\)</span></td>
+<td></td>
+<td>Commitment to the nullifier key <span class="arithmatex">\(nk\)</span> that will be used to derive the resource's nullifier. <span class="arithmatex">\(npk = NKCommit(nk)\)</span></td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(rseed\)</span></td>
+<td></td>
+<td><span class="arithmatex">\(\mathbb{F}_p\)</span></td>
+<td>A random commitment trapdoor</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The value size cannot be bigger or close to the curve's scalar field size (to avoid overflowing) but besides that there are no strict reasons for choosing 64. We can use more resources to express a value that doesn't fit in one resource (splitting the value into limbs). Having bigger value size requires fewer resources to express such a value and is more efficient. For example, a value size of 128 bits would require two times less resources to express a maximum value</p>
+</div>
+<h3 id="22-computable-fields">2.2 Computable fields<a class="headerlink" href="#22-computable-fields" title="Permanent link">&para;</a></h3>
+<h4 id="221-resource-kind">2.2.1 Resource kind<a class="headerlink" href="#221-resource-kind" title="Permanent link">&para;</a></h4>
+<p>Each resource has a kind that refers to the application the resource belongs to. It is derived from the resource's logic and label as follows:</p>
+<p><span class="arithmatex">\(K = PRF^{kind}(l, label)\)</span></p>
+<h4 id="222-psi">2.2.2 <span class="arithmatex">\(\psi\)</span><a class="headerlink" href="#222-psi" title="Permanent link">&para;</a></h4>
+<p>This an intermediate computed parameter used in the computation of resource commitment and resource nullifier.
+<span class="arithmatex">\(\psi = PRF^{\psi}(0, rseed, nonce)\)</span></p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>unstable</p>
+</div>
+<h4 id="223-rcm">2.2.3 <span class="arithmatex">\(rcm\)</span><a class="headerlink" href="#223-rcm" title="Permanent link">&para;</a></h4>
+<p>This parameter is used as randomness when computing the resource commitment.</p>
+<p><span class="arithmatex">\(rcm = PRF^{rcm}(1, rseed, nonce)\)</span></p>
+<div class="admonition quote">
+<p class="admonition-title">Quote</p>
+<p>unstable</p>
+</div>
+<h4 id="224-resource-commitment">2.2.4 Resource commitment<a class="headerlink" href="#224-resource-commitment" title="Permanent link">&para;</a></h4>
+<p>Resource commitment allows to prove the existence of the resource without revealing the resource plaintext. For a resource <span class="arithmatex">\(r\)</span>, the resource commitment is computed as follows: <span class="arithmatex">\(cm = \mathrm{ResourceCommit}(r.l, r.label, r.v, r.npk, r.nonce, r.\psi, r.eph, r.q., r.rcm)\)</span>.</p>
+<p>Resource commitments are stored in a global append-only commitment tree <span class="arithmatex">\(CMtree\)</span>, which contains commitments to all of the resources that were ever created. <span class="arithmatex">\(CMtree\)</span> is a cryptographic accumulator implemented as a Merkle tree. To prove the resource's existence, a path to the resource's commitment leaf is provided as a witness (private input).</p>
+<h4 id="225-nullifier">2.2.5 Nullifier<a class="headerlink" href="#225-nullifier" title="Permanent link">&para;</a></h4>
+<p>Revealing the resource's nullifier invalidates the resource. All nullifiers are stored in a global append-only nullifier set <span class="arithmatex">\(NFset\)</span>. Given the nullifier key <span class="arithmatex">\(nk\)</span> and a resource <span class="arithmatex">\(r\)</span>, the nullifier <span class="arithmatex">\(nf\)</span> is computed as follows: <span class="arithmatex">\(nf = DeriveNullifier_{nk}(r) = PRF_{nf}(r.nk, r.nonce, r.\psi, r.cm)\)</span></p>
+<h5 id="2251-nullifier-key-nk">2.2.5.1 Nullifier key <span class="arithmatex">\(nk\)</span><a class="headerlink" href="#2251-nullifier-key-nk" title="Permanent link">&para;</a></h5>
+<p>Each created resource plaintext contains a nullifier public key <span class="arithmatex">\(npk\)</span> that commits to some nullifier key <span class="arithmatex">\(nk\)</span>. This nullifier key have to be used to compute the resource's nullifier. The knowledge of the resource's nullifier key is necessary (but not sufficient) to create the resource's nullifier and invalidate the resource.</p>
+<p><span class="arithmatex">\(nk \mathop{\longleftarrow}\limits^{R} \mathbb{F}_p\)</span></p>
+<h3 id="25-verifiable-encryption">2.5 Verifiable encryption<a class="headerlink" href="#25-verifiable-encryption" title="Permanent link">&para;</a></h3>
+<p>Encryption is used for in-band distribution of resources. Encrypted resources are stored on the blockchain, the receiver can scan the blockhcain trying to decrypt the transactions to find the resources that were sent to them.</p>
+<p>We want the encryption to be verifiable to make sure the receiver of the resources can decrypt them. In other systems like Zcash the sender and the creator of the resource are the same actor, and it doesn't make sense for the sender to send a corrupted message to the receiver (essentially burning the resource), but in Taiga the resources are often created and sent by different parties.</p>
+<p>For verifiable encryption, we use the combination of DH key exchange for key derivation and symmetric encryption.</p>
+<p><span class="arithmatex">\(sk = DH(pub_{recv}, priv_{send})\)</span></p>
+<p><span class="arithmatex">\(ce = Encrypt(resource, sk)\)</span></p>
+<p>Not all of the resource fields require to be encrypted (e.g. the resource commitment), and the encrypted fields may vary depending on the application. To make sure it is flexible enough, the encryption check is performed in RL circuits (as opposed to verifying the encryption in the compliance circuit).</p>
+<h3 id="26-ephemeral-resources">2.6 Ephemeral resources<a class="headerlink" href="#26-ephemeral-resources" title="Permanent link">&para;</a></h3>
+<p>Ephemeral resources are resources for which the existence (i.e., Merkle path to its commitment in the <span class="arithmatex">\(CMtree\)</span>) is not checked when the resource is being consumed. Unlike some other systems (e.g., Zcash), resource's ephemerality isn't defined by its quantity (i.e., resources of quantity 0 are not necessarily ephemeral), instead, it is explicitly defined by the ephemerality flag <span class="arithmatex">\(eph\)</span>. Non-zero value ephemeral resources can be handy for carrying additional constraints (e.g. intents) and for balancing transactions.</p>
+<h2 id="3-circuits">3. Circuits<a class="headerlink" href="#3-circuits" title="Permanent link">&para;</a></h2>
+<h3 id="31-the-compliance-circuit">3.1 The Compliance Circuit<a class="headerlink" href="#31-the-compliance-circuit" title="Permanent link">&para;</a></h3>
+<p>The compliance circuit <code>ComplianceCircuit(x; w)</code> checks that a transaction satisfies the Taiga rules. The Compliance circuit performs checks over <span class="arithmatex">\(1\)</span> input and <span class="arithmatex">\(1\)</span> output resource, which sometimes referred as a compliance pair. A transaction containing <span class="arithmatex">\(n\)</span> input and <span class="arithmatex">\(n\)</span> output resources requires <span class="arithmatex">\(n\)</span> Compliance proofs. If the number of input and output resources isn't equal, ephemeral notes can be used to make them equal. The circuit is arithmetized over <span class="arithmatex">\(\mathbb{F}_p\)</span>.</p>
+<h4 id="inputs">Inputs<a class="headerlink" href="#inputs" title="Permanent link">&para;</a></h4>
+<p>Public inputs (<span class="arithmatex">\(x\)</span>):
+1. <span class="arithmatex">\(rt\)</span> - <span class="arithmatex">\(CMtree\)</span> root
+2. <span class="arithmatex">\(cm\)</span> - output resource commitment
+3. <span class="arithmatex">\(cm_{l}^{out}\)</span> - commitment to the output resource's logic,
+2. <span class="arithmatex">\(nf\)</span> - input resource nullifier
+5. <span class="arithmatex">\(cm_{l}^{in}\)</span> - commitment to the input resource's logic
+6. <span class="arithmatex">\(\Delta\)</span> - compliance pair delta</p>
+<p>Private inputs (<span class="arithmatex">\(w\)</span>):
+1. <span class="arithmatex">\(path\)</span> - <span class="arithmatex">\(CMtree\)</span> path from <span class="arithmatex">\(rt\)</span> to <span class="arithmatex">\(cm\)</span>
+2. <span class="arithmatex">\(r^{in}\)</span> - input resource plaintext
+3. <span class="arithmatex">\((l^{in}, rcm^{in}_{l})\)</span> - <span class="arithmatex">\(cm_{l}^{in}\)</span> opening
+4. <span class="arithmatex">\(r^{out}\)</span> - output resource plaintext
+5. <span class="arithmatex">\((l^{out}, rcm^{out}_{l})\)</span> - <span class="arithmatex">\(cm_{l}^{out}\)</span> opening</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>opening of a parameter contains every component of the parameter</p>
+</div>
+<h4 id="checks">Checks<a class="headerlink" href="#checks" title="Permanent link">&para;</a></h4>
+<ul>
+<li>For the input resource:
+    - If <code>eph = true</code>, check that the resource is a valid resource in <span class="arithmatex">\(rt\)</span>: there is a path in Merkle tree with root <span class="arithmatex">\(rt\)</span> to a resource commitment <span class="arithmatex">\(cm\)</span> that opens to <span class="arithmatex">\(r\)</span>
+      - <span class="arithmatex">\(path\)</span> leads from <span class="arithmatex">\(rt\)</span> to <span class="arithmatex">\(cm\)</span>
+      - <span class="arithmatex">\(cm\)</span> commits to <span class="arithmatex">\(r^{in}\)</span>
+    - Nullifier integrity: <span class="arithmatex">\(nf = DeriveNullifier_{nk}(r^{in})\)</span>.
+    - Resource logic integrity: <span class="arithmatex">\(cm_{l}^{in} = RLCommit(l^{in}, rcm^{in}_{l})\)</span>
+    - Kind integrity: <span class="arithmatex">\(K = PRF^{kind}(l^{in}, label^{in})\)</span></li>
+<li>For the output resource:
+    - Commitment integrity: <span class="arithmatex">\(cm = ResourceCommit(r^{out}, rseed^{out})\)</span>
+    - Resource logic integrity: <span class="arithmatex">\(cm_{l}^{out} = RLCommit(l^{out}, rcm^{out}_{l})\)</span>
+    - Kind integrity: <span class="arithmatex">\(K = PRF^{kind}(l^{out}, label^{out})\)</span></li>
+<li>Delta integrity: <span class="arithmatex">\(delta = DeltaCommit(q_{in}, q_{out}, K_{in}, K_{out}, rcd)\)</span></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>unlike <a href="https://github.com/anoma/masp">MASP</a>, the value base in Taiga is not used to compute resource's commitment and the compliance circuit doesn't take <span class="arithmatex">\(kind\)</span> as private input but computes it from the resource fields, and it is checked for both input and output resources.</p>
+</div>
+<h3 id="32-resource-logic-rl-circuits">3.2 Resource Logic (RL) circuits<a class="headerlink" href="#32-resource-logic-rl-circuits" title="Permanent link">&para;</a></h3>
+<p>Resource logic is a circuit containing the application logic. Resource logics take <span class="arithmatex">\(m\)</span> input and <span class="arithmatex">\(n\)</span> output resources, are represented as Halo2 circuits <code>RL(x; w) ⟶ 0/1</code> and arithmetized over <span class="arithmatex">\(\mathbb{F}_p\)</span>.</p>
+<h4 id="inputs_1">Inputs<a class="headerlink" href="#inputs_1" title="Permanent link">&para;</a></h4>
+<p>Public inputs (<span class="arithmatex">\(x\)</span>):</p>
+<ul>
+<li><span class="arithmatex">\(nf_1, …, nf_m\)</span> - input resource nullifiers</li>
+<li><span class="arithmatex">\(cm_1, …, cm_n\)</span> - output resource commitments</li>
+<li><span class="arithmatex">\(ce_1, …, ce_n\)</span> - encrypted output resources</li>
+<li>custom public inputs</li>
+</ul>
+<p>Private inputs (<span class="arithmatex">\(w\)</span>):</p>
+<ul>
+<li><span class="arithmatex">\(r^{in}_1, …, r^{in}_m\)</span> - input resources openings</li>
+<li><span class="arithmatex">\(r^{out}_1, …, r^{out}_n\)</span> - output resources openings</li>
+<li><span class="arithmatex">\(tag\)</span> that identifies the resource for which the resource logic is being checked</li>
+<li>custom private inputs</li>
+</ul>
+<p>Each resource logic has a fixed number of public inputs and unlimited amount of private inputs. Currently, the allowed number of public inputs is limited to <span class="arithmatex">\(25\)</span>.</p>
+<h4 id="checks_1">Checks<a class="headerlink" href="#checks_1" title="Permanent link">&para;</a></h4>
+<p>As the resource plaintexts are private inputs, to make sure that resources that the circuit received indeed the ones that correspond to the public parameters, every RL circuit must check:</p>
+<ol>
+<li>Input resource nullifier integrity: for each <span class="arithmatex">\(i ∈ {1, …, m}, nf_i = DeriveNullifier_{nk}(nonce, \psi, cm)\)</span></li>
+<li>Output resource commitment integrity: for each <span class="arithmatex">\(i ∈ {1, …, n}, cm_i = ResourceCommit(r)\)</span></li>
+<li>Encrypted output resource integrity: for each <span class="arithmatex">\(i ∈ {1, …, n}, ce_i = Encrypt(r, pub\_recv)\)</span></li>
+</ol>
+<div class="admonition quote">
+<p class="admonition-title">Quote</p>
+<p><strong>Note:</strong> encryption can be customized per application. Some applications might encrypt more fields, others - less. The size of the encrypted resource does leak some information.</p>
+</div>
+<p>All other constraints enforced by RL circuits are custom.</p>
+<h4 id="finding-the-owned-resources">Finding the owned resources<a class="headerlink" href="#finding-the-owned-resources" title="Permanent link">&para;</a></h4>
+<p>A resource logic takes all resources from the current <span class="arithmatex">\(tx\)</span> as input which requires a mechanism to determine which resource is the resource being currently checked. Currently, to determine that, Taiga passes the resource commitment (for output resources) or the nullifier (for input resources) of the owned resource as a tag. The RL identifies the resource that is being checked by its tag.</p>
+<h4 id="rl-commitment">RL commitment<a class="headerlink" href="#rl-commitment" title="Permanent link">&para;</a></h4>
+<p>In the presence of a RL proof for a certain resource, RL commitment is used to make sure the right RL is checked for the resource. It makes sure that <span class="arithmatex">\(vk_{logic}\)</span> the resource refers to and <span class="arithmatex">\(vk_{logic}\)</span> used to validate the RL proof are the same.</p>
+<p>RL commitment has a nested structure:</p>
+<ul>
+<li><span class="arithmatex">\(cm_{l} = RLCommit(l, rcm_{l})\)</span></li>
+<li><span class="arithmatex">\(l = VKCommit(vk_{logic})\)</span></li>
+</ul>
+<p>The check is done in two steps:
+1. The Compliance circuit checks that the RL commitment <span class="arithmatex">\(cm_{l}\)</span> is derived with the <span class="arithmatex">\(l\)</span> the resource refers to:
+<span class="arithmatex">\(cm_{l} = RLCommit(l, rcm_{l})\)</span>
+2. The verifier circuit checks that the RL commitment is computed using the <span class="arithmatex">\(vk_{logic}\)</span> that is used to validate the RL proof:
+<span class="arithmatex">\(cm_{l} = RLCommit(VKCommit(vk_{logic}), rcm_{l}) (l = VKCommit(vk_{logic}))\)</span></p>
+<div class="admonition quote">
+<p class="admonition-title">Quote</p>
+<p><span class="arithmatex">\(VKCommit\)</span> is not implemented yet and currently <span class="arithmatex">\(l = Blake2b(vk_{logic})\)</span></p>
+</div>
+<p>As the outer commitment <span class="arithmatex">\(RLCommit\)</span> is verified in both the compliance and verifier circuit which are arithmetized over different fields, the outer commitment instantiation should be efficient over both fields.</p>
+<p>As the inner commitment <span class="arithmatex">\(VKCommit\)</span> is only opened in the verifier circuit, it only needs to be efficient over the <span class="arithmatex">\(E_O\)</span> scalar field.</p>
+<h2 id="4-circuit-accumulation">4. Circuit Accumulation<a class="headerlink" href="#4-circuit-accumulation" title="Permanent link">&para;</a></h2>
+<p>TBD: Halo2 accumulation</p>
+<h4 id="5-delta-balance-commitment-delta-proof">5. Delta (balance commitment) &amp; delta proof<a class="headerlink" href="#5-delta-balance-commitment-delta-proof" title="Permanent link">&para;</a></h4>
+<p>Delta parameter is used to ensure balance across the resources in a transaction. In Taiga, delta is computed directly for compliance pairs and transactions (not for individual resources).</p>
+<p>For a compliance pair of one input and one output resources, delta is computed as follows:</p>
+<p><span class="arithmatex">\(\Delta_{compl} = DeltaCommit(q^{in}, K^{in}, q^{out}, K^{out}, rcd) = \lbrack q^{in} \rbrack K^{in} - \lbrack q^{out}\rbrack K^{out} + \lbrack rcd\rbrack R\)</span></p>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>Type/size</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="arithmatex">\(q^{in}\)</span></td>
+<td><span class="arithmatex">\({0..2^{64} - 1}\)</span></td>
+<td>input resource's quantity</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(q^{out}\)</span></td>
+<td><span class="arithmatex">\({0..2^{64} - 1}\)</span></td>
+<td>output resource's quantity</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(K^{in}\)</span></td>
+<td><span class="arithmatex">\(E_O\)</span> point</td>
+<td>input resource's kind</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(K^{out}\)</span></td>
+<td><span class="arithmatex">\(E_O\)</span> point</td>
+<td>output resource's kind</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(R\)</span></td>
+<td><span class="arithmatex">\(E_O\)</span> point</td>
+<td>randomness base, fixed</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(rcd\)</span></td>
+<td><span class="arithmatex">\({0..2^{255} - 1}\)</span></td>
+<td>delta randomness</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(\Delta_{compl}\)</span></td>
+<td><span class="arithmatex">\(E_O\)</span> point</td>
+<td>compliance pair delta</td>
+</tr>
+</tbody>
+</table>
+<p>For an initial transaction containing <span class="arithmatex">\(n\)</span> compliance pairs, delta is computed as follows:</p>
+<p><span class="arithmatex">\(\Delta_{tx} =  \sum{\Delta_{compl_i}}\)</span></p>
+<p>For a transaction <span class="arithmatex">\(tx\)</span> composed from transactions <span class="arithmatex">\(tx_1\)</span> and <span class="arithmatex">\(tx_2\)</span>, <span class="arithmatex">\(\Delta_{tx} = \Delta_{tx_1} + \Delta_{tx_2}\)</span>.</p>
+<h3 id="51-binding-signature-delta-proof">5.1 Binding signature (delta proof)<a class="headerlink" href="#51-binding-signature-delta-proof" title="Permanent link">&para;</a></h3>
+<p>Binding signature is used to prove that the transaction is correctly balanced. Delta parameters produced in each transaction used to compose the current transaction being checked are accumulated and checked against the commitment to the expected net value change. Currently, Taiga uses the same binding signature mechanism as Zcash Orchard.</p>
+<h4 id="taiga-balance-vs-application-balance">Taiga balance vs Application balance<a class="headerlink" href="#taiga-balance-vs-application-balance" title="Permanent link">&para;</a></h4>
+<p>Taiga transaction is balanced if for each resource kind: <span class="arithmatex">\(\sum_i{v_i^{in}} - \sum_j{v_j^{out}} = v^{balance}\)</span>, where <span class="arithmatex">\(v^{balance}\)</span> is the balancing value. Applications have their own definitions of balance that might differ from the Taiga definition. For example, some applications might allow to create more output value from less input value, which makes the total value change <span class="arithmatex">\(v^{balance}\)</span> non-zero. In case when Taiga's balancing value is assumed to be zero, the application-specific balance is different from the Taiga balance and the application needs to make sure the transaction is balanced in the Taiga sense by adding some non-zero value ephemeral resources to the transaction.</p>
+<h2 id="6-instantiations">6. Instantiations<a class="headerlink" href="#6-instantiations" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Function</th>
+<th>Instantiation</th>
+<th>Domain/Range</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="arithmatex">\(PRF^{nf}\)</span></td>
+<td>Poseidon</td>
+<td><span class="arithmatex">\(\mathbb{F_p^4} \rightarrow \mathbb F_p\)</span></td>
+<td><span class="arithmatex">\(PRF^{nf}_{nk}(nonce, \psi, cm) = Poseidon(nk, nonce, \psi, cm)\)</span></td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(PRF^{kind}\)</span></td>
+<td>Poseidon</td>
+<td>$\mathbb{F_p^2} \rightarrow \mathbb{E_I} $</td>
+<td><span class="arithmatex">\(PRF^{kind} = \mathtt{hash\_to\_curve}(Poseidon(l, label))\)</span></td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(PRF^{rcm}\)</span></td>
+<td>Poseidon</td>
+<td>$ \mathbb{F_p^3} \rightarrow \mathbb F_p$</td>
+<td>Used to derive resource commitment randomness</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(PRF^{\psi}\)</span></td>
+<td>Poseidon</td>
+<td><span class="arithmatex">\(\mathbb{F_p^3} \rightarrow \mathbb F_p\)</span></td>
+<td>Used to derive <span class="arithmatex">\(\psi\)</span></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(NKCommit\)</span></td>
+<td>Poseidon</td>
+<td><span class="arithmatex">\(\mathbb{F_p^2} \rightarrow \mathbb F_p\)</span></td>
+<td><span class="arithmatex">\(NKCommit(nk, k) = Poseidon(nk,k)\)</span>; used to compute <span class="arithmatex">\(npk\)</span>, user-derived key <span class="arithmatex">\(k\)</span> is currently not used</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(ResourceCommit\)</span></td>
+<td>Poseidon</td>
+<td><span class="arithmatex">\(\mathbb{F_p^9} \rightarrow \mathbb F_p\)</span></td>
+<td></td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(DeltaCommit\)</span></td>
+<td>Pedersen commitment with variable value base</td>
+<td><span class="arithmatex">\(\mathbb{F_q^2} \times \mathbb{E_I^2} \times \mathbb{F_q} \rightarrow \mathbb{E_I}\)</span></td>
+<td></td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(RLCommit\)</span></td>
+<td>Blake2s</td>
+<td>-</td>
+<td>Efficient over both <span class="arithmatex">\(\mathbb F_p\)</span> and <span class="arithmatex">\(\mathbb F_q\)</span></td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(VKCommit\)</span></td>
+<td>-</td>
+<td>-</td>
+<td>Efficient over the <span class="arithmatex">\(E_O\)</span> scalar field; not implemented yet (it is checked in the verifier circuit that is not implemented)</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(Encrypt\)</span></td>
+<td>DH + Poseidon</td>
+<td><span class="arithmatex">\(\mathbb F_p \rightarrow \mathbb F_p\)</span></td>
+<td><span class="arithmatex">\(Encrypt(r, pub_{recv}, priv_{send}) = Poseidon(r, DH(pub_{recv}, priv_{send}))\)</span></td>
+</tr>
+<tr>
+<td>Binding signature</td>
+<td>RedDSA</td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h2 id="7-transaction">7. Transaction<a class="headerlink" href="#7-transaction" title="Permanent link">&para;</a></h2>
+<h4 id="components">Components<a class="headerlink" href="#components" title="Permanent link">&para;</a></h4>
+<p>Each Taiga <span class="arithmatex">\(tx\)</span> contains:</p>
+<ul>
+<li><span class="arithmatex">\(n\)</span> compliance proof records (one compliance proof covers one input and one output resource), each containing:
+    - <span class="arithmatex">\(\pi_{compl}\)</span> - compliance proof
+    - <span class="arithmatex">\(vk_{compl}\)</span> - compliance circuit verifying key
+    - <span class="arithmatex">\((rt, cm, cm^{out}_{l}, nf, cm^{in}_{l}, \Delta)\)</span> - compliance proof public input</li>
+<li>resource logic's proving record for every resource created/consumed in the <span class="arithmatex">\(tx\)</span>:
+    - <span class="arithmatex">\(\pi_{l}\)</span> - resource logic proof
+    - <span class="arithmatex">\(vk_{logic}\)</span> - resource logic verifying key
+    - public inputs, including commitments and encryptions of the created resources and nullifiers of the consumed resources</li>
+<li>binding signature</li>
+<li>transaction delta <span class="arithmatex">\(\Delta_{tx}\)</span></li>
+<li>extra data <span class="arithmatex">\(extra\)</span></li>
+<li>preference function <span class="arithmatex">\(\Phi\)</span></li>
+</ul>
+<h4 id="validity-of-a-transaction">Validity of a transaction<a class="headerlink" href="#validity-of-a-transaction" title="Permanent link">&para;</a></h4>
+<p>A transaction is valid if:
+1. For each compliance proof:
+    - if <code>eph = true</code>, <code>rt</code> must be a valid <span class="arithmatex">\(CMtree\)</span> root.
+    - <span class="arithmatex">\(Verify(\pi_{compl}, vk_{compl}, CompliancePublicInput) = True\)</span>
+2. For each resource logic proof:
+    - <span class="arithmatex">\(Verify(\pi_{l}, vk_{logic}, LogicPublicInput) = True\)</span>
+    - Public input consistency: resource logic public input <span class="arithmatex">\(nf\)</span> and <span class="arithmatex">\(cm\)</span> are the same as in the compliance public input
+3. Binding signature is valid for <span class="arithmatex">\(\Delta_{tx}\)</span></p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Currently, each resource requires a separate RL proof, even if they belong to the same application. Eventually the RL might be called just once per <span class="arithmatex">\(tx\)</span>, meaning that if the <span class="arithmatex">\(tx\)</span> has 2 or more resources belonging to the same application, the total amount of non-ephemeral proofs is reduced.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>It is possible that a resource logic requires checks of other logics in order to be satisfied. In that case, the total amount of logic proofs verified could be more than <span class="arithmatex">\(2n\)</span>, but we can count such check as a single check.</p>
+</div>
+<h3 id="taiga-state">Taiga state<a class="headerlink" href="#taiga-state" title="Permanent link">&para;</a></h3>
+<p>Taiga doesn't store a state, but Taiga produces state changes (that will be executed elsewhere), that include:</p>
+<ul>
+<li>For each created resource <span class="arithmatex">\(r\)</span>, <span class="arithmatex">\(CMtree.WRITE(r.cm)\)</span>,</li>
+<li>For each consumed resource <span class="arithmatex">\(r\)</span>, <span class="arithmatex">\(NFset.WRITE(r.nf)\)</span>,</li>
+</ul>
+<h2 id="8-communication-between-the-shielded-and-transparent-pools">8. Communication between the shielded and transparent pools<a class="headerlink" href="#8-communication-between-the-shielded-and-transparent-pools" title="Permanent link">&para;</a></h2>
+<p>State transitions that do not preserve privacy are called <em>transparent</em>. Assuming that the system allows both transparent and shielded state transitions, we say that all of the valid resources created as a result of shielded state transitions form a <em>shielded pool</em> and the valid resources created as a result of transparent state transitions form a <em>transparent pool</em>. The action of moving data from transparent to shielded pool is called <em>shielding</em>, the opposite is called <em>unshielding</em>. Shielding (or unshielding) is done by consuming resources in one pool and creating the corresponding resources in the other. <em>Balancing value</em> <span class="arithmatex">\(v^{balance}\)</span> indicates the data move between the pools:</p>
+<ul>
+<li><span class="arithmatex">\(v^{balance} = 0\)</span> if the current transaction doesn't move data between pools</li>
+<li><span class="arithmatex">\(v^{balance} &lt; 0\)</span> refers to the value moved from the transparent to the shielded pool</li>
+<li><span class="arithmatex">\(v^{balance} &gt; 0\)</span> refers to the value moved from the shielded to the transparent pool</li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>That the balancing value corresponds to the data flow between pools only for transactions processed in post-ordering execution. Transactions before ordering might not necessarily correctly represent the data flow between the pools.</p>
+</div>
+<!-- list_wikilinks -->
+
+<!-- mermaid_wikilinks -->
+
+
+
+
+
+
+
+  
+    
+  
+  
+    
+  
+
+
+  <aside class="md-source-file">
+    
+      
+  <span class="md-source-file__fact">
+    <span class="md-icon" title="Last update">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
+    </span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago"><span class="timeago" datetime="2024-11-01T02:52:42+01:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date">2024-11-01</span>
+  </span>
+
+    
+    
+      
+  <span class="md-source-file__fact">
+    <span class="md-icon" title="Created">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14.47 15.08 11 13V7h1.5v5.25l3.08 1.83c-.41.28-.79.62-1.11 1m-1.39 4.84c-.36.05-.71.08-1.08.08-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8c0 .37-.03.72-.08 1.08.69.1 1.33.32 1.92.64.1-.56.16-1.13.16-1.72 0-5.5-4.5-10-10-10S2 6.5 2 12s4.47 10 10 10c.59 0 1.16-.06 1.72-.16-.32-.59-.54-1.23-.64-1.92M18 15v3h-3v2h3v3h2v-3h3v-2h-3v-3z"/></svg>
+    </span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago"><span class="timeago" datetime="2024-03-24T00:41:13+01:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date">2024-03-24</span>
+  </span>
+
+    
+    
+    
+  </aside>
+
+
+  
+
+
+
+  <form class="md-feedback" name="feedback" hidden>
+    <fieldset>
+      <legend class="md-feedback__title">
+        Was this page helpful?
+      </legend>
+      <div class="md-feedback__inner">
+        <div class="md-feedback__list">
+          
+            <button class="md-feedback__icon md-icon" type="submit" title="This page was helpful" data-md-value="1">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12 21.35-1.45-1.32C5.4 15.36 2 12.27 2 8.5 2 5.41 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.08C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.41 22 8.5c0 3.77-3.4 6.86-8.55 11.53z"/></svg>
+            </button>
+          
+            <button class="md-feedback__icon md-icon" type="submit" title="This page could be improved" data-md-value="0">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12 21.35-1.45-1.32C5.4 15.36 2 12.27 2 8.5 2 5.41 4.42 3 7.5 3c.67 0 1.32.12 1.94.33L13 9.35l-4 5zM16.5 3C19.58 3 22 5.41 22 8.5c0 3.77-3.4 6.86-8.55 11.53L12 21.35l-1-7 4.5-5-2.65-5.08C13.87 3.47 15.17 3 16.5 3"/></svg>
+            </button>
+          
+        </div>
+        <div class="md-feedback__note">
+          
+            <div data-md-value="1" hidden>
+              
+              
+                
+              
+              Thanks for your feedback!
+            </div>
+          
+            <div data-md-value="0" hidden>
+              
+              
+                
+              
+              Thanks for your feedback! We'll try to improve this page in the future.
+            </div>
+          
+        </div>
+      </div>
+    </fieldset>
+  </form>
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  <div class="md-copyright__highlight">
+    Powered by Mkdocs, Material 9.5.37-insiders-4.53.13 and Juvix v0.6.6 - Last updated: December 03, 2024 at 01:26 PM UTC
+  </div>
+  
+
+  <ul>
+    <li><a href="https://anoma.net/" target="_blank">Anoma Official Website</a> </li>
+    <li><a href="https://art.anoma.net" target="_blank">Anoma Research Topics (ART)</a></li>
+    <li><a href="https://anoma.net/blog" target="_blank">Anoma Blog</a></li>
+    <li><a href="https://anoma.net/talks" target="_blank">Anoma Talks</a></li>
+  </ul>
+  <ul>
+    <span class="md-copyright__highlight">Extra resources for Anoma
+      Specification collaborators</span>
+      
+      <li><a href="https://anoma.github.io/nspec/v2/indexes/links.html">Quick links</a></li>
+      <li><a href="https://anoma.github.io/nspec/v2/indexes/juvix_modules.html">Juvix modules</a></li>
+      <li><a href="https://anoma.github.io/nspec/v2/tutorial/index.html">Markdown tutorials for writing Anoma
+          Specification</a></li>
+      <li><a href="https://anoma.github.io/nspec/v2/tutorial/engines/index.html">On engines in Anoma</a></li>
+  </ul>
+</div>
+      
+        <div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://x.com/anoma" target="_blank" rel="noopener" title="x.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M389.2 48h70.6L305.6 224.2 487 464H345L233.7 318.6 106.5 464H35.8l164.9-188.5L26.8 48h145.6l100.5 132.9zm-24.8 373.8h39.1L151.1 88h-42z"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/anoma" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8M97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://anoma.net/blog" target="_blank" rel="noopener" title="anoma.net" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M192 32c0 17.7 14.3 32 32 32 123.7 0 224 100.3 224 224 0 17.7 14.3 32 32 32s32-14.3 32-32C512 128.9 383.1 0 224 0c-17.7 0-32 14.3-32 32m0 96c0 17.7 14.3 32 32 32 70.7 0 128 57.3 128 128 0 17.7 14.3 32 32 32s32-14.3 32-32c0-106-86-192-192-192-17.7 0-32 14.3-32 32m-96 16c0-26.5-21.5-48-48-48S0 117.5 0 144v224c0 79.5 64.5 144 144 144s144-64.5 144-144-64.5-144-144-144h-16v96h16c26.5 0 48 21.5 48 48s-21.5 48-48 48-48-21.5-48-48z"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://research.anoma.net" target="_blank" rel="noopener" title="research.anoma.net" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M225.9 32C103.3 32 0 130.5 0 252.1 0 256 .1 480 .1 480l225.8-.2c122.7 0 222.1-102.3 222.1-223.9S348.6 32 225.9 32M224 384c-19.4 0-37.9-4.3-54.4-12.1L88.5 392l22.9-75c-9.8-18.1-15.4-38.9-15.4-61 0-70.7 57.3-128 128-128s128 57.3 128 128-57.3 128-128 128"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://youtube.com/anoma" target="_blank" rel="noopener" title="youtube.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M549.655 124.083c-6.281-23.65-24.787-42.276-48.284-48.597C458.781 64 288 64 288 64S117.22 64 74.629 75.486c-23.497 6.322-42.003 24.947-48.284 48.597-11.412 42.867-11.412 132.305-11.412 132.305s0 89.438 11.412 132.305c6.281 23.65 24.787 41.5 48.284 47.821C117.22 448 288 448 288 448s170.78 0 213.371-11.486c23.497-6.321 42.003-24.171 48.284-47.821 11.412-42.867 11.412-132.305 11.412-132.305s0-89.438-11.412-132.305m-317.51 213.508V175.185l142.739 81.205z"/></svg>
+    </a>
+  
+    
+    
+    
+    
+    <a href="mailto:arts@heliax.dev" target="_blank" rel="noopener" title="" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m20 8-8 5-8-5V6l8 5 8-5m0-2H4c-1.11 0-2 .89-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+      <div class="md-progress" data-md-component="progress" role="progressbar"></div>
+    
+    
+    <script id="__config" type="application/json">{"base": "../../../..", "features": ["announce.dismiss", "content.code.annotate", "content.code.copy", "content.tooltips", "search.highlight", "search.suggest", "search.sharing", "navigation.instant", "navigation.instant.prefetch", "navigation.instant.progress", "navigation.instant.preview", "navigation.tracking", "navigation.tabs", "navigation.tabs.sticky", "navigation.prune", "navigation.indexes", "navigation.top", "toc.follow", "toc.integrate"], "search": "../../../../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../../../../assets/javascripts/bundle.d6f25eb3.min.js"></script>
+      
+        <script src="../../../../js/timeago.min.js"></script>
+      
+        <script src="../../../../js/timeago_mkdocs_material.js"></script>
+      
+        <script src="../../../../assets/js/extra.js"></script>
+      
+        <script src="../../../../assets/js/highlight.js"></script>
+      
+        <script src="../../../../assets/js/mathjax.js"></script>
+      
+        <script src="../../../../assets/js/tex-svg-full.js"></script>
+      
+    
+  <script id="init-glightbox">const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "slide"});
+document$.subscribe(() => { lightbox.reload() });
+</script></body>
+</html>

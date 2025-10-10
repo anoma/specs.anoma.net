@@ -1,0 +1,31 @@
+name: update latest symlink
+on:
+  push:
+
+concurrency:
+  group: "${{ github.workflow }}-${{ github.head_ref || github.run_id }}"
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
+jobs:
+  latest:
+    runs-on: ubuntu-latest
+    steps:
+      - name: git checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: true
+          fetch-depth: 0
+      - name: git config
+        run: |
+          git config --global user.name 'Anoma Research'
+          git config --global user.email 'arts@heliax.dev'
+      - name: update latest symlink
+        run: |
+          ln -nsf `ls -d v*/ | grep '^v[0-9]\+\.[0-9]\+\.[0-9]\+/$' | sort -V | tail -1` latest
+      - name: git commit && git push
+        run: |
+          git add latest
+          git commit -m 'update latest symlink' && git push || true
