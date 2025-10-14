@@ -98,7 +98,7 @@
                 <span class="first-letter">s</span>pecs
               
               
-                <span class="md-header__topic-version">(PR390 - yulia/shielded-spec-617a6375)</span>
+                <span class="md-header__topic-version">(PR390 - yulia/shielded-spec-763e9964)</span>
 </span>
 </div>
 <div class="md-header__topic" data-md-component="header-topic">
@@ -210,7 +210,7 @@
 <ul class="md-nav__list">
 <li class="md-nav__item">
 <a class="md-nav__link" href="https://specs.anoma.net/latest" target="_blank">
-     Latest version ((PR390 - yulia/shielded-spec-617a6375))
+     Latest version ((PR390 - yulia/shielded-spec-763e9964))
       </a>
 </li>
 <li class="md-nav__item">
@@ -662,6 +662,33 @@
     </label>
 <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
 <li class="md-nav__item">
+<a class="md-nav__link" href="#logicverifierinputs">
+<span class="md-ellipsis">
+      
+        LogicVerifierInputs
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#applicationdata">
+<span class="md-ellipsis">
+      
+        applicationData
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#definitions">
+<span class="md-ellipsis">
+      
+        Definitions
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
 <a class="md-nav__link" href="#interface">
 <span class="md-ellipsis">
       
@@ -845,20 +872,57 @@
 <tbody>
 <tr>
 <td><code>logicVerifierInputs</code></td>
-<td><code>Map Tag (isConsumed: Bool, logicVKOuter: LogicVKOuterHash, applicationData: List (BitString, DeletionCriterion), proof: ResourceLogicProvingSystem.Proof)</code></td>
-<td>Resource logic proofs for resources associated with the action and accompanying data. The key of each map entry is the tag of the resource for which a RL proof is to be verified. The deletion criterion field is described <a href="https://specs.anoma.net/pr-390/arch/system/state/resource_machine/notes/storage.html">here</a>.</td>
+<td><code>Map Tag LogicVerifierInputs</code></td>
+<td>For each resource tag, contains the associated logic proof and everything required to verify it. The structure of <code>LogicVerifierInputs</code> is further described below.</td>
 </tr>
 <tr>
 <td><code>complianceUnits</code></td>
 <td><code>List ComplianceUnit</code></td>
 <td>The set of transaction's <a href="https://specs.anoma.net/pr-390/arch/system/state/resource_machine/data_structures/compliance_unit/compliance_unit.html">compliance units</a></td>
 </tr>
+<tr>
+<td><code>actionTreeSize</code></td>
+<td></td>
+<td>Determines the depth of the Merkle tree used to store input resources. If not specified, the depth is set to the smallest necessary to fit all the input resources.</td>
+</tr>
 </tbody>
 </table>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>For function privacy in the shielded context, instead of a logic proof we verify a proof of logic proof validity - a recursive proof. <code>LogicVKOuterHash</code> type corresponds to the RL VK commitment while verifying key in <code>logicVerifierInputs</code> refers to the key to be used for verification (i.e., a <em>verifier circuit verifying key</em> as opposed to a <em>resource logic verifying key</em>). RL VK commitment should be included somewhere else, e.g., in <code>applicationData</code>.</p>
-</div>
+<h3 id="logicverifierinputs"><code>LogicVerifierInputs</code><a class="headerlink" href="#logicverifierinputs" title="Anchor link to this section for reference">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>verifyingKey</code></td>
+<td><code>ResourceLogicProvingSystem.verifyingKey</code></td>
+<td>Contains the verifying key used to verify the logic proof</td>
+</tr>
+<tr>
+<td><code>applicationData</code></td>
+<td><code>(ResourcePayload, DiscoveryPayload, ExternalPayload, ApplicationPayload)</code></td>
+<td>Contains inputs required to verify the RL proof. Each payload type is <code>List(BitString, DeletionCriterion)</code>. The tuple entries are further described below. The deletion criterion field is further described <a href="https://specs.anoma.net/pr-390/arch/system/state/resource_machine/notes/storage.html">here</a>.</td>
+</tr>
+<tr>
+<td><code>proof</code></td>
+<td><code>ResourceLogicProvingSystem.Proof</code></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="applicationdata"><code>applicationData</code><a class="headerlink" href="#applicationdata" title="Anchor link to this section for reference">¶</a></h3>
+<p>Application data contains the inputs required to verify the RL proof. It has four entries, all of which of type <code>List (BitString, DeletionCriterion)</code>:</p>
+<ol>
+<li><code>ResourcePayload</code> – contains resource-object-related data. For example, encrypted (or not) resource object.</li>
+<li><code>DiscoveryPayload</code> – contains data related to discovery, for example, FMD ciphertext.</li>
+<li><code>ExternalPayload</code> – contains data associated with external calls, for example, <code>forwarderCallData</code> from Ethereum.</li>
+<li><code>ApplicationPayload</code> – contains other data expected by the resource logic, for example, a signature to be verified.</li>
+</ol>
+<h2 id="definitions">Definitions<a class="headerlink" href="#definitions" title="Anchor link to this section for reference">¶</a></h2>
 <p>Actions partition the state change induced by a transaction and limit the evaluation context of resource logics: proofs created in the context of an action have access only to the resources associated with the action. A resource is said to be <em>associated with an action</em> if its tag is a key of the <code>logicVerifierInputs</code> map. A resource is associated with at most two actions: resource creation is associated with exactly one action and resource consumption is associated with exactly one action. A resource is said to be <em>consumed in the action</em> for a valid action if its <em>nullifier</em> is a key of the <code>logicVerifierInputs</code> map. A resource is said to be <em>created in the action</em> for a valid action if its <em>commitment</em> is a key of the <code>logicVerifierInputs</code> map.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -985,8 +1049,8 @@
 <div class="md-copyright__highlight">
       Powered by Mkdocs, Poetry , Material 9.6.12-insiders-4.53.16 and Juvix v0.6.10
     </div>
-<strong>Version: (PR390 - yulia/shielded-spec-617a6375) - Updated: October 08,
-    2025 at 04:26 PM UTC</strong>
+<strong>Version: (PR390 - yulia/shielded-spec-763e9964) - Updated: October 14,
+    2025 at 01:06 PM UTC</strong>
 <br/>
 <strong>Latest version: <a href="https://specs.anoma.net/latest">
     https://specs.anoma.net/latest</a></strong>

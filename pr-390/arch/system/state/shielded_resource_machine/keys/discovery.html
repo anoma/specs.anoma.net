@@ -98,7 +98,7 @@
                 <span class="first-letter">s</span>pecs
               
               
-                <span class="md-header__topic-version">(PR390 - yulia/shielded-spec-617a6375)</span>
+                <span class="md-header__topic-version">(PR390 - yulia/shielded-spec-763e9964)</span>
 </span>
 </div>
 <div class="md-header__topic" data-md-component="header-topic">
@@ -210,7 +210,7 @@
 <ul class="md-nav__list">
 <li class="md-nav__item">
 <a class="md-nav__link" href="https://specs.anoma.net/latest" target="_blank">
-     Latest version ((PR390 - yulia/shielded-spec-617a6375))
+     Latest version ((PR390 - yulia/shielded-spec-763e9964))
       </a>
 </li>
 <li class="md-nav__item">
@@ -829,7 +829,7 @@
 <ol>
 <li>generates an ephemeral discovery key pair <span class="arithmatex">\((edsk, edpk)\)</span></li>
 <li>using the receiver's static discovery public key, generates the discovery encryption key <span class="arithmatex">\(dek = KDF(DH(sdpk_{R}, edsk_{S}), edpk_{S})\)</span></li>
-<li>encrypts a fixed string <code>ds</code> <span class="arithmatex">\(cd = Encrypt(dek, ds)\)</span> and includes the discovery message in the transaction payload: <code>discoveryPayload = [cd, edpk_{S}]</code></li>
+<li>encrypts a fixed string <code>ds</code> <span class="arithmatex">\(cd = Encrypt(dek, ds)\)</span> and includes the discovery message in the transaction payload: <code>discoveryPayload = [(cd, edpk_{S})]</code></li>
 </ol>
 <h4 id="discovery">Discovery<a class="headerlink" href="#discovery" title="Anchor link to this section for reference">¶</a></h4>
 <p>Given the relevant key <span class="arithmatex">\(sdsk\)</span> by the potential receiver, the discovery server tries to decrypt each discovery message for each published transaction:</p>
@@ -841,7 +841,7 @@
 <h4 id="resource-decryption">Resource decryption<a class="headerlink" href="#resource-decryption" title="Anchor link to this section for reference">¶</a></h4>
 <p>To decrypt a resource, the user:</p>
 <ol>
-<li>using an ephemeral key attached to the payload, they generate the resource encryption key <span class="arithmatex">\(rek = KDF(DH(sesk_{R}, eepk_{S}), eepk{S})\)</span></li>
+<li>using <a href="encryption.html">an ephemeral key attached to the payload</a>, they generate the resource encryption key <span class="arithmatex">\(rek = KDF(DH(sesk_{R}, eepk_{S}), eepk{S})\)</span></li>
 <li>they decrypt the resource object <span class="arithmatex">\(resource = Decrypt(rek, ce)\)</span></li>
 </ol>
 <h4 id="verifiable-discovery">Verifiable discovery<a class="headerlink" href="#verifiable-discovery" title="Anchor link to this section for reference">¶</a></h4>
@@ -953,8 +953,8 @@
 <div class="md-copyright__highlight">
       Powered by Mkdocs, Poetry , Material 9.6.12-insiders-4.53.16 and Juvix v0.6.10
     </div>
-<strong>Version: (PR390 - yulia/shielded-spec-617a6375) - Updated: October 08,
-    2025 at 04:26 PM UTC</strong>
+<strong>Version: (PR390 - yulia/shielded-spec-763e9964) - Updated: October 14,
+    2025 at 01:06 PM UTC</strong>
 <br/>
 <strong>Latest version: <a href="https://specs.anoma.net/latest">
     https://specs.anoma.net/latest</a></strong>
