@@ -624,7 +624,7 @@
 <ol>
 <li>generates an ephemeral encryption key pair <span class="arithmatex">\((eesk, eepk)\)</span></li>
 <li>using the receiver's static encrypion public key, generates the resource encryption key <span class="arithmatex">\(rek = KDF(DH(sepk_{R}, eesk_{S}), eepk_{S})\)</span></li>
-<li>encrypts the resource <span class="arithmatex">\(ce = Encrypt(rek, resource)\)</span> and includes the encrypted message in the transaction payload: <code>resourcePayload = [ce, eepk_{S}]</code></li>
+<li>encrypts the resource <span class="arithmatex">\(ce = Encrypt(rek, resource)\)</span> and includes the encrypted message in the transaction payload: <code>resourcePayload = [(ce, eepk_{S})]</code></li>
 </ol>
 <p>The receiver has to <a href="discovery.html">discover</a> the message sent to them and then decrypt it, inverting the process above.</p>
 <h3 id="instantiations">Instantiations<a class="headerlink" href="#instantiations" title="Anchor link to this section for reference">¶</a></h3>
@@ -641,7 +641,7 @@
 <td>AES256-GCM</td>
 </tr>
 <tr>
-<td>KDF</td>
+<td><a href="https://en.wikipedia.org/wiki/Key_derivation_function">KDF</a></td>
 <td>SHA256</td>
 </tr>
 </tbody>
@@ -690,8 +690,8 @@
 <div class="md-copyright__highlight">
       © 2025 <a href="https://anoma.net">Anoma Foundation</a>
 </div>
-<strong>Version: (PR 390) - Updated: October 08,
-    2025 at 04:24 PM UTC</strong>
+<strong>Version: (PR 390) - Updated: October 14,
+    2025 at 01:03 PM UTC</strong>
 <br/>
 <strong>Latest version: <a href="https://specs.anoma.net/latest">
     https://specs.anoma.net/latest</a></strong>
