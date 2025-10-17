@@ -98,7 +98,7 @@
                 <span class="first-letter">s</span>pecs
               
               
-                <span class="md-header__topic-version">(PR390 - yulia/shielded-spec-763e9964)</span>
+                <span class="md-header__topic-version">(PR390 - yulia/shielded-spec-0887f4c6)</span>
 </span>
 </div>
 <div class="md-header__topic" data-md-component="header-topic">
@@ -210,7 +210,7 @@
 <ul class="md-nav__list">
 <li class="md-nav__item">
 <a class="md-nav__link" href="https://specs.anoma.net/latest" target="_blank">
-     Latest version ((PR390 - yulia/shielded-spec-763e9964))
+     Latest version ((PR390 - yulia/shielded-spec-0887f4c6))
       </a>
 </li>
 <li class="md-nav__item">
@@ -498,6 +498,15 @@
     </span>
 </a>
 </li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#resource-logic-constraints">
+<span class="md-ellipsis">
+      
+        Resource logic constraints
+      
+    </span>
+</a>
+</li>
 </ul>
 </nav>
 </li>
@@ -637,6 +646,15 @@
     </span>
 </a>
 </li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#resource-logic-constraints">
+<span class="md-ellipsis">
+      
+        Resource logic constraints
+      
+    </span>
+</a>
+</li>
 </ul>
 </nav>
 </div>
@@ -740,6 +758,14 @@
 <h2 id="action-trees">Action trees<a class="headerlink" href="#action-trees" title="Anchor link to this section for reference">¶</a></h2>
 <p>The tags of all resources in the action are organized in an action tree. The root of the tree is passed as a part of an instance to each logic associated with the action, and when a resource object is passed in the witness, we verify inclusion of the corresponding tag in the tree.</p>
 <p>The depth of the action tree depends on the number of resources in the action. The tree parameters are the same as for the commitment tree.</p>
+<h2 id="resource-logic-constraints">Resource logic constraints<a class="headerlink" href="#resource-logic-constraints" title="Anchor link to this section for reference">¶</a></h2>
+<p>Currently there is no way to enforce the presence of any constraints in a resource logic since resource logics are designed by application developers. The constraints that nevertheless have to be present in resource logics for safety reasons are:</p>
+<ol>
+<li>Ensuring the correspondence of the instance and witness. Specifically, the corresponsence of resource tags and examined resource objects.</li>
+<li>If in-band encryption is used, verifying the correctness of the encryption.</li>
+<li>Verifying the tag existence in the action tree.</li>
+</ol>
+<p>Since this cannot be included automatically, users must make sure the applications they use have these checks present.</p>
 <!-- list_wikilinks -->
 <!-- Source file information -->
 <!-- Was this page helpful? -->
@@ -827,8 +853,8 @@
 <div class="md-copyright__highlight">
       Powered by Mkdocs, Poetry , Material 9.6.12-insiders-4.53.16 and Juvix v0.6.10
     </div>
-<strong>Version: (PR390 - yulia/shielded-spec-763e9964) - Updated: October 14,
-    2025 at 01:06 PM UTC</strong>
+<strong>Version: (PR390 - yulia/shielded-spec-0887f4c6) - Updated: October 17,
+    2025 at 08:57 AM UTC</strong>
 <br/>
 <strong>Latest version: <a href="https://specs.anoma.net/latest">
     https://specs.anoma.net/latest</a></strong>
