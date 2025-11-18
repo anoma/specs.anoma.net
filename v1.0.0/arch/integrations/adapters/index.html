@@ -9,7 +9,7 @@
 <meta content="Anoma Foundation" name="author"/>
 <link href="https://specs.anoma.net/v1.0.0/arch/integrations/adapters/index.html" rel="canonical"/>
 <link href="../../system/state/shielded_resource_machine/features/function_privacy.html" rel="prev"/>
-<link href="evm.html" rel="next"/>
+<link href="evm/index.html" rel="next"/>
 <link href="../../../assets/logo.svg" rel="icon"/>
 <meta content="mkdocs-1.6.1, mkdocs-material-9.6.12+insiders-4.53.16" name="generator"/>
 <title>Protocol Adapters - Anoma specs</title>
@@ -415,9 +415,8 @@
 
           </label>
 <ul class="md-nav__list" data-md-scrollfix="">
-<li class="md-nav__item">
-<a class="md-nav__link" href="evm.html">
-<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 6h18V4H3c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h4v-2H3zm10 6H9v1.78c-.61.55-1 1.33-1 2.22s.39 1.67 1 2.22V20h4v-1.78c.61-.55 1-1.34 1-2.22s-.39-1.67-1-2.22zm-2 5.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5M22 8h-6c-.5 0-1 .5-1 1v10c0 .5.5 1 1 1h6c.5 0 1-.5 1-1V9c0-.5-.5-1-1-1m-1 10h-4v-8h4z"></path></svg>
+<li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+<a class="md-nav__link" href="evm/index.html">
 <span class="md-ellipsis">
     
   
@@ -426,6 +425,7 @@
 
     
   </span>
+<span class="md-nav__icon md-icon"></span>
 </a>
 </li>
 </ul>
@@ -595,10 +595,11 @@
 <!-- Page content -->
 <h1 id="protocol-adapters">Protocol Adapters<a class="headerlink" href="#protocol-adapters" title="Anchor link to this section for reference">¶</a></h1>
 <p>A protocol adapter provides executor engine and shard engine functionality on a foreign blockchain protocol (adaptee) being independent of the Anoma protocol (target). In other words, it processes <a href="https://specs.anoma.net/v1.0.0/arch/system/state/resource_machine/index.html">resource machine (RM)</a> transactions and updates the RM state in correspondence with the adaptee's state changes.</p>
+<p>In general, the aim of a protocol adapter is to allow Anoma applications to be run on existing chains (similar to how drivers allow an operating system to be run on different pieces of physical hardware).</p>
 <p>In order to support a protocol adapter, the adaptee protocol has to be programmable (i.e., support smart contracts).</p>
 <h2 id="instances">Instances<a class="headerlink" href="#instances" title="Anchor link to this section for reference">¶</a></h2>
 <ul>
-<li><a href="https://specs.anoma.net/v1.0.0/arch/integrations/adapters/evm.html">Ethereum Virtual Machine</a> protocol adapter prototype (settlement-only)</li>
+<li><a href="https://specs.anoma.net/v1.0.0/arch/integrations/adapters/evm/index.html">Ethereum Virtual Machine</a> protocol adapter (settlement-only)</li>
 </ul>
 <!-- list_wikilinks -->
 <!-- Source file information -->
@@ -667,13 +668,13 @@
               </div>
 </div>
 </a>
-<a aria-label="Next: Ethereum Virtual Machine" class="md-footer__link md-footer__link--next" href="evm.html">
+<a aria-label="Next: Ethereum Virtual Machine Protocol Adapter" class="md-footer__link md-footer__link--next" href="evm/index.html">
 <div class="md-footer__title">
 <span class="md-footer__direction">
                 Next
               </span>
 <div class="md-ellipsis">
-                Ethereum Virtual Machine
+                Ethereum Virtual Machine Protocol Adapter
               </div>
 </div>
 <div class="md-footer__button md-icon">
@@ -687,8 +688,8 @@
 <div class="md-copyright__highlight">
       Powered by Mkdocs, Material 9.6.12-insiders-4.53.16 and Juvix v0.6.10
     </div>
-<strong>Version: v1.0.0 - Updated: November 17,
-    2025 at 02:57 PM UTC</strong>
+<strong>Version: v1.0.0 - Updated: November 18,
+    2025 at 03:39 PM UTC</strong>
 <br/>
 <strong>Latest version: <a href="https://specs.anoma.net/latest">
     https://specs.anoma.net/latest</a></strong>
